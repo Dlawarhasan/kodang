@@ -1,0 +1,73 @@
+{
+  "nav": {
+    "home": "Home",
+    "news": "News",
+    "categories": "Categories",
+    "about": "About",
+    "contact": "Contact"
+  },
+  "home": {
+    "title": "News",
+    "subtitle": "Stay updated with the latest news",
+    "latestNews": "Latest News",
+    "allNews": "All News",
+    "readMore": "Read More",
+    "viewAll": "View All"
+  },
+  "news": {
+    "title": "News",
+    "backToList": "Back to News List",
+    "publishedOn": "Published on",
+    "author": "Author",
+    "category": "Category",
+    "noNews": "No news found"
+  },
+  "categories": {
+    "title": "Categories",
+    "subtitle": "All Categories",
+    "viewNews": "View News",
+    "all": "All",
+    "social": "Social",
+    "politics": "Politics",
+    "sports": "Sports",
+    "technology": "Technology",
+    "culture": "Culture",
+    "health": "Health"
+  },
+  "about": {
+    "title": "About",
+    "subtitle": "About KODANG",
+    "aboutUs": "About the Website",
+    "description": "KODANG is a modern platform for publishing news and information. Our goal is to provide reliable news and documents quickly and securely.",
+    "goals": "Our Goals",
+    "goal1": "Publishing reliable news",
+    "goal2": "Providing trusted information",
+    "goal3": "Supporting multiple languages",
+    "goal4": "Using modern technology"
+  },
+  "contact": {
+    "title": "Contact",
+    "subtitle": "Get in Touch",
+    "name": "Name",
+    "email": "Email",
+    "message": "Message",
+    "send": "Send",
+    "sendButton": "Send"
+  },
+  "footer": {
+    "quickLinks": "Quick Links",
+    "aboutText": "A modern news website for publishing news and information. We are committed to providing reliable news and documents.",
+    "copyright": "All rights reserved"
+  },
+  "common": {
+    "search": "Search",
+    "language": "Language",
+    "kurdish": "Kurdish",
+    "persian": "Persian",
+    "english": "English",
+    "readMore": "Read More",
+    "loading": "Loading...",
+    "error": "Error"
+  }
+}
+

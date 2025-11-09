@@ -1,0 +1,113 @@
+'use client'
+
+import Link from 'next/link'
+import { useTranslations, useLocale } from 'next-intl'
+import { Facebook, Twitter, Instagram, Youtube } from 'lucide-react'
+
+export default function Footer() {
+  const t = useTranslations('footer')
+  const tNav = useTranslations('nav')
+  const tCategories = useTranslations('categories')
+  const locale = useLocale()
+  const currentYear = new Date().getFullYear()
+
+  const footerLinks = {
+    quickLinks: [
+      { href: `/${locale}`, label: tNav('home') },
+      { href: `/${locale}/news`, label: tNav('news') },
+      { href: `/${locale}/categories`, label: tNav('categories') },
+      { href: `/${locale}/about`, label: tNav('about') },
+    ],
+    categories: [
+      { href: `/${locale}/category/social`, label: tCategories('social') },
+      { href: `/${locale}/category/politics`, label: tCategories('politics') },
+      { href: `/${locale}/category/sports`, label: tCategories('sports') },
+      { href: `/${locale}/category/technology`, label: tCategories('technology') },
+    ],
+  }
+
+  const socialLinks = [
+    { icon: Facebook, href: '#', label: 'Facebook' },
+    { icon: Twitter, href: '#', label: 'Twitter' },
+    { icon: Instagram, href: '#', label: 'Instagram' },
+    { icon: Youtube, href: '#', label: 'Youtube' },
+  ]
+
+  return (
+    <footer className="bg-white text-gray-700 border-t">
+      <div className="container mx-auto px-4 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          {/* About Section */}
+          <div className="col-span-1 md:col-span-2">
+            <div className="mb-4">
+              <div className="flex items-center gap-3">
+                <span className="text-3xl font-bold text-red-600">KD</span>
+                <div className="flex flex-col">
+                  <span className="text-lg font-bold text-white">KODANG</span>
+                  <span className="text-base font-semibold text-blue-400">کۆدەنگ</span>
+                </div>
+              </div>
+            </div>
+            <p className="text-gray-600 mb-4 leading-relaxed">
+              {t('aboutText')}
+            </p>
+            <div className="flex gap-4 mt-6">
+              {socialLinks.map((social) => {
+                const Icon = social.icon
+                return (
+                  <a
+                    key={social.label}
+                    href={social.href}
+                    className="p-2 bg-gray-100 rounded-full hover:bg-primary-600 hover:text-white transition-colors"
+                    aria-label={social.label}
+                  >
+                    <Icon className="h-5 w-5" />
+                  </a>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* Quick Links */}
+          <div>
+            <h4 className="text-lg font-semibold mb-4">{t('quickLinks')}</h4>
+            <ul className="space-y-2">
+              {footerLinks.quickLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-gray-600 hover:text-primary-600 transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Categories */}
+          <div>
+            <h4 className="text-lg font-semibold mb-4">بابەتەکان</h4>
+            <ul className="space-y-2">
+              {footerLinks.categories.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-gray-600 hover:text-primary-600 transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <div className="border-t border-gray-200 mt-8 pt-8 text-center text-gray-500">
+          <p>© {currentYear} کۆدەنگ. {t('copyright')}.</p>
+        </div>
+      </div>
+    </footer>
+  )
+}
+
