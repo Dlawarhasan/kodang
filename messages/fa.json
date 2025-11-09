@@ -12,7 +12,13 @@
     "latestNews": "آخرین اخبار",
     "allNews": "همه اخبار",
     "readMore": "بیشتر بخوانید",
-    "viewAll": "مشاهده همه"
+    "viewAll": "مشاهده همه",
+    "topStory": "خبر ویژه",
+    "politicsFocus": "تحلیل و خبرهای سیاسی از منابع معتبر",
+    "heroButton": "خواندن متن کامل خبر",
+    "heroSecondary": "مشاهده همه خبرها",
+    "breaking": "خبر فوری",
+    "breakingPrefix": "روی خط خبر"
   },
   "news": {
     "title": "اخبار",

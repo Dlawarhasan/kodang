@@ -25,56 +25,62 @@ export default function NewsList({ news }: NewsListProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {news.map((item) => (
+    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {news.map((item, index) => (
         <Link
           key={item.id}
           href={`/${locale}/news/${item.slug}`}
-          className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 group"
+          className="relative overflow-hidden rounded-2xl border border-slate-200/60 bg-white/95 shadow-sm transition hover:-translate-y-1 hover:border-red-500/60 hover:shadow-xl hover:shadow-red-500/10 group animate-fade-up"
+          style={{ animationDelay: `${index * 0.08}s` }}
         >
+          <span className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-red-500 via-red-400 to-blue-600 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
           {item.image && (
-            <div className="w-full aspect-[4/5] bg-gray-200 relative overflow-hidden">
+            <div className="relative w-full aspect-[4/5] overflow-hidden">
               <Image
                 src={item.image}
                 alt={item.title}
                 fill
-                className="object-cover group-hover:scale-105 transition-transform duration-300"
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
             </div>
           )}
 
-          <div className="p-6">
-            <div className="flex items-center gap-3 text-sm text-gray-600 mb-3">
-              <span className="flex items-center gap-1">
-                <Calendar className="h-4 w-4" />
-              {new Date(item.date).toLocaleDateString(locale === 'ku' ? 'ku' : locale === 'fa' ? 'fa-IR' : 'en-US', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric'
-              })}
-              </span>
+          <div className="space-y-4 p-6">
+            <div className="flex items-center gap-3 text-xs font-semibold uppercase tracking-wider text-slate-500">
               {item.category && (
-                <span className="px-2 py-1 bg-primary-100 text-primary-700 rounded text-xs">
+                <span className="inline-flex items-center gap-2 rounded-full bg-red-500/10 px-3 py-1 text-[11px] font-semibold text-red-600">
                   {getCategoryName(item.category, locale)}
                 </span>
               )}
+              <span className="flex items-center gap-2 text-slate-500">
+                <Calendar className="h-4 w-4 text-red-500" />
+                {new Date(item.date).toLocaleDateString(
+                  locale === 'ku' ? 'ckb-IQ' : locale === 'fa' ? 'fa-IR' : 'en-US',
+                  {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                  }
+                )}
+              </span>
             </div>
 
-            <h2 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-primary-600 transition-colors line-clamp-2">
+            <h2 className="text-2xl font-extrabold leading-tight text-slate-900 transition-colors duration-300 group-hover:text-red-600 line-clamp-2">
               {item.title}
             </h2>
 
-            <p className="text-gray-600 mb-4 line-clamp-3">
+            <p className="text-sm text-slate-600 line-clamp-3">
               {item.excerpt}
             </p>
 
-            <div className="flex items-center justify-between">
-              <span className="flex items-center gap-1 text-sm text-gray-500">
-                <User className="h-4 w-4" />
+            <div className="flex items-center justify-between text-sm">
+              <span className="flex items-center gap-2 font-medium text-slate-500">
+                <User className="h-4 w-4 text-slate-400" />
                 {item.author}
               </span>
-              <span className="flex items-center gap-1 text-primary-600 text-sm font-medium group-hover:gap-2 transition-all">
+              <span className="flex items-center gap-1 text-red-600 font-semibold transition-all duration-300 group-hover:gap-2">
                 {tCommon('readMore')}
                 <ArrowLeft className={locale === 'en' ? 'mr-2 h-4 w-4 rotate-180' : 'ml-2 h-4 w-4'} />
               </span>

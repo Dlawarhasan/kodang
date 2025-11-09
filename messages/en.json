@@ -12,7 +12,13 @@
     "latestNews": "Latest News",
     "allNews": "All News",
     "readMore": "Read More",
-    "viewAll": "View All"
+    "viewAll": "View All",
+    "topStory": "Top Story",
+    "politicsFocus": "Political insights and verified headlines",
+    "heroButton": "Read Full Story",
+    "heroSecondary": "Browse All News",
+    "breaking": "Breaking News",
+    "breakingPrefix": "On the Wire"
   },
   "news": {
     "title": "News",

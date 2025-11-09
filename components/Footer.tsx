@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useTranslations, useLocale } from 'next-intl'
-import { Facebook, Twitter, Instagram, Youtube } from 'lucide-react'
+import { Facebook, Instagram, Send } from 'lucide-react'
 
 export default function Footer() {
   const t = useTranslations('footer')
@@ -27,10 +27,9 @@ export default function Footer() {
   }
 
   const socialLinks = [
-    { icon: Facebook, href: '#', label: 'Facebook' },
-    { icon: Twitter, href: '#', label: 'Twitter' },
-    { icon: Instagram, href: '#', label: 'Instagram' },
-    { icon: Youtube, href: '#', label: 'Youtube' },
+    { icon: Instagram, href: 'https://www.instagram.com/kodang.official?igsh=MWN3dThraTZ4YmFldw==', label: 'Instagram' },
+    { icon: Facebook, href: 'https://www.facebook.com/share/1GqxCa4MuK/?mibextid=wwXIfr', label: 'Facebook' },
+    { icon: Send, href: 'https://t.me/kodangofficial', label: 'Telegram' },
   ]
 
   return (
@@ -58,6 +57,8 @@ export default function Footer() {
                   <a
                     key={social.label}
                     href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="p-2 bg-gray-100 rounded-full hover:bg-primary-600 hover:text-white transition-colors"
                     aria-label={social.label}
                   >

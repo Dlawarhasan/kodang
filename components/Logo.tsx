@@ -1,33 +1,38 @@
-export default function Logo({ size = 'default' }: { size?: 'default' | 'small' | 'large' }) {
-  const sizeClasses = {
-    small: { kd: 'text-3xl', kodang: 'text-lg', kurdish: 'text-base' },
+type LogoSize = 'default' | 'small' | 'large'
+type LogoVariant = 'stacked' | 'inline'
+
+interface LogoProps {
+  size?: LogoSize
+  variant?: LogoVariant
+}
+
+export default function Logo({ size = 'default', variant = 'stacked' }: LogoProps) {
+  const sizeClasses: Record<LogoSize, { kd: string; kodang: string; kurdish: string }> = {
+    small: { kd: 'text-4xl', kodang: 'text-lg', kurdish: 'text-xs' },
     default: { kd: 'text-5xl', kodang: 'text-2xl', kurdish: 'text-xl' },
     large: { kd: 'text-7xl', kodang: 'text-4xl', kurdish: 'text-2xl' },
   }
-  
+
   const sizes = sizeClasses[size]
-  
+  const isInline = variant === 'inline'
+
   return (
-    <div className="flex flex-col items-center justify-center">
-      {/* KD Logo */}
-      <div className="flex items-center justify-center mb-1">
-        <div className="relative">
-          <span 
-            className={`${sizes.kd} font-bold text-red-600 leading-none`}
-            style={{
-              fontFamily: 'system-ui, -apple-system, sans-serif',
-              letterSpacing: '-0.05em',
-            }}
-          >
-            KD
-          </span>
-        </div>
+    <div className={isInline ? 'flex items-center gap-2' : 'flex flex-col items-center justify-center'}>
+      <div className={isInline ? 'flex items-center justify-center' : 'flex items-center justify-center mb-1'}>
+        <span
+          className={`${sizes.kd} font-bold text-red-600 leading-none`}
+          style={{
+            fontFamily: 'system-ui, -apple-system, sans-serif',
+            letterSpacing: '-0.05em',
+          }}
+        >
+          KD
+        </span>
       </div>
-      
-      {/* KODANG Text */}
-      <div className="text-center">
-        <div 
-          className={`${sizes.kodang} font-bold text-black mb-0.5`}
+
+      <div className={isInline ? 'flex flex-col leading-tight' : 'text-center'}>
+        <div
+          className={`${sizes.kodang} font-bold text-black ${isInline ? '' : 'mb-0.5'}`}
           style={{
             fontFamily: 'system-ui, -apple-system, sans-serif',
             letterSpacing: '0.02em',
@@ -35,9 +40,7 @@ export default function Logo({ size = 'default' }: { size?: 'default' | 'small' 
         >
           KODANG
         </div>
-        
-        {/* کۆدەنگ Text */}
-        <div 
+        <div
           className={`${sizes.kurdish} font-semibold text-blue-700`}
           style={{
             fontFamily: 'system-ui, -apple-system, sans-serif',
