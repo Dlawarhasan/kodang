@@ -54,7 +54,7 @@ export default function CategoryFilter({ selectedCategory, onCategoryChange }: C
         {categories.map(({ id, label, icon: Icon, accent }) => {
           const isActive = selectedCategory === id
           return (
-            <button
+          <button
               key={id}
               onClick={() => onCategoryChange(id)}
               className={`group relative overflow-hidden rounded-2xl border text-left transition-all duration-300 ${
@@ -81,8 +81,8 @@ export default function CategoryFilter({ selectedCategory, onCategoryChange }: C
                   <p
                     className={`text-sm font-semibold transition-colors ${
                       isActive ? 'text-white drop-shadow-sm' : 'text-slate-700 group-hover:text-slate-900'
-                    }`}
-                  >
+            }`}
+          >
                     {label}
                   </p>
                   {id !== 'all' && (
@@ -92,7 +92,7 @@ export default function CategoryFilter({ selectedCategory, onCategoryChange }: C
                   )}
                 </div>
               </div>
-            </button>
+          </button>
           )
         })}
       </div>

@@ -102,7 +102,7 @@ export default function Home() {
                   {t('heroSecondary')}
                 </Link>
               </div>
-            </div>
+      </div>
 
             {heroArticle.tags && heroArticle.tags.length > 0 && (
               <aside className="rounded-2xl bg-white/10 p-6 backdrop-blur-lg">

@@ -369,5 +369,43 @@ It is expected that this program will have a great impact on society and create 
       },
     },
   },
+  {
+    id: '10',
+    slug: 'suicide-maziyar-ahmadi-sardasht',
+    date: '2024-11-13',
+    author: 'کۆدەنگ',
+    category: 'social',
+    image: '/images/maziyar-ahmadi.jpg',
+    tags: ['کۆدەنگ', 'کورد', 'کوردستان', 'سردشت', 'جوان'],
+    translations: {
+      ku: {
+        title: 'خودکشی مازیار احمدی ٢٢ ساڵە لە سردشت',
+        excerpt: 'ڕۆژی دووشەممە ٢٢ی ئابانی ١٤٠٤، یەک دانیشتووی بە ناوی "مازیار احمدی" ٢٢ ساڵە، کوڕی ئەمیر و خەڵکی شاری سردشت بە کردنی خودکشی لە ڕێگەی خنکاندنەوە ژیانی خۆی کۆتایی هێنا.',
+        content: `ڕۆژی دووشەممە ٢٢ی ئابانی ١٤٠٤، یەک دانیشتووی بە ناوی "مازیار احمدی" ٢٢ ساڵە، کوڕی ئەمیر و خەڵکی شاری سردشت بە کردنی خودکشی لە ڕێگەی خنکاندنەوە ژیانی خۆی کۆتایی هێنا.
+
+ئەم ڕووداوە کەش و هەواکانی کۆمەڵایەتی و دەروونی کوردستان نیشان دەدات. پێویستە کۆمەڵگا و دەسەڵاتداران بەرپرسیارێتی خۆیان بگرن بەرامبەر کێشەکانی دەروونی و کۆمەڵایەتی خەڵک.
+
+کۆدەنگ داوای دەکات کە لەم جۆرە ڕووداوانەدا زیاتر سەرنج بدەین و هەوڵ بدەین کێشەکانی کۆمەڵگا چارەسەر بکەین.`,
+      },
+      fa: {
+        title: 'خودکشی مازیار احمدی ۲۲ ساله در سردشت',
+        excerpt: 'روز دوشنبه ۲۲ آبان ماه ۱۴۰۴، یک شهروند با هویت "مازیار احمدی" ۲۲ ساله، فرزند امیر و اهل شهرستان سردشت با اقدام به خودکشی از طریق حلق آویز کردن به زندگی خود پایان داد.',
+        content: `روز دوشنبه ۲۲ آبان ماه ۱۴۰۴، یک شهروند با هویت "مازیار احمدی" ۲۲ ساله، فرزند امیر و اهل شهرستان سردشت با اقدام به خودکشی از طریق حلق آویز کردن به زندگی خود پایان داد.
+
+این رویداد نشان‌دهنده مشکلات اجتماعی و روانی در کردستان است. جامعه و مسئولان باید مسئولیت خود را در قبال مشکلات روانی و اجتماعی مردم بپذیرند.
+
+کۆدەنگ خواستار توجه بیشتر به این گونه رویدادها و تلاش برای حل مشکلات جامعه است.`,
+      },
+      en: {
+        title: 'Suicide of Maziyar Ahmadi, 22 years old, in Sardasht',
+        excerpt: 'On Monday, November 13, 2024, a citizen named "Maziyar Ahmadi", 22 years old, son of Amir and resident of Sardasht city, ended his life by committing suicide through hanging.',
+        content: `On Monday, November 13, 2024, a citizen named "Maziyar Ahmadi", 22 years old, son of Amir and resident of Sardasht city, ended his life by committing suicide through hanging.
+
+This incident reflects the social and psychological challenges in Kurdistan. Society and authorities must take responsibility for addressing the mental health and social issues of the people.
+
+KODANG calls for greater attention to such incidents and efforts to address community problems.`,
+      },
+    },
+  },
 ]
 
