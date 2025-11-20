@@ -156,18 +156,23 @@ export default function Header() {
               {isLangMenuOpen && (
                   <div className="absolute right-0 mt-2 w-48 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl z-20">
                   {languages.map((lang) => {
-                      // Get current path without locale prefix
-                      let currentPath = pathname
+                      // Get current path and remove locale prefix
+                      let pathWithoutLocale = pathname
                       
-                      // Remove locale prefix if present
-                      const localePattern = new RegExp(`^/(${locales.join('|')})(/|$)`)
-                      if (localePattern.test(currentPath)) {
-                        currentPath = currentPath.replace(localePattern, '/')
+                      // Remove any locale prefix from path
+                      for (const loc of locales) {
+                        if (pathWithoutLocale.startsWith(`/${loc}/`)) {
+                          pathWithoutLocale = pathWithoutLocale.replace(`/${loc}`, '')
+                          break
+                        } else if (pathWithoutLocale === `/${loc}`) {
+                          pathWithoutLocale = '/'
+                          break
+                        }
                       }
                       
-                      // If path is empty, make it '/'
-                      if (currentPath === '') {
-                        currentPath = '/'
+                      // Ensure path starts with /
+                      if (!pathWithoutLocale.startsWith('/')) {
+                        pathWithoutLocale = '/' + pathWithoutLocale
                       }
                       
                       // Preserve query parameters
@@ -175,32 +180,37 @@ export default function Header() {
                       const query = queryString ? `?${queryString}` : ''
                       
                       // Build target href
-                      // For default locale, don't add prefix due to 'as-needed'
+                      // For default locale (ku), no prefix needed due to 'as-needed'
                       // For other locales, add the locale prefix
                       let targetHref
                       if (lang.code === defaultLocale) {
-                        // Default locale - no prefix needed
-                        targetHref = `${currentPath}${query}`
+                        // Default locale - no prefix
+                        targetHref = `${pathWithoutLocale}${query}`
                       } else {
                         // Other locales - add prefix
-                        targetHref = `/${lang.code}${currentPath}${query}`
+                        targetHref = `/${lang.code}${pathWithoutLocale}${query}`
                       }
                       
-                      // Ensure we don't have double slashes
+                      // Clean up double slashes (but keep http:// or https://)
                       targetHref = targetHref.replace(/([^:]\/)\/+/g, '$1')
                       
                     return (
-                      <Link
+                      <button
                         key={lang.code}
-                          href={targetHref}
-                          className="flex w-full items-center gap-3 px-4 py-3 text-sm font-medium text-slate-600 transition hover:bg-slate-50"
                         onClick={() => {
                           setIsLangMenuOpen(false)
+                          // If clicking current language, do nothing
+                          if (lang.code === locale) {
+                            return
+                          }
+                          // Navigate to new locale
+                          window.location.href = targetHref
                         }}
+                        className="flex w-full items-center gap-3 px-4 py-3 text-sm font-medium text-slate-600 transition hover:bg-slate-50 text-left"
                       >
                           <span className="text-lg">{lang.flag}</span>
                         <span>{lang.name}</span>
-                      </Link>
+                      </button>
                     )
                   })}
                 </div>
