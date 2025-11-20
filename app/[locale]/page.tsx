@@ -101,9 +101,9 @@ export default function Home() {
   const breakingItems = uniqueBreaking
     .filter((item: any) => item.slug !== heroArticle?.slug)
     .slice(0, 10) // Limit to 10 items
-  // Remaining news (general section, excluding hero and breaking items)
-  // Note: Posts in breaking news should still appear in their category sections
-  const remainingNews = generalArticles.filter((item: any) => 
+  // Remaining news: Show all posts except hero article
+  // Posts in breaking news should also appear in the main list
+  const remainingNews = filteredNews.filter((item: any) => 
     item.slug !== heroArticle?.slug
   )
 
