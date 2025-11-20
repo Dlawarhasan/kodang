@@ -28,6 +28,18 @@ export default function Home() {
       console.error('Error loading news:', error)
       setLoading(false)
     })
+    
+    // Auto-refresh every 30 seconds to show new posts
+    const interval = setInterval(() => {
+      getNews(locale).then(data => {
+        console.log('Auto-refresh: loaded', data.length, 'items')
+        setNews(data)
+      }).catch(error => {
+        console.error('Auto-refresh error:', error)
+      })
+    }, 30000) // 30 seconds
+    
+    return () => clearInterval(interval)
   }, [locale, selectedCategory])
 
   const filteredNews = useMemo(() => {

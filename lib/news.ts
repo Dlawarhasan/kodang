@@ -168,13 +168,17 @@ export async function getNews(locale: string = 'ku'): Promise<NewsItem[]> {
       ? window.location.origin 
       : (process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000')
     
-    const apiUrl = `${baseUrl}/api/news?locale=${locale}`
+    // Add timestamp to prevent caching
+    const timestamp = new Date().getTime()
+    const apiUrl = `${baseUrl}/api/news?locale=${locale}&_t=${timestamp}`
     console.log('Fetching news from:', apiUrl)
     
     const response = await fetch(apiUrl, {
       cache: 'no-store',
       headers: {
         'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
       },
     })
     
@@ -216,10 +220,14 @@ export async function getNewsBySlug(slug: string, locale: string = 'ku'): Promis
       ? window.location.origin 
       : (process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000')
     
-    const response = await fetch(`${baseUrl}/api/news/${encodeURIComponent(slug)}?locale=${locale}`, {
+    // Add timestamp to prevent caching
+    const timestamp = new Date().getTime()
+    const response = await fetch(`${baseUrl}/api/news/${encodeURIComponent(slug)}?locale=${locale}&_t=${timestamp}`, {
       cache: 'no-store',
       headers: {
         'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
       },
     })
     
