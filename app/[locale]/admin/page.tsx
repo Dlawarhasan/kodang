@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
 import { Save, Upload, Image as ImageIcon, Video, Music, X, Edit, Trash2, Plus, List, Lock } from 'lucide-react'
 import { getNews, type NewsItem } from '@/lib/news'
+import { newsDataWithTranslations } from '@/lib/news-translations'
 import Link from 'next/link'
 import Image from 'next/image'
 
@@ -140,11 +141,22 @@ export default function AdminPage() {
       
       const data = await response.json()
       
-      if (!data.news) {
-        throw new Error('پۆست نەدۆزرایەوە')
-      }
+      let post = data.news
       
-      const post = data.news
+      // Fallback to static data if API doesn't have the post
+      if (!post) {
+        const staticPost = newsDataWithTranslations.find(item => item.slug === slug)
+        if (staticPost) {
+          post = {
+            ...staticPost,
+            title: staticPost.translations[locale as keyof typeof staticPost.translations]?.title || staticPost.translations.ku.title,
+            excerpt: staticPost.translations[locale as keyof typeof staticPost.translations]?.excerpt || staticPost.translations.ku.excerpt,
+            content: staticPost.translations[locale as keyof typeof staticPost.translations]?.content || staticPost.translations.ku.content,
+          }
+        } else {
+          throw new Error('پۆست نەدۆزرایەوە')
+        }
+      }
       setFormData({
         titleKu: post.translations?.ku?.title || '',
         titleFa: post.translations?.fa?.title || '',
