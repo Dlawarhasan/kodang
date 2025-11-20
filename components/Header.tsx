@@ -170,6 +170,11 @@ export default function Header() {
                         }
                       }
                       
+                      // If path is empty or just '/', ensure it's '/'
+                      if (!pathWithoutLocale || pathWithoutLocale === '') {
+                        pathWithoutLocale = '/'
+                      }
+                      
                       // Ensure path starts with /
                       if (!pathWithoutLocale.startsWith('/')) {
                         pathWithoutLocale = '/' + pathWithoutLocale
@@ -184,7 +189,7 @@ export default function Header() {
                       // For other locales, add the locale prefix
                       let targetHref
                       if (lang.code === defaultLocale) {
-                        // Default locale - no prefix
+                        // Default locale - no prefix, just the path + query
                         targetHref = `${pathWithoutLocale}${query}`
                       } else {
                         // Other locales - add prefix
@@ -193,6 +198,16 @@ export default function Header() {
                       
                       // Clean up double slashes (but keep http:// or https://)
                       targetHref = targetHref.replace(/([^:]\/)\/+/g, '$1')
+                      
+                      // Remove trailing slash if not root (except for query params)
+                      if (targetHref !== '/' && targetHref.endsWith('/') && !query) {
+                        targetHref = targetHref.slice(0, -1)
+                      }
+                      
+                      // Use full URL for navigation to ensure proper locale change
+                      const fullUrl = typeof window !== 'undefined' 
+                        ? `${window.location.origin}${targetHref}`
+                        : targetHref
                       
                     return (
                       <button
@@ -203,8 +218,9 @@ export default function Header() {
                           if (lang.code === locale) {
                             return
                           }
-                          // Navigate to new locale
-                          window.location.href = targetHref
+                          // Navigate to new locale with full page reload
+                          console.log('Switching to locale:', lang.code, 'URL:', fullUrl)
+                          window.location.href = fullUrl
                         }}
                         className="flex w-full items-center gap-3 px-4 py-3 text-sm font-medium text-slate-600 transition hover:bg-slate-50 text-left"
                       >
