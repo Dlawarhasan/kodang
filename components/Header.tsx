@@ -185,16 +185,8 @@ export default function Header() {
                       const query = queryString ? `?${queryString}` : ''
                       
                       // Build target href
-                      // For default locale (ku), no prefix needed due to 'as-needed'
-                      // For other locales, add the locale prefix
-                      let targetHref
-                      if (lang.code === defaultLocale) {
-                        // Default locale - no prefix, just the path + query
-                        targetHref = `${pathWithoutLocale}${query}`
-                      } else {
-                        // Other locales - add prefix
-                        targetHref = `/${lang.code}${pathWithoutLocale}${query}`
-                      }
+                      // Always add locale prefix for consistent navigation
+                      const targetHref = `/${lang.code}${pathWithoutLocale}${query}`
                       
                       // Clean up double slashes (but keep http:// or https://)
                       targetHref = targetHref.replace(/([^:]\/)\/+/g, '$1')
