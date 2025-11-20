@@ -168,22 +168,32 @@ export async function getNews(locale: string = 'ku'): Promise<NewsItem[]> {
       ? window.location.origin 
       : (process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000')
     
-    const response = await fetch(`${baseUrl}/api/news?locale=${locale}`, {
+    const apiUrl = `${baseUrl}/api/news?locale=${locale}`
+    console.log('Fetching news from:', apiUrl)
+    
+    const response = await fetch(apiUrl, {
       cache: 'no-store',
       headers: {
         'Content-Type': 'application/json',
       },
     })
     
+    console.log('API response status:', response.status, response.statusText)
+    
     if (response.ok) {
       const data = await response.json()
       console.log('Fetched news from API:', data.news?.length || 0, 'items')
-      return data.news || []
+      if (data.news && Array.isArray(data.news) && data.news.length > 0) {
+        return data.news
+      } else {
+        console.log('API returned empty array, using static data')
+      }
     } else {
-      console.log('API response not OK:', response.status, response.statusText)
+      const errorText = await response.text()
+      console.error('API response error:', response.status, response.statusText, errorText)
     }
-  } catch (error) {
-    console.log('API not available, using static data:', error)
+  } catch (error: any) {
+    console.error('API fetch error:', error.message, error)
   }
 
   // Fallback to static data
