@@ -156,23 +156,26 @@ export default function Header() {
               {isLangMenuOpen && (
                   <div className="absolute right-0 mt-2 w-48 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl z-20">
                   {languages.map((lang) => {
-                      const currentPath =
-                        typeof window !== 'undefined'
-                          ? window.location.pathname.replace(/^\/[^/]+/, '')
-                      : ''
-                      const normalizedPath =
-                        currentPath === ''
-                          ? ''
-                          : currentPath.startsWith('/')
-                            ? currentPath
-                            : `/${currentPath}`
-                      const targetHref = `/${lang.code}${normalizedPath}`
+                      // Get current path without locale
+                      const currentPath = pathname.replace(/^\/[^/]+/, '') || '/'
+                      // Preserve query parameters
+                      const queryString = searchParams.toString()
+                      const query = queryString ? `?${queryString}` : ''
+                      // Build target href with new locale
+                      const targetHref = `/${lang.code}${currentPath}${query}`
                     return (
                       <Link
                         key={lang.code}
                           href={targetHref}
                           className="flex w-full items-center gap-3 px-4 py-3 text-sm font-medium text-slate-600 transition hover:bg-slate-50"
-                        onClick={() => setIsLangMenuOpen(false)}
+                        onClick={(e) => {
+                          setIsLangMenuOpen(false)
+                          // If clicking the current language, don't navigate
+                          if (lang.code === locale) {
+                            e.preventDefault()
+                            return
+                          }
+                        }}
                       >
                           <span className="text-lg">{lang.flag}</span>
                         <span>{lang.name}</span>
@@ -197,24 +200,41 @@ export default function Header() {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <nav className="md:hidden py-4 border-t">
-            {navItems.map((item) => (
-              <button
-                key={item.category}
-                onClick={() => {
-                  setSelectedCategory(item.category)
+          <nav className="md:hidden py-4 border-t space-y-4">
+            {/* Category Filter for Mobile */}
+            <div className="px-4">
+              <CategoryFilter
+                selectedCategory={selectedCategory}
+                onCategoryChange={(category) => {
+                  setSelectedCategory(category)
                   setIsMenuOpen(false)
                   const params = new URLSearchParams()
-                  params.set('category', item.category)
+                  params.set('category', category)
                   router.push(`/${locale}?${params.toString()}`)
                 }}
-                className={`block w-full text-left py-2 text-gray-700 hover:text-primary-600 transition-colors ${
-                  selectedCategory === item.category ? 'font-bold text-red-600' : ''
-                }`}
-              >
-                {item.label}
-              </button>
-            ))}
+              />
+            </div>
+            
+            {/* Category Navigation Items */}
+            <div className="border-t pt-4">
+              {navItems.map((item) => (
+                <button
+                  key={item.category}
+                  onClick={() => {
+                    setSelectedCategory(item.category)
+                    setIsMenuOpen(false)
+                    const params = new URLSearchParams()
+                    params.set('category', item.category)
+                    router.push(`/${locale}?${params.toString()}`)
+                  }}
+                  className={`block w-full text-left px-4 py-2 text-gray-700 hover:text-primary-600 transition-colors ${
+                    selectedCategory === item.category ? 'font-bold text-red-600 bg-red-50' : ''
+                  }`}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
           </nav>
         )}
       </div>
