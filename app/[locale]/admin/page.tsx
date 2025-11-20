@@ -562,35 +562,35 @@ export default function AdminPage() {
                 <Lock className="h-5 w-5" />
                 دەرچوون
               </button>
-            <button
-              onClick={() => {
-                setMode('add')
-                setEditingSlug(null)
-                setFormData({
-                  titleKu: '',
-                  titleFa: '',
-                  titleEn: '',
-                  excerptKu: '',
-                  excerptFa: '',
-                  excerptEn: '',
-                  contentKu: '',
-                  contentFa: '',
-                  contentEn: '',
-                  category: 'social',
-                  author: 'کۆدەنگ',
-                  tags: '',
-                  image: '',
-                  video: '',
-                  audio: '',
-                  date: new Date().toISOString().split('T')[0],
-                })
-              }}
-              className="flex items-center gap-2 bg-red-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-600 transition"
-            >
-              <Plus className="h-5 w-5" />
-              پۆستی نوێ
-            </button>
-          </div>
+              <button
+                onClick={() => {
+                  setMode('add')
+                  setEditingSlug(null)
+                  setFormData({
+                    titleKu: '',
+                    titleFa: '',
+                    titleEn: '',
+                    excerptKu: '',
+                    excerptFa: '',
+                    excerptEn: '',
+                    contentKu: '',
+                    contentFa: '',
+                    contentEn: '',
+                    category: 'social',
+                    author: 'کۆدەنگ',
+                    tags: '',
+                    image: '',
+                    video: '',
+                    audio: '',
+                    date: new Date().toISOString().split('T')[0],
+                  })
+                }}
+                className="flex items-center gap-2 bg-red-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-600 transition"
+              >
+                <Plus className="h-5 w-5" />
+                پۆستی نوێ
+              </button>
+            </div>
 
           {message && (
             <div className={`rounded-lg p-4 ${
