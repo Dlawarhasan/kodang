@@ -1,8 +1,9 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { notFound } from 'next/navigation'
 import { useTranslations, useLocale } from 'next-intl'
-import { getNews, getNewsBySlug } from '@/lib/news'
+import { getNews, getNewsBySlug, type NewsItem } from '@/lib/news'
 import { Calendar, User, ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -20,7 +21,26 @@ export default function NewsDetail({
   const resolvedParams = 'then' in params ? use(params) : params
   const t = useTranslations('news')
   const locale = useLocale()
-  const article = getNewsBySlug(resolvedParams.slug, locale)
+  const [article, setArticle] = useState<NewsItem | undefined>(undefined)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    getNewsBySlug(resolvedParams.slug, locale).then(data => {
+      setArticle(data)
+      setLoading(false)
+      if (!data) {
+        notFound()
+      }
+    })
+  }, [resolvedParams.slug, locale])
+
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-8 text-center">
+        <p className="text-gray-500 text-lg">بارکردن...</p>
+      </div>
+    )
+  }
 
   if (!article) {
     notFound()
@@ -42,8 +62,16 @@ export default function NewsDetail({
             <VideoPlayer videoUrl={article.video} title={article.title} />
           </div>
         )}
-        {article.image && !article.video && (
-          <div className="w-full h-96 bg-gray-200 relative overflow-hidden">
+        {article.audio && (
+          <div className="p-8 pb-0">
+            <div className="w-full bg-slate-100 rounded-lg p-6">
+              <h3 className="text-lg font-semibold text-slate-900 mb-4">ئۆدیۆ</h3>
+              <audio src={article.audio} controls className="w-full" />
+            </div>
+          </div>
+        )}
+        {article.image && !article.video && !article.audio && (
+          <div className="relative w-full aspect-[4/5] bg-gray-200 overflow-hidden">
             <Image
               src={article.image}
               alt={article.title}
@@ -54,8 +82,8 @@ export default function NewsDetail({
             />
           </div>
         )}
-        {article.image && article.video && (
-          <div className="w-full h-64 bg-gray-200 relative overflow-hidden">
+        {article.image && (article.video || article.audio) && (
+          <div className="relative w-full aspect-[4/5] bg-gray-200 overflow-hidden">
             <Image
               src={article.image}
               alt={article.title}

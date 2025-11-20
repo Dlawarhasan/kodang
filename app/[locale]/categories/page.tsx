@@ -11,10 +11,15 @@ export default function CategoriesPage() {
   const categories = [
     { id: 'social', label: t('social') },
     { id: 'politics', label: t('politics') },
-    { id: 'sports', label: t('sports') },
-    { id: 'technology', label: t('technology') },
     { id: 'culture', label: t('culture') },
     { id: 'health', label: t('health') },
+    { id: 'women', label: t('women') },
+    { id: 'workers', label: t('workers') },
+    { id: 'kolbar', label: t('kolbar') },
+    { id: 'children', label: t('children') },
+    { id: 'arrest', label: t('arrest') },
+    { id: 'students', label: t('students') },
+    { id: 'suicide', label: t('suicide') },
   ]
 
   return (

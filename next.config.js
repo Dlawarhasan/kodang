@@ -6,11 +6,19 @@ const withNextIntl = require('next-intl/plugin')(
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ['images.unsplash.com'],
+    domains: ['images.unsplash.com', 'mllmvvxjkuiihaekswpd.supabase.co'],
     remotePatterns: [
       {
         protocol: 'https',
         hostname: 'images.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.supabase.co',
+      },
+      {
+        protocol: 'https',
+        hostname: 'mllmvvxjkuiihaekswpd.supabase.co',
       },
     ],
   },

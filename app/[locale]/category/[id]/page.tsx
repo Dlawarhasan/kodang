@@ -1,8 +1,9 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
 import NewsList from '@/components/NewsList'
-import { getNewsByCategory } from '@/lib/news'
+import { getNewsByCategory, type NewsItem } from '@/lib/news'
 import { notFound } from 'next/navigation'
 import { use } from 'react'
 
@@ -17,24 +18,36 @@ export default function CategoryPage({
   
   const t = useTranslations('categories')
   const locale = useLocale()
+  const [news, setNews] = useState<NewsItem[]>([])
+  const [loading, setLoading] = useState(true)
   
-  const validCategories = ['all', 'social', 'politics', 'sports', 'technology', 'culture', 'health']
+  const validCategories = ['all', 'social', 'politics', 'culture', 'health', 'women', 'workers', 'kolbar', 'children', 'arrest', 'students', 'suicide']
   const categoryId = resolvedParams.id
   
   if (!validCategories.includes(categoryId)) {
     notFound()
   }
   
-  const news = getNewsByCategory(categoryId, locale)
+  useEffect(() => {
+    getNewsByCategory(categoryId, locale).then(data => {
+      setNews(data)
+      setLoading(false)
+    })
+  }, [categoryId, locale])
   
   const categoryNames: Record<string, string> = {
     all: t('all'),
     social: t('social'),
     politics: t('politics'),
-    sports: t('sports'),
-    technology: t('technology'),
     culture: t('culture'),
     health: t('health'),
+    women: t('women'),
+    workers: t('workers'),
+    kolbar: t('kolbar'),
+    children: t('children'),
+    arrest: t('arrest'),
+    students: t('students'),
+    suicide: t('suicide'),
   }
 
   return (
@@ -48,7 +61,13 @@ export default function CategoryPage({
         </p>
       </div>
 
+      {loading ? (
+        <div className="text-center py-12">
+          <p className="text-gray-500 text-lg">بارکردن...</p>
+        </div>
+      ) : (
       <NewsList news={news} />
+      )}
     </div>
   )
 }

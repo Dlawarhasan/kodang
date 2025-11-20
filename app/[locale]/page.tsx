@@ -1,22 +1,33 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useTranslations, useLocale } from 'next-intl'
+import { useSearchParams } from 'next/navigation'
 import { Calendar, Flame, ArrowRight } from 'lucide-react'
 import NewsList from '@/components/NewsList'
-import CategoryFilter from '@/components/CategoryFilter'
-import { getNews } from '@/lib/news'
+import { getNews, type NewsItem } from '@/lib/news'
 import { getCategoryName } from '@/lib/category-mapping'
 
 export default function Home() {
   const t = useTranslations('home')
   const locale = useLocale()
-  const news = getNews(locale)
-  const [selectedCategory, setSelectedCategory] = useState<string>('all')
+  const searchParams = useSearchParams()
+  const [news, setNews] = useState<NewsItem[]>([])
+  const [loading, setLoading] = useState(true)
+  const selectedCategory = searchParams.get('category') || 'all'
+
+  useEffect(() => {
+    setLoading(true)
+    getNews(locale).then(data => {
+      setNews(data)
+      setLoading(false)
+    })
+  }, [locale])
 
   const filteredNews = useMemo(() => {
+    if (!Array.isArray(news)) return []
     if (selectedCategory === 'all') {
       return news
     }
@@ -26,6 +37,14 @@ export default function Home() {
   const heroArticle = filteredNews[0]
   const remainingNews = heroArticle ? filteredNews.slice(1) : filteredNews
   const breakingItems = filteredNews.slice(0, 6)
+
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-10 text-center">
+        <p className="text-gray-500 text-lg">بارکردن...</p>
+      </div>
+    )
+  }
 
   return (
     <div className="container mx-auto px-4 py-10 space-y-10">
@@ -153,10 +172,6 @@ export default function Home() {
       )}
 
       <section className="space-y-8">
-        <CategoryFilter
-          selectedCategory={selectedCategory}
-          onCategoryChange={setSelectedCategory}
-        />
         <NewsList news={remainingNews} />
       </section>
     </div>

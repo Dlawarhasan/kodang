@@ -22,6 +22,7 @@
   },
   "news": {
     "title": "اخبار",
+    "subtitle": "دنبال کردن آخرین اخبار",
     "backToList": "بازگشت به لیست اخبار",
     "publishedOn": "منتشر شده در",
     "author": "نویسنده",
@@ -35,10 +36,15 @@
     "all": "همه",
     "social": "اجتماعی",
     "politics": "سیاسی",
-    "sports": "ورزش",
-    "technology": "فناوری",
     "culture": "فرهنگ",
-    "health": "سلامت"
+    "health": "سلامت",
+    "women": "زنان",
+    "workers": "کارگر",
+    "kolbar": "کولبر",
+    "children": "کودکان",
+    "arrest": "بازداشت",
+    "students": "دانشجو",
+    "suicide": "خودکشی"
   },
   "about": {
     "title": "درباره",

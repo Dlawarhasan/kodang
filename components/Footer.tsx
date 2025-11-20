@@ -21,8 +21,15 @@ export default function Footer() {
     categories: [
       { href: `/${locale}/category/social`, label: tCategories('social') },
       { href: `/${locale}/category/politics`, label: tCategories('politics') },
-      { href: `/${locale}/category/sports`, label: tCategories('sports') },
-      { href: `/${locale}/category/technology`, label: tCategories('technology') },
+      { href: `/${locale}/category/culture`, label: tCategories('culture') },
+      { href: `/${locale}/category/health`, label: tCategories('health') },
+      { href: `/${locale}/category/women`, label: tCategories('women') },
+      { href: `/${locale}/category/workers`, label: tCategories('workers') },
+      { href: `/${locale}/category/kolbar`, label: tCategories('kolbar') },
+      { href: `/${locale}/category/children`, label: tCategories('children') },
+      { href: `/${locale}/category/arrest`, label: tCategories('arrest') },
+      { href: `/${locale}/category/students`, label: tCategories('students') },
+      { href: `/${locale}/category/suicide`, label: tCategories('suicide') },
     ],
   }
 

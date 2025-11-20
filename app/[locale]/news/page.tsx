@@ -1,13 +1,22 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
 import NewsList from '@/components/NewsList'
-import { getNews } from '@/lib/news'
+import { getNews, type NewsItem } from '@/lib/news'
 
 export default function NewsPage() {
   const t = useTranslations('news')
   const locale = useLocale()
-  const news = getNews(locale)
+  const [news, setNews] = useState<NewsItem[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    getNews(locale).then(data => {
+      setNews(data)
+      setLoading(false)
+    })
+  }, [locale])
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -20,7 +29,13 @@ export default function NewsPage() {
         </p>
       </div>
 
+      {loading ? (
+        <div className="text-center py-12">
+          <p className="text-gray-500 text-lg">{t('loading') || 'بارکردن...'}</p>
+        </div>
+      ) : (
       <NewsList news={news} />
+      )}
     </div>
   )
 }

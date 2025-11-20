@@ -158,7 +158,21 @@ export interface NewsItem {
   },
 ]*/ // Old data removed
 
-export function getNews(locale: string = 'ku'): NewsItem[] {
+export async function getNews(locale: string = 'ku'): Promise<NewsItem[]> {
+  // Try to fetch from API first
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/news?locale=${locale}`, {
+      cache: 'no-store'
+    })
+    if (response.ok) {
+      const data = await response.json()
+      return data.news || []
+    }
+  } catch (error) {
+    console.log('API not available, using static data')
+  }
+
+  // Fallback to static data
   return newsDataWithTranslations.map(item => ({
     ...item,
     title: item.translations[locale as keyof typeof item.translations]?.title || item.translations.ku.title,
@@ -169,7 +183,21 @@ export function getNews(locale: string = 'ku'): NewsItem[] {
   )
 }
 
-export function getNewsBySlug(slug: string, locale: string = 'ku'): NewsItem | undefined {
+export async function getNewsBySlug(slug: string, locale: string = 'ku'): Promise<NewsItem | undefined> {
+  // Try to fetch from API first
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/news/${slug}?locale=${locale}`, {
+      cache: 'no-store'
+    })
+    if (response.ok) {
+      const data = await response.json()
+      return data.news
+    }
+  } catch (error) {
+    console.log('API not available, using static data')
+  }
+
+  // Fallback to static data
   const item = newsDataWithTranslations.find(item => item.slug === slug)
   if (!item) return undefined
   
@@ -183,8 +211,8 @@ export function getNewsBySlug(slug: string, locale: string = 'ku'): NewsItem | u
   }
 }
 
-export function getNewsByCategory(category: string, locale: string = 'ku'): NewsItem[] {
-  const allNews = getNews(locale)
+export async function getNewsByCategory(category: string, locale: string = 'ku'): Promise<NewsItem[]> {
+  const allNews = await getNews(locale)
   if (category === 'all') {
     return allNews
   }

@@ -22,6 +22,7 @@
   },
   "news": {
     "title": "News",
+    "subtitle": "Follow the latest news",
     "backToList": "Back to News List",
     "publishedOn": "Published on",
     "author": "Author",
@@ -35,10 +36,15 @@
     "all": "All",
     "social": "Social",
     "politics": "Politics",
-    "sports": "Sports",
-    "technology": "Technology",
     "culture": "Culture",
-    "health": "Health"
+    "health": "Health",
+    "women": "Women",
+    "workers": "Workers",
+    "kolbar": "Kolbar",
+    "children": "Children",
+    "arrest": "Arrest",
+    "students": "Students",
+    "suicide": "Suicide"
   },
   "about": {
     "title": "About",

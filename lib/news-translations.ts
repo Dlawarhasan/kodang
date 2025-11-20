@@ -18,6 +18,7 @@ export interface NewsItemBase {
   category?: string
   image?: string
   video?: string
+  audio?: string
   images?: string[]
   tags?: string[]
   translations: NewsTranslations
@@ -30,7 +31,7 @@ export const newsDataWithTranslations: NewsItemBase[] = [
     slug: 'sample-instagram-style-post',
     date: '2025-11-05',
     author: 'دەستەی دەستکاریکردن',
-    category: 'technology',
+    category: 'social',
     image: 'https://images.unsplash.com/photo-1518779578993-ec3579fee39f?w=1080&h=1350&fit=crop',
     tags: ['sample', 'instagram', 'aspect-4-5'],
     translations: {
@@ -177,7 +178,7 @@ This tournament is one of the most important sports tournaments in Kurdistan and
     slug: 'technology-ai-development',
     date: '2025-11-01',
     author: 'نووسەری تەکنەلۆژیا',
-    category: 'technology',
+    category: 'social',
     image: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&h=600&fit=crop',
     images: [
       'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=600&fit=crop',
