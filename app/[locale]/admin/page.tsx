@@ -591,6 +591,7 @@ export default function AdminPage() {
                 پۆستی نوێ
               </button>
             </div>
+          </div>
 
           {message && (
             <div className={`rounded-lg p-4 ${
