@@ -21,10 +21,14 @@ export default function Home() {
   useEffect(() => {
     setLoading(true)
     getNews(locale).then(data => {
+      console.log('Homepage loaded news:', data.length, 'items')
       setNews(data)
       setLoading(false)
+    }).catch(error => {
+      console.error('Error loading news:', error)
+      setLoading(false)
     })
-  }, [locale])
+  }, [locale, selectedCategory])
 
   const filteredNews = useMemo(() => {
     if (!Array.isArray(news)) return []

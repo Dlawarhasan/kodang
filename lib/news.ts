@@ -163,18 +163,31 @@ export interface NewsItem {
 export async function getNews(locale: string = 'ku'): Promise<NewsItem[]> {
   // Try to fetch from API first
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/news?locale=${locale}`, {
-      cache: 'no-store'
+    // Use window.location.origin in browser, or process.env in server
+    const baseUrl = typeof window !== 'undefined' 
+      ? window.location.origin 
+      : (process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000')
+    
+    const response = await fetch(`${baseUrl}/api/news?locale=${locale}`, {
+      cache: 'no-store',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     })
+    
     if (response.ok) {
       const data = await response.json()
+      console.log('Fetched news from API:', data.news?.length || 0, 'items')
       return data.news || []
+    } else {
+      console.log('API response not OK:', response.status, response.statusText)
     }
   } catch (error) {
-    console.log('API not available, using static data')
+    console.log('API not available, using static data:', error)
   }
 
   // Fallback to static data
+  console.log('Using static data fallback')
   return newsDataWithTranslations.map(item => ({
     ...item,
     title: item.translations[locale as keyof typeof item.translations]?.title || item.translations.ku.title,
@@ -188,15 +201,26 @@ export async function getNews(locale: string = 'ku'): Promise<NewsItem[]> {
 export async function getNewsBySlug(slug: string, locale: string = 'ku'): Promise<NewsItem | undefined> {
   // Try to fetch from API first
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/news/${slug}?locale=${locale}`, {
-      cache: 'no-store'
+    // Use window.location.origin in browser, or process.env in server
+    const baseUrl = typeof window !== 'undefined' 
+      ? window.location.origin 
+      : (process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000')
+    
+    const response = await fetch(`${baseUrl}/api/news/${encodeURIComponent(slug)}?locale=${locale}`, {
+      cache: 'no-store',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     })
+    
     if (response.ok) {
       const data = await response.json()
       return data.news
+    } else {
+      console.log('API response not OK for slug:', response.status, response.statusText)
     }
   } catch (error) {
-    console.log('API not available, using static data')
+    console.log('API not available, using static data:', error)
   }
 
   // Fallback to static data
