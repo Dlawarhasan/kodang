@@ -100,10 +100,32 @@ export default function AdminPage() {
   const loadNews = useCallback(async () => {
     setLoading(true)
     try {
-      const data = await getNews(locale)
-      setNewsList(data)
+      // Fetch directly from API to ensure we get the latest data
+      const baseUrl = typeof window !== 'undefined' ? window.location.origin : ''
+      const response = await fetch(`${baseUrl}/api/news?locale=${locale}`, {
+        cache: 'no-store',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      
+      if (response.ok) {
+        const data = await response.json()
+        setNewsList(data.news || [])
+      } else {
+        // Fallback to getNews if API fails
+        const data = await getNews(locale)
+        setNewsList(data)
+      }
     } catch (error) {
-      setMessage({ type: 'error', text: 'هەڵە لە بارکردنی پۆستەکان' })
+      console.error('Error loading news:', error)
+      // Fallback to getNews if fetch fails
+      try {
+        const data = await getNews(locale)
+        setNewsList(data)
+      } catch (fallbackError) {
+        setMessage({ type: 'error', text: 'هەڵە لە بارکردنی پۆستەکان' })
+      }
     } finally {
       setLoading(false)
     }
@@ -390,6 +412,7 @@ export default function AdminPage() {
       }
 
       const data = await response.json()
+      console.log('Submit response:', data)
 
       if (data.success) {
         setMessage({ type: 'success', text: editingSlug ? 'پۆست بە سەرکەوتووی نوێ کرا!' : 'پۆست بە سەرکەوتووی زیاد کرا!' })
@@ -421,7 +444,10 @@ export default function AdminPage() {
         setAudioPreview('')
         setEditingSlug(null)
         setMode('list')
-        loadNews()
+        // Wait a bit before reloading to ensure database is updated
+        setTimeout(() => {
+          loadNews()
+        }, 500)
       } else {
         throw new Error(data.error || 'هەڵە لە زیادکردنی پۆست')
       }
