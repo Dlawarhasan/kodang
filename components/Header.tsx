@@ -186,7 +186,7 @@ export default function Header() {
                       
                       // Build target href
                       // Always add locale prefix for consistent navigation
-                      const targetHref = `/${lang.code}${pathWithoutLocale}${query}`
+                      let targetHref = `/${lang.code}${pathWithoutLocale}${query}`
                       
                       // Clean up double slashes (but keep http:// or https://)
                       targetHref = targetHref.replace(/([^:]\/)\/+/g, '$1')
