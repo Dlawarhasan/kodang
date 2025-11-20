@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useTranslations, useLocale } from 'next-intl'
 import { Menu, X, Globe, Search, Flame, Facebook, Send, Instagram } from 'lucide-react'
-import { locales } from '@/i18n'
+import { locales, defaultLocale } from '@/i18n'
 import Logo from './Logo'
 import CategoryFilter from './CategoryFilter'
 import { getCategoryName } from '@/lib/category-mapping'
@@ -156,25 +156,46 @@ export default function Header() {
               {isLangMenuOpen && (
                   <div className="absolute right-0 mt-2 w-48 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl z-20">
                   {languages.map((lang) => {
-                      // Get current path without locale
-                      const currentPath = pathname.replace(/^\/[^/]+/, '') || '/'
+                      // Get current path without locale prefix
+                      let currentPath = pathname
+                      
+                      // Remove locale prefix if present
+                      const localePattern = new RegExp(`^/(${locales.join('|')})(/|$)`)
+                      if (localePattern.test(currentPath)) {
+                        currentPath = currentPath.replace(localePattern, '/')
+                      }
+                      
+                      // If path is empty, make it '/'
+                      if (currentPath === '') {
+                        currentPath = '/'
+                      }
+                      
                       // Preserve query parameters
                       const queryString = searchParams.toString()
                       const query = queryString ? `?${queryString}` : ''
-                      // Build target href with new locale
-                      const targetHref = `/${lang.code}${currentPath}${query}`
+                      
+                      // Build target href
+                      // For default locale, don't add prefix due to 'as-needed'
+                      // For other locales, add the locale prefix
+                      let targetHref
+                      if (lang.code === defaultLocale) {
+                        // Default locale - no prefix needed
+                        targetHref = `${currentPath}${query}`
+                      } else {
+                        // Other locales - add prefix
+                        targetHref = `/${lang.code}${currentPath}${query}`
+                      }
+                      
+                      // Ensure we don't have double slashes
+                      targetHref = targetHref.replace(/([^:]\/)\/+/g, '$1')
+                      
                     return (
                       <Link
                         key={lang.code}
                           href={targetHref}
                           className="flex w-full items-center gap-3 px-4 py-3 text-sm font-medium text-slate-600 transition hover:bg-slate-50"
-                        onClick={(e) => {
+                        onClick={() => {
                           setIsLangMenuOpen(false)
-                          // If clicking the current language, don't navigate
-                          if (lang.code === locale) {
-                            e.preventDefault()
-                            return
-                          }
                         }}
                       >
                           <span className="text-lg">{lang.flag}</span>
