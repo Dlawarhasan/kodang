@@ -2,13 +2,18 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
-import { Save, Upload, Image as ImageIcon, Video, Music, X, Edit, Trash2, Plus, List } from 'lucide-react'
+import { Save, Upload, Image as ImageIcon, Video, Music, X, Edit, Trash2, Plus, List, Lock } from 'lucide-react'
 import { getNews, type NewsItem } from '@/lib/news'
 import Link from 'next/link'
 import Image from 'next/image'
 
 export default function AdminPage() {
   const locale = useLocale()
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true)
+  const [loginUsername, setLoginUsername] = useState('')
+  const [loginPassword, setLoginPassword] = useState('')
+  const [loginError, setLoginError] = useState('')
   const [mode, setMode] = useState<'list' | 'add' | 'edit'>('list')
   const [editingSlug, setEditingSlug] = useState<string | null>(null)
   const [newsList, setNewsList] = useState<NewsItem[]>([])
@@ -41,6 +46,55 @@ export default function AdminPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
 
+  // Check authentication on mount
+  useEffect(() => {
+    const token = sessionStorage.getItem('admin_token')
+    if (token) {
+      setIsAuthenticated(true)
+    }
+    setIsCheckingAuth(false)
+  }, [])
+
+  // Handle login
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoginError('')
+
+    try {
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: loginUsername,
+          password: loginPassword,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        sessionStorage.setItem('admin_token', data.token)
+        setIsAuthenticated(true)
+        setLoginUsername('')
+        setLoginPassword('')
+      } else {
+        setLoginError(data.message || 'هەڵە لە ناسینەوە')
+      }
+    } catch (error) {
+      setLoginError('هەڵە لە پەیوەندی بە سێرڤەرەوە')
+    }
+  }
+
+  // Handle logout
+  const handleLogout = () => {
+    sessionStorage.removeItem('admin_token')
+    setIsAuthenticated(false)
+    setLoginUsername('')
+    setLoginPassword('')
+  }
+
   const loadNews = useCallback(async () => {
     setLoading(true)
     try {
@@ -54,10 +108,10 @@ export default function AdminPage() {
   }, [locale])
 
   useEffect(() => {
-    if (mode === 'list') {
+    if (mode === 'list' && isAuthenticated) {
       loadNews()
     }
-  }, [mode, locale, loadNews])
+  }, [mode, locale, loadNews, isAuthenticated])
 
   const handleEdit = async (slug: string) => {
     try {
@@ -416,6 +470,81 @@ export default function AdminPage() {
     alert('JSON کۆپی کرا! دەتوانیت لە فایلی news-translations.ts بچێژیت')
   }
 
+  // Show loading while checking authentication
+  if (isCheckingAuth) {
+    return (
+      <div className="container mx-auto px-4 py-8 max-w-6xl">
+        <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8">
+          <div className="text-center py-12">
+            <p className="text-gray-500 text-lg">بارکردن...</p>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Show login form if not authenticated
+  if (!isAuthenticated) {
+    return (
+      <div className="container mx-auto px-4 py-8 max-w-md">
+        <div className="bg-white rounded-2xl shadow-lg p-8 space-y-6">
+          <div className="text-center">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mb-4">
+              <Lock className="h-8 w-8 text-red-600" />
+            </div>
+            <h1 className="text-3xl font-bold text-slate-900 mb-2">چوونەژوورەوە</h1>
+            <p className="text-slate-600">تکایە username و password بنووسە</p>
+          </div>
+
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-2">
+                Username
+              </label>
+              <input
+                type="text"
+                value={loginUsername}
+                onChange={(e) => setLoginUsername(e.target.value)}
+                className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                placeholder="Username"
+                required
+                autoFocus
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-2">
+                Password
+              </label>
+              <input
+                type="password"
+                value={loginPassword}
+                onChange={(e) => setLoginPassword(e.target.value)}
+                className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                placeholder="Password"
+                required
+              />
+            </div>
+
+            {loginError && (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-800">
+                {loginError}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              className="w-full flex items-center justify-center gap-2 bg-red-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-600 transition"
+            >
+              <Lock className="h-5 w-5" />
+              چوونەژوورەوە
+            </button>
+          </form>
+        </div>
+      </div>
+    )
+  }
+
   if (mode === 'list') {
     return (
       <div className="container mx-auto px-4 py-8 max-w-6xl">
@@ -425,6 +554,14 @@ export default function AdminPage() {
               <h1 className="text-3xl font-bold text-slate-900">بەڕێوەبردنی پۆستەکان</h1>
               <p className="text-slate-600 mt-2">لیستی هەموو پۆستەکان</p>
             </div>
+            <div className="flex items-center gap-4">
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 bg-slate-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-slate-600 transition"
+              >
+                <Lock className="h-5 w-5" />
+                دەرچوون
+              </button>
             <button
               onClick={() => {
                 setMode('add')
@@ -530,16 +667,25 @@ export default function AdminPage() {
               {editingSlug ? 'پۆستەکە دەستکاری بکە' : 'فۆرمێکی سادە بۆ زیادکردنی پۆستی نوێ'}
             </p>
           </div>
-          <button
-            onClick={() => {
-              setMode('list')
-              setEditingSlug(null)
-            }}
-            className="flex items-center gap-2 bg-slate-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-slate-700 transition"
-          >
-            <List className="h-5 w-5" />
-            لیست
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-2 bg-slate-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-slate-600 transition"
+            >
+              <Lock className="h-5 w-5" />
+              دەرچوون
+            </button>
+            <button
+              onClick={() => {
+                setMode('list')
+                setEditingSlug(null)
+              }}
+              className="flex items-center gap-2 bg-slate-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-slate-700 transition"
+            >
+              <List className="h-5 w-5" />
+              لیست
+            </button>
+          </div>
         </div>
 
         <div className="grid gap-6 md:grid-cols-2">

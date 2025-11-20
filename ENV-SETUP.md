@@ -30,22 +30,34 @@ SUPABASE_SERVICE_ROLE_KEY=eyJhbGc...
 - لە Supabase → `service_role` key کۆپی بکە
 - ⚠️ **گرنگ**: ئەم key-ە secret-ە! هەرگیز لە client-side بەکارمەهێنە!
 
-### 4. فایلی `.env.local` پڕ بکە
+### 4. Admin Credentials زیاد بکە (بۆ چوونەژوورەوەی Admin Panel)
+
+```env
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=your_secure_password_here
+```
+- ⚠️ **گرنگ**: Password-ەکەت بەهێز بنووسە! (کمتر لە 8 پیت نەبێت)
+
+### 5. فایلی `.env.local` پڕ بکە
 فایلی `.env.local` بکەوە و values زیاد بکە:
 
 ```env
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key_here
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key_here
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=your_secure_password_here
 ```
 
-### 5. Dev Server Restart بکە
+### 6. Dev Server Restart بکە
 ```bash
 npm run dev
 ```
 
-### 6. تاقی بکەوە
+### 7. تاقی بکەوە
 بچۆ بۆ `http://localhost:3000/ku/admin`
+- Login page دەرکەوێت
+- Username و Password بنووسە (لە `.env.local` دا دیاری کردووت)
 
 ---
 
