@@ -45,9 +45,14 @@ export default function Home() {
   const filteredNews = useMemo(() => {
     if (!Array.isArray(news)) return []
     if (selectedCategory === 'all') {
+      // Show all posts when "all" category is selected
+      console.log('Showing all posts:', news.length)
       return news
     }
-    return news.filter((item) => item.category === selectedCategory)
+    // Filter by specific category
+    const filtered = news.filter((item) => item.category === selectedCategory)
+    console.log(`Filtered by category "${selectedCategory}":`, filtered.length, 'posts')
+    return filtered
   }, [news, selectedCategory])
 
   // Get posts by section
