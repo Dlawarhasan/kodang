@@ -113,6 +113,17 @@ export default function Footer() {
 
         <div className="border-t border-gray-200 mt-8 pt-8 text-center text-gray-500">
           <p>© {currentYear} کۆدەنگ. {t('copyright')}.</p>
+          <p className="mt-2 text-xs text-gray-400">
+            Created by{' '}
+            <a
+              href="https://www.instagram.com/dlawar.hasan?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-500 hover:text-red-600 transition-colors underline"
+            >
+              dlawarhasan
+            </a>
+          </p>
         </div>
       </div>
     </footer>
