@@ -1,10 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
 import { Save, Upload, Image as ImageIcon, Video, Music, X, Edit, Trash2, Plus, List } from 'lucide-react'
 import { getNews, type NewsItem } from '@/lib/news'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function AdminPage() {
   const locale = useLocale()
@@ -40,13 +41,7 @@ export default function AdminPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
 
-  useEffect(() => {
-    if (mode === 'list') {
-      loadNews()
-    }
-  }, [mode, locale])
-
-  const loadNews = async () => {
+  const loadNews = useCallback(async () => {
     setLoading(true)
     try {
       const data = await getNews(locale)
@@ -56,7 +51,13 @@ export default function AdminPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [locale])
+
+  useEffect(() => {
+    if (mode === 'list') {
+      loadNews()
+    }
+  }, [mode, locale, loadNews])
 
   const handleEdit = async (slug: string) => {
     try {
@@ -626,7 +627,7 @@ export default function AdminPage() {
             </label>
             {imagePreview && (
               <div className="relative">
-                <img src={imagePreview} alt="Preview" className="h-20 w-20 object-cover rounded-lg" />
+                <Image src={imagePreview} alt="Preview" width={80} height={80} className="h-20 w-20 object-cover rounded-lg" />
                 <button
                   onClick={() => {
                     setImageFile(null)
@@ -857,7 +858,7 @@ export default function AdminPage() {
           <ol className="list-decimal list-inside space-y-1">
             <li>فۆرمەکە پڕ بکەوە</li>
             <li>وێنە upload بکە (یان لینکی وێنە بنووسە)</li>
-            <li>کلیک لە "پۆست زیاد بکە" بکە</li>
+            <li>کلیک لە &quot;پۆست زیاد بکە&quot; بکە</li>
             <li>پۆستەکە خۆکار لە database زیاد دەبێت</li>
           </ol>
         </div>
