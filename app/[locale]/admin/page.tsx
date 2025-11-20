@@ -116,43 +116,51 @@ export default function AdminPage() {
 
   const handleEdit = async (slug: string) => {
     try {
-      const encodedSlug = encodeURIComponent(slug)
-      const baseUrl = typeof window !== 'undefined' ? window.location.origin : ''
-      const url = `${baseUrl}/api/news/${encodedSlug}?locale=${locale}`
-      
-      console.log('Loading post for edit:', url)
-      
-      const response = await fetch(url, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-      
       let post = null
       
-      // Try to get post from API
-      if (response.ok) {
-        const data = await response.json()
-        post = data.news
+      // First, check if post is in the current list
+      const listPost = newsList.find(item => item.slug === slug)
+      if (listPost) {
+        console.log('Found post in current list')
+        post = listPost
       } else {
-        console.log('API returned error, checking static data...')
-      }
-      
-      // Fallback to static data if API doesn't have the post or returned error
-      if (!post) {
-        console.log('Looking for post in static data with slug:', slug)
-        const staticPost = newsDataWithTranslations.find(item => item.slug === slug)
-        if (staticPost) {
-          console.log('Found post in static data')
-          post = {
-            ...staticPost,
-            title: staticPost.translations[locale as keyof typeof staticPost.translations]?.title || staticPost.translations.ku.title,
-            excerpt: staticPost.translations[locale as keyof typeof staticPost.translations]?.excerpt || staticPost.translations.ku.excerpt,
-            content: staticPost.translations[locale as keyof typeof staticPost.translations]?.content || staticPost.translations.ku.content,
-          }
+        // Try to get post from API
+        const encodedSlug = encodeURIComponent(slug)
+        const baseUrl = typeof window !== 'undefined' ? window.location.origin : ''
+        const url = `${baseUrl}/api/news/${encodedSlug}?locale=${locale}`
+        
+        console.log('Loading post for edit from API:', url)
+        
+        const response = await fetch(url, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+        
+        if (response.ok) {
+          const data = await response.json()
+          post = data.news
+          console.log('Found post in API')
         } else {
-          console.error('Post not found in static data either. Available slugs:', newsDataWithTranslations.map(n => n.slug))
-          throw new Error('پۆست نەدۆزرایەوە')
+          console.log('API returned error, checking static data...')
+        }
+        
+        // Fallback to static data if API doesn't have the post or returned error
+        if (!post) {
+          console.log('Looking for post in static data with slug:', slug)
+          const staticPost = newsDataWithTranslations.find(item => item.slug === slug)
+          if (staticPost) {
+            console.log('Found post in static data')
+            post = {
+              ...staticPost,
+              title: staticPost.translations[locale as keyof typeof staticPost.translations]?.title || staticPost.translations.ku.title,
+              excerpt: staticPost.translations[locale as keyof typeof staticPost.translations]?.excerpt || staticPost.translations.ku.excerpt,
+              content: staticPost.translations[locale as keyof typeof staticPost.translations]?.content || staticPost.translations.ku.content,
+            }
+          } else {
+            console.error('Post not found in static data either. Available slugs:', newsDataWithTranslations.map(n => n.slug))
+            throw new Error('پۆست نەدۆزرایەوە')
+          }
         }
       }
       console.log('Setting form data for post:', { slug, hasTranslations: !!post.translations, post })
