@@ -35,17 +35,29 @@ export default function Home() {
   }, [news, selectedCategory])
 
   // Get posts by section
-  const heroArticles = filteredNews.filter((item) => item.section === 'hero')
-  const breakingArticles = filteredNews.filter((item) => item.section === 'breaking')
-  const generalArticles = filteredNews.filter((item) => !item.section || item.section === 'general')
+  // Check for section field (might be undefined for old posts)
+  const heroArticles = filteredNews.filter((item: any) => item.section === 'hero')
+  const breakingArticles = filteredNews.filter((item: any) => item.section === 'breaking')
+  const generalArticles = filteredNews.filter((item: any) => !item.section || item.section === 'general' || item.section === null)
+
+  // Debug logging
+  useEffect(() => {
+    console.log('News sections:', {
+      total: filteredNews.length,
+      hero: heroArticles.length,
+      breaking: breakingArticles.length,
+      general: generalArticles.length,
+      allSections: filteredNews.map((n: any) => ({ slug: n.slug, section: n.section, title: n.title?.substring(0, 30) })),
+    })
+  }, [filteredNews, heroArticles, breakingArticles, generalArticles])
 
   // Use first hero article, or first general article as fallback
-  const heroArticle = heroArticles[0] || generalArticles[0]
+  const heroArticle = heroArticles.length > 0 ? heroArticles[0] : (generalArticles.length > 0 ? generalArticles[0] : null)
   // Use breaking articles, or first 6 general articles as fallback
   const breakingItems = breakingArticles.length > 0 ? breakingArticles : generalArticles.slice(0, 6)
   // Remaining news (general section, excluding hero and breaking)
-  const remainingNews = generalArticles.filter((item) => 
-    item.slug !== heroArticle?.slug && !breakingArticles.some(b => b.slug === item.slug)
+  const remainingNews = generalArticles.filter((item: any) => 
+    item.slug !== heroArticle?.slug && !breakingArticles.some((b: any) => b.slug === item.slug)
   )
 
   if (loading) {
