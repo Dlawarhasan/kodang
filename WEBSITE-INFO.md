@@ -107,16 +107,74 @@
 
 ---
 
-## 💰 Costs (نرخ)
+## 💰 Costs (نرخ) & Limits (سنوورەکان)
 
-### Free Tier:
-- **Supabase Free**: 500MB database, 1GB storage, 2GB bandwidth
-- **Vercel Free**: Unlimited bandwidth, 100GB bandwidth/month
-- **Total**: $0/month (بۆ پڕۆژەی بچووک)
+### ✅ Free Tier (فری - بەهەتاهەتایە):
 
-### If You Need More:
-- **Supabase Pro**: $25/month (8GB database, 100GB storage)
-- **Vercel Pro**: $20/month (100GB bandwidth, better performance)
+#### **Vercel Free Plan**:
+- ✅ **بەهەتاهەتایە فرییە** (هەتاهەتایە)
+- ✅ **Unlimited Projects**: ژمارەیەکی بێسنووری پڕۆژە
+- ✅ **100GB Bandwidth/month**: 100 گیگابایت باندوێید لە مانگێکدا
+- ✅ **Unlimited Requests**: ژمارەیەکی بێسنووری request
+- ✅ **Automatic HTTPS**: خۆکار SSL certificate
+- ✅ **Custom Domain**: دۆمەینی تایبەت (فری)
+- ⚠️ **Build Time**: 45 hours/month (بۆ پڕۆژەی بچووک بەسە)
+
+#### **Supabase Free Plan**:
+- ✅ **بەهەتاهەتایە فرییە** (هەتاهەتایە)
+- ✅ **500MB Database**: 500 مێگابایت دەیتابەیس
+- ✅ **1GB File Storage**: 1 گیگابایت storage بۆ وێنە/ڤیدیۆ/ئۆدیۆ
+- ✅ **2GB Bandwidth/month**: 2 گیگابایت باندوێید لە مانگێکدا
+- ✅ **50,000 Monthly Active Users**: 50,000 بەکارهێنەری چالاک لە مانگێکدا
+- ✅ **Unlimited API Requests**: ژمارەیەکی بێسنووری API request
+- ✅ **500MB Database Size**: 500 مێگابایت قەبارەی دەیتابەیس
+- ⚠️ **7 Days Backup Retention**: 7 ڕۆژ backup
+
+### 📊 چەند پۆست دەتوانیت ڕۆژانە بکەیت؟
+
+#### **بەپێی Database Size**:
+- **هەر پۆستێک**: ~5-10KB (بەپێی ناوەڕۆک)
+- **500MB Database**: ~50,000 - 100,000 پۆست
+- **ڕۆژانە**: **بێسنوور** (بەپێی database size)
+
+#### **بەپێی Storage**:
+- **وێنە**: ~500KB - 2MB (بەپێی قەبارە)
+- **1GB Storage**: ~500 - 2,000 وێنە
+- **ڕۆژانە**: **~16 - 66 وێنە** (ئەگەر 1GB بەکاربهێنیت)
+
+#### **بەپێی Bandwidth**:
+- **2GB/month Supabase**: ~66MB/day
+- **100GB/month Vercel**: ~3.3GB/day
+- **ڕۆژانە**: **بێسنوور** (بەپێی bandwidth)
+
+### 💡 Recommendation (پێشنیار):
+
+#### **بۆ پڕۆژەی بچووک-ناوەند**:
+- ✅ **Free Tier بەسە**: 0$/month
+- ✅ **~50-100 پۆست/ڕۆژ**: بەبێ کێشە
+- ✅ **~500-1,000 وێنە**: بەبێ کێشە
+
+#### **ئەگەر پێویستت بە زیاترە**:
+- **Supabase Pro**: $25/month
+  - 8GB database
+  - 100GB storage
+  - 50GB bandwidth
+- **Vercel Pro**: $20/month
+  - 1TB bandwidth
+  - Better performance
+  - Priority support
+
+### 📈 Usage Tracking (چێککردنی بەکارهێنان):
+
+#### **Supabase**:
+1. بچۆ بۆ [Supabase Dashboard](https://supabase.com/dashboard)
+2. Project هەڵبژێرە
+3. Settings → Usage → ببینیت چەنێک بەکارهاتووە
+
+#### **Vercel**:
+1. بچۆ بۆ [Vercel Dashboard](https://vercel.com/dashboard)
+2. Project هەڵبژێرە
+3. Analytics → ببینیت bandwidth usage
 
 ---
 
