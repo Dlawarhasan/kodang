@@ -81,6 +81,7 @@ export async function PUT(
       date: body.date || new Date().toISOString().split('T')[0],
       author: body.author || 'کۆدەنگ',
       category: body.category || 'social',
+      section: body.section || 'general',
       image: body.image || '',
       video: body.video || null,
       audio: body.audio || null,

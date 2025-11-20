@@ -34,9 +34,19 @@ export default function Home() {
     return news.filter((item) => item.category === selectedCategory)
   }, [news, selectedCategory])
 
-  const heroArticle = filteredNews[0]
-  const remainingNews = heroArticle ? filteredNews.slice(1) : filteredNews
-  const breakingItems = filteredNews.slice(0, 6)
+  // Get posts by section
+  const heroArticles = filteredNews.filter((item) => item.section === 'hero')
+  const breakingArticles = filteredNews.filter((item) => item.section === 'breaking')
+  const generalArticles = filteredNews.filter((item) => !item.section || item.section === 'general')
+
+  // Use first hero article, or first general article as fallback
+  const heroArticle = heroArticles[0] || generalArticles[0]
+  // Use breaking articles, or first 6 general articles as fallback
+  const breakingItems = breakingArticles.length > 0 ? breakingArticles : generalArticles.slice(0, 6)
+  // Remaining news (general section, excluding hero and breaking)
+  const remainingNews = generalArticles.filter((item) => 
+    item.slug !== heroArticle?.slug && !breakingArticles.some(b => b.slug === item.slug)
+  )
 
   if (loading) {
     return (

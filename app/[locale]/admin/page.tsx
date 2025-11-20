@@ -30,6 +30,7 @@ export default function AdminPage() {
     contentFa: '',
     contentEn: '',
     category: 'social',
+    section: 'general', // 'hero', 'breaking', 'general'
     author: 'کۆدەنگ',
     tags: '',
     image: '',
@@ -176,6 +177,7 @@ export default function AdminPage() {
         contentFa: post.translations?.fa?.content || '',
         contentEn: post.translations?.en?.content || '',
         category: post.category || 'social',
+        section: post.section || 'general',
         author: post.author || 'کۆدەنگ',
         tags: Array.isArray(post.tags) ? post.tags.join(', ') : (post.tags || ''),
         image: post.image || '',
@@ -403,6 +405,7 @@ export default function AdminPage() {
           contentFa: '',
           contentEn: '',
           category: 'social',
+          section: 'general',
           author: 'کۆدەنگ',
           tags: '',
           image: '',
@@ -586,24 +589,25 @@ export default function AdminPage() {
                 onClick={() => {
                   setMode('add')
                   setEditingSlug(null)
-                  setFormData({
-                    titleKu: '',
-                    titleFa: '',
-                    titleEn: '',
-                    excerptKu: '',
-                    excerptFa: '',
-                    excerptEn: '',
-                    contentKu: '',
-                    contentFa: '',
-                    contentEn: '',
-                    category: 'social',
-                    author: 'کۆدەنگ',
-                    tags: '',
-                    image: '',
-                    video: '',
-                    audio: '',
-                    date: new Date().toISOString().split('T')[0],
-                  })
+                setFormData({
+                  titleKu: '',
+                  titleFa: '',
+                  titleEn: '',
+                  excerptKu: '',
+                  excerptFa: '',
+                  excerptEn: '',
+                  contentKu: '',
+                  contentFa: '',
+                  contentEn: '',
+                  category: 'social',
+                  section: 'general',
+                  author: 'کۆدەنگ',
+                  tags: '',
+                  image: '',
+                  video: '',
+                  audio: '',
+                  date: new Date().toISOString().split('T')[0],
+                })
                 }}
                 className="flex items-center gap-2 bg-red-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-600 transition"
               >
@@ -732,6 +736,25 @@ export default function AdminPage() {
               <option value="students">خوێندکار</option>
               <option value="suicide">خۆکوژی</option>
             </select>
+          </div>
+
+          {/* Section/Position */}
+          <div>
+            <label className="block text-sm font-semibold text-slate-700 mb-2">
+              بەشی پۆست
+            </label>
+            <select
+              value={formData.section}
+              onChange={(e) => setFormData({ ...formData, section: e.target.value })}
+              className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+            >
+              <option value="general">بەشە گشتیەکە (General Section)</option>
+              <option value="hero">سەرەوەی هەواڵ (Hero/Top Story)</option>
+              <option value="breaking">هەواڵی گەرم (Breaking News)</option>
+            </select>
+            <p className="mt-1 text-xs text-slate-500">
+              پۆستەکەت لە کام بەشی وێبسایتەکە دەرکەوێت؟
+            </p>
           </div>
 
           {/* Author */}

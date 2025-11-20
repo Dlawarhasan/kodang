@@ -9,6 +9,7 @@ export interface NewsItem {
   date: string
   author: string
   category?: string
+  section?: 'hero' | 'breaking' | 'general'
   image?: string
   video?: string
   audio?: string
