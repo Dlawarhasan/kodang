@@ -11,6 +11,7 @@ export interface NewsItem {
   category?: string
   image?: string
   video?: string
+  audio?: string
   images?: string[]
   tags?: string[]
 }
