@@ -155,19 +155,21 @@ export default function AdminPage() {
           throw new Error('پۆست نەدۆزرایەوە')
         }
       }
+      console.log('Setting form data for post:', { slug, hasTranslations: !!post.translations, post })
+      
       setFormData({
-        titleKu: post.translations?.ku?.title || '',
+        titleKu: post.translations?.ku?.title || post.title || '',
         titleFa: post.translations?.fa?.title || '',
         titleEn: post.translations?.en?.title || '',
-        excerptKu: post.translations?.ku?.excerpt || '',
+        excerptKu: post.translations?.ku?.excerpt || post.excerpt || '',
         excerptFa: post.translations?.fa?.excerpt || '',
         excerptEn: post.translations?.en?.excerpt || '',
-        contentKu: post.translations?.ku?.content || '',
+        contentKu: post.translations?.ku?.content || post.content || '',
         contentFa: post.translations?.fa?.content || '',
         contentEn: post.translations?.en?.content || '',
         category: post.category || 'social',
         author: post.author || 'کۆدەنگ',
-        tags: post.tags?.join(', ') || '',
+        tags: Array.isArray(post.tags) ? post.tags.join(', ') : (post.tags || ''),
         image: post.image || '',
         video: post.video || '',
         audio: post.audio || '',
