@@ -56,6 +56,13 @@ export default function Home() {
   const breakingArticles = filteredNews.filter((item: any) => item.section === 'breaking')
   const generalArticles = filteredNews.filter((item: any) => !item.section || item.section === 'general' || item.section === null)
 
+  // Sort all news by date (newest first) for breaking news
+  const sortedNews = [...filteredNews].sort((a: any, b: any) => {
+    const dateA = new Date(a.date || 0).getTime()
+    const dateB = new Date(b.date || 0).getTime()
+    return dateB - dateA
+  })
+
   // Debug logging
   useEffect(() => {
     console.log('News sections:', {
@@ -69,11 +76,30 @@ export default function Home() {
 
   // Use first hero article, or first general article as fallback
   const heroArticle = heroArticles.length > 0 ? heroArticles[0] : (generalArticles.length > 0 ? generalArticles[0] : null)
-  // Use breaking articles, or first 6 general articles as fallback
-  const breakingItems = breakingArticles.length > 0 ? breakingArticles : generalArticles.slice(0, 6)
-  // Remaining news (general section, excluding hero and breaking)
+  
+  // Breaking news: Show posts with section='breaking' OR newest posts (auto-include new posts)
+  // Get newest posts (last 24 hours or last 10 posts, whichever is more)
+  const now = new Date().getTime()
+  const oneDayAgo = now - (24 * 60 * 60 * 1000)
+  const newestPosts = sortedNews.filter((item: any) => {
+    const postDate = new Date(item.date || 0).getTime()
+    return postDate >= oneDayAgo
+  }).slice(0, 10)
+  
+  // Combine breaking articles with newest posts, remove duplicates
+  const allBreakingCandidates = [...breakingArticles, ...newestPosts]
+  const uniqueBreaking = allBreakingCandidates.filter((item, index, self) => 
+    index === self.findIndex((t) => t.slug === item.slug)
+  )
+  
+  // Exclude hero article from breaking news
+  const breakingItems = uniqueBreaking
+    .filter((item: any) => item.slug !== heroArticle?.slug)
+    .slice(0, 10) // Limit to 10 items
+  // Remaining news (general section, excluding hero and breaking items)
+  // Note: Posts in breaking news should still appear in their category sections
   const remainingNews = generalArticles.filter((item: any) => 
-    item.slug !== heroArticle?.slug && !breakingArticles.some((b: any) => b.slug === item.slug)
+    item.slug !== heroArticle?.slug
   )
 
   if (loading) {
