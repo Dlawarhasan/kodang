@@ -128,25 +128,22 @@ export default function AdminPage() {
         },
       })
       
-      if (!response.ok) {
-        let errorData
-        try {
-          errorData = await response.json()
-        } catch {
-          errorData = { error: `HTTP error! status: ${response.status}` }
-        }
-        console.error('Edit API Error:', errorData)
-        throw new Error(errorData.error || errorData.details || `HTTP error! status: ${response.status}`)
+      let post = null
+      
+      // Try to get post from API
+      if (response.ok) {
+        const data = await response.json()
+        post = data.news
+      } else {
+        console.log('API returned error, checking static data...')
       }
       
-      const data = await response.json()
-      
-      let post = data.news
-      
-      // Fallback to static data if API doesn't have the post
+      // Fallback to static data if API doesn't have the post or returned error
       if (!post) {
+        console.log('Looking for post in static data with slug:', slug)
         const staticPost = newsDataWithTranslations.find(item => item.slug === slug)
         if (staticPost) {
+          console.log('Found post in static data')
           post = {
             ...staticPost,
             title: staticPost.translations[locale as keyof typeof staticPost.translations]?.title || staticPost.translations.ku.title,
@@ -154,6 +151,7 @@ export default function AdminPage() {
             content: staticPost.translations[locale as keyof typeof staticPost.translations]?.content || staticPost.translations.ku.content,
           }
         } else {
+          console.error('Post not found in static data either. Available slugs:', newsDataWithTranslations.map(n => n.slug))
           throw new Error('پۆست نەدۆزرایەوە')
         }
       }
