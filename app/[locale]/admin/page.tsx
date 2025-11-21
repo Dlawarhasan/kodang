@@ -1037,9 +1037,44 @@ export default function AdminPage() {
           />
         </div>
 
-        {/* Kurdish */}
+        {/* Persian - Required */}
         <div className="border-t border-slate-200 pt-6">
-          <h2 className="text-xl font-bold text-slate-900 mb-4">کوردی</h2>
+          <h2 className="text-xl font-bold text-slate-900 mb-4">
+            فارسی <span className="text-red-500 text-sm">(الزامی)</span>
+          </h2>
+          <div className="space-y-4">
+            <input
+              type="text"
+              value={formData.titleFa}
+              onChange={(e) => setFormData({ ...formData, titleFa: e.target.value })}
+              className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+              placeholder="ناونیشان (فارسی) *"
+              required
+            />
+            <textarea
+              value={formData.excerptFa}
+              onChange={(e) => setFormData({ ...formData, excerptFa: e.target.value })}
+              className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+              placeholder="خلاصه (فارسی) *"
+              rows={2}
+              required
+            />
+            <textarea
+              value={formData.contentFa}
+              onChange={(e) => setFormData({ ...formData, contentFa: e.target.value })}
+              className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+              placeholder="محتوا (فارسی) *"
+              rows={6}
+              required
+            />
+          </div>
+        </div>
+
+        {/* Kurdish - Optional */}
+        <div className="border-t border-slate-200 pt-6">
+          <h2 className="text-xl font-bold text-slate-900 mb-4">
+            کوردی <span className="text-slate-500 text-sm">(ئیختیاری)</span>
+          </h2>
           <div className="space-y-4">
             <input
               type="text"
@@ -1060,34 +1095,6 @@ export default function AdminPage() {
               onChange={(e) => setFormData({ ...formData, contentKu: e.target.value })}
               className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
               placeholder="ناوەڕۆک (کوردی)"
-              rows={6}
-            />
-          </div>
-        </div>
-
-        {/* Persian */}
-        <div className="border-t border-slate-200 pt-6">
-          <h2 className="text-xl font-bold text-slate-900 mb-4">فارسی</h2>
-          <div className="space-y-4">
-            <input
-              type="text"
-              value={formData.titleFa}
-              onChange={(e) => setFormData({ ...formData, titleFa: e.target.value })}
-              className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
-              placeholder="ناونیشان (فارسی)"
-            />
-            <textarea
-              value={formData.excerptFa}
-              onChange={(e) => setFormData({ ...formData, excerptFa: e.target.value })}
-              className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
-              placeholder="دەربارە (فارسی)"
-              rows={2}
-            />
-            <textarea
-              value={formData.contentFa}
-              onChange={(e) => setFormData({ ...formData, contentFa: e.target.value })}
-              className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
-              placeholder="ناوەڕۆک (فارسی)"
               rows={6}
             />
           </div>
