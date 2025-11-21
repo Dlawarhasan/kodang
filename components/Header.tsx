@@ -213,20 +213,39 @@ export default function Header() {
                     return (
                       <button
                         key={lang.code}
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.preventDefault()
+                          e.stopPropagation()
                           setIsLangMenuOpen(false)
+                          
                           // If clicking current language, do nothing
                           if (lang.code === locale) {
                             return
                           }
+                          
                           // Navigate to new locale with full page reload
-                          console.log('Switching to locale:', lang.code, 'URL:', fullUrl)
-                          window.location.href = fullUrl
+                          console.log('Language Switch Debug:', {
+                            currentLocale: locale,
+                            targetLocale: lang.code,
+                            currentPathname: pathname,
+                            pathWithoutLocale: pathWithoutLocale,
+                            targetHref: targetHref,
+                            fullUrl: fullUrl
+                          })
+                          
+                          // Force a full page reload to ensure locale change
+                          // Use setTimeout to ensure state updates complete first
+                          setTimeout(() => {
+                            window.location.href = fullUrl
+                          }, 100)
                         }}
-                        className="flex w-full items-center gap-3 px-4 py-3 text-sm font-medium text-slate-600 transition hover:bg-slate-50 text-left"
+                        className={`flex w-full items-center gap-3 px-4 py-3 text-sm font-medium transition hover:bg-slate-50 text-left ${
+                          lang.code === locale ? 'bg-slate-100 text-slate-900' : 'text-slate-600'
+                        }`}
                       >
                           <span className="text-lg">{lang.flag}</span>
                         <span>{lang.name}</span>
+                        {lang.code === locale && <span className="ml-auto text-xs">✓</span>}
                       </button>
                     )
                   })}
