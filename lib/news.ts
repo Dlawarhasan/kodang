@@ -160,7 +160,7 @@ export interface NewsItem {
   },
 ]*/ // Old data removed
 
-export async function getNews(locale: string = 'ku'): Promise<NewsItem[]> {
+export async function getNews(locale: string = 'fa'): Promise<NewsItem[]> { // Default to Farsi
   // Try to fetch from API first
   try {
     // Use window.location.origin in browser, or process.env in server
@@ -212,7 +212,7 @@ export async function getNews(locale: string = 'ku'): Promise<NewsItem[]> {
   )
 }
 
-export async function getNewsBySlug(slug: string, locale: string = 'ku'): Promise<NewsItem | undefined> {
+export async function getNewsBySlug(slug: string, locale: string = 'fa'): Promise<NewsItem | undefined> { // Default to Farsi
   // Try to fetch from API first
   try {
     // Use window.location.origin in browser, or process.env in server
@@ -255,7 +255,7 @@ export async function getNewsBySlug(slug: string, locale: string = 'ku'): Promis
   }
 }
 
-export async function getNewsByCategory(category: string, locale: string = 'ku'): Promise<NewsItem[]> {
+export async function getNewsByCategory(category: string, locale: string = 'fa'): Promise<NewsItem[]> { // Default to Farsi
   const allNews = await getNews(locale)
   if (category === 'all') {
     return allNews

@@ -20,15 +20,15 @@ export default function AdminPage() {
   const [newsList, setNewsList] = useState<NewsItem[]>([])
   const [loading, setLoading] = useState(true)
   const [formData, setFormData] = useState({
-    titleKu: '',
-    titleFa: '',
-    titleEn: '',
-    excerptKu: '',
-    excerptFa: '',
-    excerptEn: '',
-    contentKu: '',
-    contentFa: '',
-    contentEn: '',
+    titleFa: '', // Farsi is required
+    titleKu: '', // Kurdish is optional
+    titleEn: '', // English is optional
+    excerptFa: '', // Farsi is required
+    excerptKu: '', // Kurdish is optional
+    excerptEn: '', // English is optional
+    contentFa: '', // Farsi is required
+    contentKu: '', // Kurdish is optional
+    contentEn: '', // English is optional
     category: 'social',
     section: 'general', // 'hero', 'breaking', 'general'
     author: 'کۆدەنگ',
@@ -189,14 +189,14 @@ export default function AdminPage() {
       console.log('Setting form data for post:', { slug, hasTranslations: !!post.translations, post })
       
       setFormData({
-        titleKu: post.translations?.ku?.title || post.title || '',
-        titleFa: post.translations?.fa?.title || '',
+        titleFa: post.translations?.fa?.title || post.title || '',
+        titleKu: post.translations?.ku?.title || '',
         titleEn: post.translations?.en?.title || '',
-        excerptKu: post.translations?.ku?.excerpt || post.excerpt || '',
-        excerptFa: post.translations?.fa?.excerpt || '',
+        excerptFa: post.translations?.fa?.excerpt || post.excerpt || '',
+        excerptKu: post.translations?.ku?.excerpt || '',
         excerptEn: post.translations?.en?.excerpt || '',
-        contentKu: post.translations?.ku?.content || post.content || '',
-        contentFa: post.translations?.fa?.content || '',
+        contentFa: post.translations?.fa?.content || post.content || '',
+        contentKu: post.translations?.ku?.content || '',
         contentEn: post.translations?.en?.content || '',
         category: post.category || 'social',
         section: post.section || 'general',
@@ -339,8 +339,9 @@ export default function AdminPage() {
   }
 
   const handleSubmit = async () => {
-    if (!formData.titleKu || !formData.excerptKu || !formData.contentKu) {
-      setMessage({ type: 'error', text: 'تکایە ناونیشان، دەربارە و ناوەڕۆکی کوردی پڕ بکەوە' })
+    // Validate required fields (Farsi is required)
+    if (!formData.titleFa || !formData.excerptFa || !formData.contentFa) {
+      setMessage({ type: 'error', text: 'لطفاً عنوان، خلاصه و محتوای فارسی را پر کنید' })
       return
     }
 
@@ -420,14 +421,14 @@ export default function AdminPage() {
         setMessage({ type: 'success', text: editingSlug ? 'پۆست بە سەرکەوتووی نوێ کرا!' : 'پۆست بە سەرکەوتووی زیاد کرا!' })
         // Reset form
         setFormData({
-          titleKu: '',
           titleFa: '',
+          titleKu: '',
           titleEn: '',
-          excerptKu: '',
           excerptFa: '',
+          excerptKu: '',
           excerptEn: '',
-          contentKu: '',
           contentFa: '',
+          contentKu: '',
           contentEn: '',
           category: 'social',
           section: 'general',
@@ -468,7 +469,7 @@ export default function AdminPage() {
   }
 
   const generatePostJSON = () => {
-    const slug = generateSlug(formData.titleKu || formData.titleEn)
+    const slug = generateSlug(formData.titleFa || formData.titleKu || formData.titleEn)
     const nextId = Date.now().toString()
     const tagsArray = formData.tags.split(',').map(tag => tag.trim()).filter(Boolean)
 

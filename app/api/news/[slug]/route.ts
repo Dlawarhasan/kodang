@@ -25,9 +25,9 @@ export async function GET(
     // Map translations based on locale
     const newsItem = {
       ...data,
-      title: data.translations?.[locale]?.title || data.translations?.ku?.title || '',
-      excerpt: data.translations?.[locale]?.excerpt || data.translations?.ku?.excerpt || '',
-      content: data.translations?.[locale]?.content || data.translations?.ku?.content || '',
+      title: data.translations?.[locale]?.title || data.translations?.fa?.title || '',
+      excerpt: data.translations?.[locale]?.excerpt || data.translations?.fa?.excerpt || '',
+      content: data.translations?.[locale]?.content || data.translations?.fa?.content || '',
     }
 
     return NextResponse.json({ news: newsItem })
@@ -46,30 +46,30 @@ export async function PUT(
     const supabase = createServerClient()
     const body = await request.json()
 
-    // Validate required fields
-    if (!body.titleKu || !body.excerptKu || !body.contentKu) {
+    // Validate required fields (Farsi is required)
+    if (!body.titleFa || !body.excerptFa || !body.contentFa) {
       return NextResponse.json(
-        { error: 'ناونیشان، دەربارە و ناوەڕۆکی کوردی پێویستە' },
+        { error: 'ناونیشان، خلاصه و محتوای فارسی الزامی است' },
         { status: 400 }
       )
     }
 
-    // Prepare translations
+    // Prepare translations (Farsi is required, Kurdish and English are optional)
     const translations = {
-      ku: {
-        title: body.titleKu,
-        excerpt: body.excerptKu,
-        content: body.contentKu,
-      },
       fa: {
-        title: body.titleFa || body.titleKu,
-        excerpt: body.excerptFa || body.excerptKu,
-        content: body.contentFa || body.contentKu,
+        title: body.titleFa,
+        excerpt: body.excerptFa,
+        content: body.contentFa,
+      },
+      ku: {
+        title: body.titleKu || body.titleFa,
+        excerpt: body.excerptKu || body.excerptFa,
+        content: body.contentKu || body.contentFa,
       },
       en: {
-        title: body.titleEn || body.titleKu,
-        excerpt: body.excerptEn || body.excerptKu,
-        content: body.contentEn || body.contentKu,
+        title: body.titleEn || body.titleFa,
+        excerpt: body.excerptEn || body.excerptFa,
+        content: body.contentEn || body.contentFa,
       },
     }
 

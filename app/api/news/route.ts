@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
     const supabase = createServerClient()
     console.log('Supabase client created')
     const { searchParams } = new URL(request.url)
-    const locale = searchParams.get('locale') || 'ku'
+    const locale = searchParams.get('locale') || 'fa' // Default to Farsi
     const category = searchParams.get('category')
 
     let query = supabase
@@ -31,9 +31,9 @@ export async function GET(request: NextRequest) {
     // Map data to include translations based on locale
     const news = data?.map(item => ({
       ...item,
-      title: item.translations?.[locale]?.title || item.translations?.ku?.title || '',
-      excerpt: item.translations?.[locale]?.excerpt || item.translations?.ku?.excerpt || '',
-      content: item.translations?.[locale]?.content || item.translations?.ku?.content || '',
+      title: item.translations?.[locale]?.title || item.translations?.fa?.title || '',
+      excerpt: item.translations?.[locale]?.excerpt || item.translations?.fa?.excerpt || '',
+      content: item.translations?.[locale]?.content || item.translations?.fa?.content || '',
     })) || []
 
     return NextResponse.json({ news })
@@ -55,18 +55,18 @@ export async function POST(request: NextRequest) {
     const supabase = createServerClient()
     const body = await request.json()
 
-    // Validate required fields
-    if (!body.titleKu || !body.excerptKu || !body.contentKu) {
+    // Validate required fields (Farsi is required)
+    if (!body.titleFa || !body.excerptFa || !body.contentFa) {
       return NextResponse.json(
-        { error: 'ناونیشان، دەربارە و ناوەڕۆکی کوردی پێویستە' },
+        { error: 'ناونیشان، خلاصه و محتوای فارسی الزامی است' },
         { status: 400 }
       )
     }
 
-    // Generate slug
-    let baseSlug = body.slug || body.titleKu
+    // Generate slug from Farsi title
+    let baseSlug = body.slug || body.titleFa
       .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/[^a-z0-9\u0600-\u06FF]+/g, '-') // Support Persian characters
       .replace(/(^-|-$)/g, '')
     
     // Check if slug exists and make it unique
@@ -89,22 +89,22 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Prepare translations
+    // Prepare translations (Farsi is required, Kurdish and English are optional)
     const translations = {
-      ku: {
-        title: body.titleKu,
-        excerpt: body.excerptKu,
-        content: body.contentKu,
-      },
       fa: {
-        title: body.titleFa || body.titleKu,
-        excerpt: body.excerptFa || body.excerptKu,
-        content: body.contentFa || body.contentKu,
+        title: body.titleFa,
+        excerpt: body.excerptFa,
+        content: body.contentFa,
+      },
+      ku: {
+        title: body.titleKu || body.titleFa,
+        excerpt: body.excerptKu || body.excerptFa,
+        content: body.contentKu || body.contentFa,
       },
       en: {
-        title: body.titleEn || body.titleKu,
-        excerpt: body.excerptEn || body.excerptKu,
-        content: body.contentEn || body.contentKu,
+        title: body.titleEn || body.titleFa,
+        excerpt: body.excerptEn || body.excerptFa,
+        content: body.contentEn || body.contentFa,
       },
     }
 

@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation'
 export const locales = ['ku', 'fa', 'en'] as const
 export type Locale = (typeof locales)[number]
 
-export const defaultLocale: Locale = 'ku'
+export const defaultLocale: Locale = 'fa' // فارسی زمانە سەرەکییەکەیە
 
 export default getRequestConfig(async ({ locale }) => {
   if (!locales.includes(locale as Locale)) {
