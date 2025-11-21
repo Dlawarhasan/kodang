@@ -274,29 +274,80 @@ export default function Home() {
       )}
 
       {breakingItems.length > 0 && (
-        <section className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-          <div className="flex items-center gap-4 bg-red-600 px-6 py-3 text-white">
-            <Flame className="h-5 w-5" />
-            <span className="text-sm font-semibold uppercase tracking-widest">
-              {t('breaking')}
-            </span>
+        <section className="group relative overflow-hidden rounded-3xl border-2 border-red-500/30 bg-gradient-to-br from-white via-red-50/30 to-white shadow-xl shadow-red-500/10 hover:shadow-red-500/20 transition-all duration-500 hover:border-red-500/50">
+          {/* Decorative Border Lines */}
+          <div className="absolute inset-0 z-10 pointer-events-none">
+            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-red-500/60 to-transparent group-hover:via-red-500 transition-opacity duration-500" />
+            <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-red-500/60 to-transparent group-hover:via-red-500 transition-opacity duration-500" />
           </div>
-          <div className="relative">
-            <div className="flex items-center gap-8 whitespace-nowrap py-4 pl-6 pr-6 text-slate-700 animate-marquee">
+
+          {/* Header with Enhanced Design */}
+          <div className="relative flex items-center gap-4 bg-gradient-to-r from-red-600 via-red-500 to-red-600 px-6 py-4 text-white shadow-lg">
+            {/* Animated Background Pattern */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-shimmer" />
+            
+            {/* Decorative Elements */}
+            <div className="absolute top-0 left-0 w-32 h-full bg-gradient-to-r from-red-700/50 to-transparent" />
+            <div className="absolute bottom-0 right-0 w-32 h-full bg-gradient-to-l from-red-700/50 to-transparent" />
+            
+            <div className="relative z-10 flex items-center gap-3">
+              <div className="relative">
+                <Flame className="h-6 w-6 animate-pulse drop-shadow-lg" />
+                <div className="absolute inset-0 bg-red-400 blur-xl opacity-50 animate-pulse" />
+              </div>
+              <span className="text-sm font-black uppercase tracking-widest drop-shadow-lg relative">
+                {t('breaking')}
+                <span className="absolute -bottom-1 left-0 w-full h-[2px] bg-white/60 rounded-full" />
+              </span>
+            </div>
+            
+            {/* Animated Indicator */}
+            <div className="relative z-10 ml-auto flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
+              <span className="h-2 w-2 rounded-full bg-white/60 animate-pulse delay-75" />
+              <span className="h-2 w-2 rounded-full bg-white/40 animate-pulse delay-150" />
+            </div>
+          </div>
+
+          {/* News Ticker */}
+          <div className="relative bg-white/50 backdrop-blur-sm">
+            <div className="flex items-center gap-8 whitespace-nowrap py-5 pl-8 pr-8 text-slate-800 animate-marquee">
               {[...breakingItems, ...breakingItems].map((item, index) => (
                 <Link
                   key={`${item.id}-${index}`}
                   href={`/${locale}/news/${item.slug}`}
-                  className="flex items-center gap-2 text-sm font-medium transition hover:text-red-600"
+                  className="group/item flex items-center gap-3 text-sm font-semibold transition-all duration-300 hover:text-red-600 hover:scale-105"
                 >
-                  <span className="inline-flex h-2 w-2 rounded-full bg-red-500" />
-                  {item.title}
+                  {/* Animated Dot */}
+                  <span className="relative inline-flex h-3 w-3 rounded-full bg-gradient-to-r from-red-500 to-red-600 shadow-lg shadow-red-500/40 group-hover/item:scale-125 transition-transform duration-300">
+                    <span className="absolute inset-0 rounded-full bg-red-400 animate-ping opacity-75" />
+                  </span>
+                  
+                  {/* Title with Gradient Effect */}
+                  <span className="relative">
+                    {item.title}
+                    <span className="absolute -bottom-0.5 left-0 w-0 h-[2px] bg-gradient-to-r from-red-500 to-red-600 group-hover/item:w-full transition-all duration-300" />
+                  </span>
+                  
+                  {/* Separator */}
+                  <span className="text-red-300 font-bold">•</span>
                 </Link>
               ))}
             </div>
-            <div className="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-white via-white to-transparent" />
-            <div className="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-white via-white to-transparent" />
+            
+            {/* Gradient Fade Effects */}
+            <div className="pointer-events-none absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-white via-white/80 to-transparent z-10" />
+            <div className="pointer-events-none absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-white via-white/80 to-transparent z-10" />
+            
+            {/* Bottom Border Line */}
+            <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-red-200 to-transparent" />
           </div>
+
+          {/* Corner Accents */}
+          <div className="absolute top-4 left-4 w-8 h-8 border-t-2 border-l-2 border-red-500/40 rounded-tl-lg opacity-60 group-hover:opacity-100 group-hover:border-red-500 transition-all duration-500" />
+          <div className="absolute top-4 right-4 w-8 h-8 border-t-2 border-r-2 border-red-500/40 rounded-tr-lg opacity-60 group-hover:opacity-100 group-hover:border-red-500 transition-all duration-500" />
+          <div className="absolute bottom-4 left-4 w-8 h-8 border-b-2 border-l-2 border-red-500/40 rounded-bl-lg opacity-60 group-hover:opacity-100 group-hover:border-red-500 transition-all duration-500" />
+          <div className="absolute bottom-4 right-4 w-8 h-8 border-b-2 border-r-2 border-red-500/40 rounded-br-lg opacity-60 group-hover:opacity-100 group-hover:border-red-500 transition-all duration-500" />
         </section>
       )}
 
