@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
-import { Save, Upload, Image as ImageIcon, Video, Music, X, Edit, Trash2, Plus, List, Lock } from 'lucide-react'
+import { Save, Upload, Image as ImageIcon, Video, Music, X, Edit, Trash2, Plus, List, Lock, Users, UserPlus } from 'lucide-react'
 import { getNews, type NewsItem } from '@/lib/news'
 import { newsDataWithTranslations } from '@/lib/news-translations'
 import Link from 'next/link'
@@ -15,7 +15,21 @@ export default function AdminPage() {
   const [loginUsername, setLoginUsername] = useState('')
   const [loginPassword, setLoginPassword] = useState('')
   const [loginError, setLoginError] = useState('')
-  const [mode, setMode] = useState<'list' | 'add' | 'edit'>('list')
+  const [mode, setMode] = useState<'list' | 'add' | 'edit' | 'users'>('list')
+  const [userPermissions, setUserPermissions] = useState<{
+    can_create: boolean
+    can_edit: boolean
+    can_delete: boolean
+  }>({ can_create: true, can_edit: true, can_delete: true })
+  const [users, setUsers] = useState<any[]>([])
+  const [editingUserId, setEditingUserId] = useState<string | null>(null)
+  const [userFormData, setUserFormData] = useState({
+    username: '',
+    password: '',
+    can_create: false,
+    can_edit: false,
+    can_delete: false,
+  })
   const [editingSlug, setEditingSlug] = useState<string | null>(null)
   const [newsList, setNewsList] = useState<NewsItem[]>([])
   const [loading, setLoading] = useState(true)
@@ -83,6 +97,13 @@ export default function AdminPage() {
 
       if (data.success) {
         sessionStorage.setItem('admin_token', data.token)
+        if (data.user?.permissions) {
+          setUserPermissions(data.user.permissions)
+          sessionStorage.setItem('user_permissions', JSON.stringify(data.user.permissions))
+        } else if (data.permissions) {
+          setUserPermissions(data.permissions)
+          sessionStorage.setItem('user_permissions', JSON.stringify(data.permissions))
+        }
         setIsAuthenticated(true)
         setLoginUsername('')
         setLoginPassword('')
@@ -136,13 +157,41 @@ export default function AdminPage() {
     }
   }, [locale])
 
+  // Load users
+  const loadUsers = useCallback(async () => {
+    try {
+      const baseUrl = typeof window !== 'undefined' ? window.location.origin : ''
+      const response = await fetch(`${baseUrl}/api/users`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      
+      if (response.ok) {
+        const data = await response.json()
+        setUsers(data.users || [])
+      }
+    } catch (error) {
+      console.error('Error loading users:', error)
+      setMessage({ type: 'error', text: 'هەڵە لە بارکردنی بەکارهێنەران' })
+    }
+  }, [])
+
   useEffect(() => {
     if (mode === 'list' && isAuthenticated) {
       loadNews()
+    } else if (mode === 'users' && isAuthenticated) {
+      loadUsers()
     }
-  }, [mode, locale, loadNews, isAuthenticated])
+  }, [mode, locale, loadNews, loadUsers, isAuthenticated])
 
   const handleEdit = async (slug: string) => {
+    // Check permissions
+    if (!userPermissions.can_edit) {
+      setMessage({ type: 'error', text: 'شما اجازه ویرایش پست ندارید' })
+      return
+    }
+
     try {
       let post = null
       
@@ -235,6 +284,12 @@ export default function AdminPage() {
   }
 
   const handleDelete = async (slug: string) => {
+    // Check permissions
+    if (!userPermissions.can_delete) {
+      setMessage({ type: 'error', text: 'شما اجازه حذف پست ندارید' })
+      return
+    }
+
     if (!confirm('دڵنیایت لە سڕینەوەی ئەم پۆستە؟')) {
       return
     }
@@ -348,7 +403,136 @@ export default function AdminPage() {
     }
   }
 
+  // User Management Functions
+  const handleCreateUser = async () => {
+    if (!userFormData.username || !userFormData.password) {
+      setMessage({ type: 'error', text: 'نام کاربری و رمز عبور الزامی است' })
+      return
+    }
+
+    try {
+      const baseUrl = typeof window !== 'undefined' ? window.location.origin : ''
+      const response = await fetch(`${baseUrl}/api/users`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userFormData),
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        setMessage({ type: 'success', text: 'کاربر با موفقیت ایجاد شد' })
+        setUserFormData({
+          username: '',
+          password: '',
+          can_create: false,
+          can_edit: false,
+          can_delete: false,
+        })
+        loadUsers()
+      } else {
+        setMessage({ type: 'error', text: data.error || 'هەڵە لە دروستکردنی بەکارهێنەر' })
+      }
+    } catch (error: any) {
+      setMessage({ type: 'error', text: error.message || 'هەڵەیەک ڕوویدا' })
+    }
+  }
+
+  const handleUpdateUser = async (userId: string) => {
+    try {
+      const baseUrl = typeof window !== 'undefined' ? window.location.origin : ''
+      const updateData: any = {
+        username: userFormData.username,
+        can_create: userFormData.can_create,
+        can_edit: userFormData.can_edit,
+        can_delete: userFormData.can_delete,
+      }
+      
+      // Only include password if it's provided
+      if (userFormData.password) {
+        updateData.password = userFormData.password
+      }
+
+      const response = await fetch(`${baseUrl}/api/users/${userId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updateData),
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        setMessage({ type: 'success', text: 'کاربر با موفقیت به‌روزرسانی شد' })
+        setEditingUserId(null)
+        setUserFormData({
+          username: '',
+          password: '',
+          can_create: false,
+          can_edit: false,
+          can_delete: false,
+        })
+        loadUsers()
+      } else {
+        setMessage({ type: 'error', text: data.error || 'هەڵە لە نوێکردنەوەی بەکارهێنەر' })
+      }
+    } catch (error: any) {
+      setMessage({ type: 'error', text: error.message || 'هەڵەیەک ڕوویدا' })
+    }
+  }
+
+  const handleDeleteUser = async (userId: string) => {
+    if (!confirm('آیا از حذف این کاربر مطمئن هستید؟')) {
+      return
+    }
+
+    try {
+      const baseUrl = typeof window !== 'undefined' ? window.location.origin : ''
+      const response = await fetch(`${baseUrl}/api/users/${userId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        setMessage({ type: 'success', text: 'کاربر با موفقیت حذف شد' })
+        loadUsers()
+      } else {
+        setMessage({ type: 'error', text: data.error || 'هەڵە لە سڕینەوەی بەکارهێنەر' })
+      }
+    } catch (error: any) {
+      setMessage({ type: 'error', text: error.message || 'هەڵەیەک ڕوویدا' })
+    }
+  }
+
+  const handleEditUser = (user: any) => {
+    setEditingUserId(user.id)
+    setUserFormData({
+      username: user.username,
+      password: '', // Don't show password
+      can_create: user.can_create,
+      can_edit: user.can_edit,
+      can_delete: user.can_delete,
+    })
+  }
+
   const handleSubmit = async () => {
+    // Check permissions
+    if (!userPermissions.can_create && !editingSlug) {
+      setMessage({ type: 'error', text: 'شما اجازه ایجاد پست ندارید' })
+      return
+    }
+    if (!userPermissions.can_edit && editingSlug) {
+      setMessage({ type: 'error', text: 'شما اجازه ویرایش پست ندارید' })
+      return
+    }
+
     // Validate required fields (Farsi is required)
     if (!formData.titleFa || !formData.excerptFa || !formData.contentFa) {
       setMessage({ type: 'error', text: 'لطفاً عنوان، خلاصه و محتوای فارسی را پر کنید' })
@@ -630,39 +814,48 @@ export default function AdminPage() {
                 دەرچوون
               </button>
               <button
-                onClick={() => {
-                  setMode('add')
-                  setEditingSlug(null)
-                setFormData({
-                  titleKu: '',
-                  titleFa: '',
-                  titleEn: '',
-                  excerptKu: '',
-                  excerptFa: '',
-                  excerptEn: '',
-                  contentKu: '',
-                  contentFa: '',
-                  contentEn: '',
-                  category: 'social',
-                  section: 'general',
-          author: 'کۆدەنگ',
-          authorInstagram: '',
-          authorFacebook: '',
-          authorTwitter: '',
-          authorTelegram: '',
-          authorYoutube: '',
-          tags: '',
-          image: '',
-          video: '',
-          audio: '',
-          date: new Date().toISOString().split('T')[0],
-                })
-                }}
-                className="flex items-center gap-2 bg-red-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-600 transition"
+                onClick={() => setMode('users')}
+                className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-600 transition"
               >
-                <Plus className="h-5 w-5" />
-                پۆستی نوێ
+                <Users className="h-5 w-5" />
+                بەکارهێنەران
               </button>
+              {userPermissions.can_create && (
+                <button
+                  onClick={() => {
+                    setMode('add')
+                    setEditingSlug(null)
+                  setFormData({
+                    titleKu: '',
+                    titleFa: '',
+                    titleEn: '',
+                    excerptKu: '',
+                    excerptFa: '',
+                    excerptEn: '',
+                    contentKu: '',
+                    contentFa: '',
+                    contentEn: '',
+                    category: 'social',
+                    section: 'general',
+            author: 'کۆدەنگ',
+            authorInstagram: '',
+            authorFacebook: '',
+            authorTwitter: '',
+            authorTelegram: '',
+            authorYoutube: '',
+            tags: '',
+                    image: '',
+                    video: '',
+                    audio: '',
+                    date: new Date().toISOString().split('T')[0],
+                  })
+                  }}
+                  className="flex items-center gap-2 bg-red-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-600 transition"
+                >
+                  <Plus className="h-5 w-5" />
+                  پۆستی نوێ
+                </button>
+              )}
             </div>
           </div>
 
@@ -705,25 +898,214 @@ export default function AdminPage() {
                     >
                       <List className="h-5 w-5" />
                     </Link>
+                    {userPermissions.can_edit && (
+                      <button
+                        onClick={() => handleEdit(item.slug)}
+                        className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition"
+                        aria-label="دەستکاری"
+                      >
+                        <Edit className="h-5 w-5" />
+                      </button>
+                    )}
+                    {userPermissions.can_delete && (
+                      <button
+                        onClick={() => handleDelete(item.slug)}
+                        className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition"
+                        aria-label="سڕینەوە"
+                      >
+                        <Trash2 className="h-5 w-5" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    )
+  }
+
+  // User Management Mode
+  if (mode === 'users') {
+    return (
+      <div className="container mx-auto px-4 py-8 max-w-6xl">
+        <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8 space-y-6">
+          <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+            <div>
+              <h1 className="text-3xl font-bold text-slate-900">بەڕێوەبردنی بەکارهێنەران</h1>
+              <p className="text-slate-600 mt-2">دروستکردن و بەڕێوەبردنی بەکارهێنەران</p>
+            </div>
+            <div className="flex items-center gap-4">
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 bg-slate-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-slate-600 transition"
+              >
+                <Lock className="h-5 w-5" />
+                دەرچوون
+              </button>
+              <button
+                onClick={() => setMode('list')}
+                className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-600 transition"
+              >
+                <List className="h-5 w-5" />
+                پۆستەکان
+              </button>
+            </div>
+          </div>
+
+          {message && (
+            <div className={`rounded-lg p-4 ${
+              message.type === 'success' 
+                ? 'bg-green-50 border border-green-200 text-green-800' 
+                : 'bg-red-50 border border-red-200 text-red-800'
+            }`}>
+              {message.text}
+            </div>
+          )}
+
+          {/* User Form */}
+          <div className="bg-slate-50 rounded-lg p-6 space-y-4">
+            <h2 className="text-xl font-bold text-slate-900">
+              {editingUserId ? 'دەستکاریکردنی بەکارهێنەر' : 'دروستکردنی بەکارهێنەری نوێ'}
+            </h2>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
+                  نام کاربری
+                </label>
+                <input
+                  type="text"
+                  value={userFormData.username}
+                  onChange={(e) => setUserFormData({ ...userFormData, username: e.target.value })}
+                  className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  placeholder="نام کاربری"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
+                  رمز عبور {editingUserId && '(خالی بگذارید برای عدم تغییر)'}
+                </label>
+                <input
+                  type="password"
+                  value={userFormData.password}
+                  onChange={(e) => setUserFormData({ ...userFormData, password: e.target.value })}
+                  className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  placeholder="رمز عبور"
+                />
+              </div>
+              <div className="md:col-span-2">
+                <label className="block text-sm font-semibold text-slate-700 mb-3">
+                  دسترسی‌ها
+                </label>
+                <div className="grid gap-3 md:grid-cols-3">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={userFormData.can_create}
+                      onChange={(e) => setUserFormData({ ...userFormData, can_create: e.target.checked })}
+                      className="rounded border-slate-300 text-red-600 focus:ring-red-500"
+                    />
+                    <span className="text-sm text-slate-700">ایجاد پست</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={userFormData.can_edit}
+                      onChange={(e) => setUserFormData({ ...userFormData, can_edit: e.target.checked })}
+                      className="rounded border-slate-300 text-red-600 focus:ring-red-500"
+                    />
+                    <span className="text-sm text-slate-700">ویرایش پست</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={userFormData.can_delete}
+                      onChange={(e) => setUserFormData({ ...userFormData, can_delete: e.target.checked })}
+                      className="rounded border-slate-300 text-red-600 focus:ring-red-500"
+                    />
+                    <span className="text-sm text-slate-700">حذف پست</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center gap-4">
+              <button
+                onClick={editingUserId ? () => handleUpdateUser(editingUserId) : handleCreateUser}
+                className="flex items-center gap-2 bg-red-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-red-600 transition"
+              >
+                <Save className="h-5 w-5" />
+                {editingUserId ? 'ذخیره تغییرات' : 'ایجاد کاربر'}
+              </button>
+              {editingUserId && (
+                <button
+                  onClick={() => {
+                    setEditingUserId(null)
+                    setUserFormData({
+                      username: '',
+                      password: '',
+                      can_create: false,
+                      can_edit: false,
+                      can_delete: false,
+                    })
+                  }}
+                  className="flex items-center gap-2 bg-slate-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-slate-600 transition"
+                >
+                  <X className="h-5 w-5" />
+                  لغو
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Users List */}
+          <div className="space-y-4">
+            <h2 className="text-xl font-bold text-slate-900">لیست کاربران</h2>
+            <div className="grid gap-4">
+              {users.map((user) => (
+                <div
+                  key={user.id}
+                  className="flex items-center justify-between p-4 border border-slate-200 rounded-lg hover:shadow-md transition"
+                >
+                  <div className="flex-1">
+                    <h3 className="font-bold text-slate-900 mb-2">{user.username}</h3>
+                    <div className="flex items-center gap-4 text-sm text-slate-600">
+                      <span className={user.can_create ? 'text-green-600' : 'text-slate-400'}>
+                        ایجاد: {user.can_create ? '✓' : '✗'}
+                      </span>
+                      <span className={user.can_edit ? 'text-green-600' : 'text-slate-400'}>
+                        ویرایش: {user.can_edit ? '✓' : '✗'}
+                      </span>
+                      <span className={user.can_delete ? 'text-green-600' : 'text-slate-400'}>
+                        حذف: {user.can_delete ? '✓' : '✗'}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 ml-4">
                     <button
-                      onClick={() => handleEdit(item.slug)}
+                      onClick={() => handleEditUser(user)}
                       className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition"
-                      aria-label="دەستکاری"
+                      aria-label="ویرایش"
                     >
                       <Edit className="h-5 w-5" />
                     </button>
                     <button
-                      onClick={() => handleDelete(item.slug)}
+                      onClick={() => handleDeleteUser(user.id)}
                       className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition"
-                      aria-label="سڕینەوە"
+                      aria-label="حذف"
                     >
                       <Trash2 className="h-5 w-5" />
                     </button>
                   </div>
                 </div>
               ))}
+              {users.length === 0 && (
+                <div className="text-center py-12 text-slate-500">
+                  هیچ کاربری وجود ندارد
+                </div>
+              )}
             </div>
-          )}
+          </div>
         </div>
       </div>
     )
