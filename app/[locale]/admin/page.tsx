@@ -32,6 +32,11 @@ export default function AdminPage() {
     category: 'social',
     section: 'general', // 'hero', 'breaking', 'general'
     author: 'کۆدەنگ',
+    authorInstagram: '',
+    authorFacebook: '',
+    authorTwitter: '',
+    authorTelegram: '',
+    authorYoutube: '',
     tags: '',
     image: '',
     video: '',
@@ -201,6 +206,11 @@ export default function AdminPage() {
         category: post.category || 'social',
         section: post.section || 'general',
         author: post.author || 'کۆدەنگ',
+        authorInstagram: (post as any).authorInstagram || '',
+        authorFacebook: (post as any).authorFacebook || '',
+        authorTwitter: (post as any).authorTwitter || '',
+        authorTelegram: (post as any).authorTelegram || '',
+        authorYoutube: (post as any).authorYoutube || '',
         tags: Array.isArray(post.tags) ? post.tags.join(', ') : (post.tags || ''),
         image: post.image || '',
         video: post.video || '',
@@ -433,6 +443,11 @@ export default function AdminPage() {
           category: 'social',
           section: 'general',
           author: 'کۆدەنگ',
+          authorInstagram: '',
+          authorFacebook: '',
+          authorTwitter: '',
+          authorTelegram: '',
+          authorYoutube: '',
           tags: '',
           image: '',
           video: '',
@@ -630,12 +645,17 @@ export default function AdminPage() {
                   contentEn: '',
                   category: 'social',
                   section: 'general',
-                  author: 'کۆدەنگ',
-                  tags: '',
-                  image: '',
-                  video: '',
-                  audio: '',
-                  date: new Date().toISOString().split('T')[0],
+          author: 'کۆدەنگ',
+          authorInstagram: '',
+          authorFacebook: '',
+          authorTwitter: '',
+          authorTelegram: '',
+          authorYoutube: '',
+          tags: '',
+          image: '',
+          video: '',
+          audio: '',
+          date: new Date().toISOString().split('T')[0],
                 })
                 }}
                 className="flex items-center gap-2 bg-red-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-600 transition"
@@ -798,6 +818,65 @@ export default function AdminPage() {
               className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
               placeholder="کۆدەنگ"
             />
+          </div>
+
+          {/* Author Social Media Links */}
+          <div className="md:col-span-2">
+            <label className="block text-sm font-semibold text-slate-700 mb-3">
+              لینکەکانی سۆشیاڵ میدیای نووسەر (ئیختیاری)
+            </label>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div>
+                <label className="block text-xs text-slate-600 mb-1">Instagram</label>
+                <input
+                  type="url"
+                  value={formData.authorInstagram}
+                  onChange={(e) => setFormData({ ...formData, authorInstagram: e.target.value })}
+                  className="w-full rounded-lg border border-slate-300 px-4 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  placeholder="https://instagram.com/username"
+                />
+              </div>
+              <div>
+                <label className="block text-xs text-slate-600 mb-1">Facebook</label>
+                <input
+                  type="url"
+                  value={formData.authorFacebook}
+                  onChange={(e) => setFormData({ ...formData, authorFacebook: e.target.value })}
+                  className="w-full rounded-lg border border-slate-300 px-4 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  placeholder="https://facebook.com/username"
+                />
+              </div>
+              <div>
+                <label className="block text-xs text-slate-600 mb-1">Twitter/X</label>
+                <input
+                  type="url"
+                  value={formData.authorTwitter}
+                  onChange={(e) => setFormData({ ...formData, authorTwitter: e.target.value })}
+                  className="w-full rounded-lg border border-slate-300 px-4 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  placeholder="https://twitter.com/username"
+                />
+              </div>
+              <div>
+                <label className="block text-xs text-slate-600 mb-1">Telegram</label>
+                <input
+                  type="url"
+                  value={formData.authorTelegram}
+                  onChange={(e) => setFormData({ ...formData, authorTelegram: e.target.value })}
+                  className="w-full rounded-lg border border-slate-300 px-4 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  placeholder="https://t.me/username"
+                />
+              </div>
+              <div>
+                <label className="block text-xs text-slate-600 mb-1">YouTube</label>
+                <input
+                  type="url"
+                  value={formData.authorYoutube}
+                  onChange={(e) => setFormData({ ...formData, authorYoutube: e.target.value })}
+                  className="w-full rounded-lg border border-slate-300 px-4 py-2 text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                  placeholder="https://youtube.com/@username"
+                />
+              </div>
+            </div>
           </div>
 
           {/* Date */}

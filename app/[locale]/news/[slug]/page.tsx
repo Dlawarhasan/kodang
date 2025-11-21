@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { notFound } from 'next/navigation'
 import { useTranslations, useLocale } from 'next-intl'
 import { getNews, getNewsBySlug, type NewsItem } from '@/lib/news'
-import { Calendar, User, ArrowRight } from 'lucide-react'
+import { Calendar, User, ArrowRight, Instagram, Facebook, Twitter, Send, Youtube } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { use } from 'react'
@@ -153,6 +153,72 @@ export default function NewsDetail({
               </div>
             )}
           </div>
+
+          {/* Author Social Media Links */}
+          {(article.authorInstagram || article.authorFacebook || article.authorTwitter || article.authorTelegram || article.authorYoutube) && (
+            <div className="mt-8 pt-8 border-t border-slate-200">
+              <h3 className="text-lg font-semibold text-slate-900 mb-4">
+                {locale === 'fa' ? 'شبکه‌های اجتماعی نویسنده' : locale === 'ku' ? 'تۆرەکۆمەڵایەتییەکانی نووسەر' : 'Author Social Media'}
+              </h3>
+              <div className="flex flex-wrap items-center gap-3">
+                {article.authorInstagram && (
+                  <a
+                    href={article.authorInstagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-pink-200 bg-pink-50 text-pink-600 hover:bg-pink-100 transition"
+                  >
+                    <Instagram className="h-4 w-4" />
+                    <span className="text-sm font-medium">Instagram</span>
+                  </a>
+                )}
+                {article.authorFacebook && (
+                  <a
+                    href={article.authorFacebook}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-blue-200 bg-blue-50 text-blue-600 hover:bg-blue-100 transition"
+                  >
+                    <Facebook className="h-4 w-4" />
+                    <span className="text-sm font-medium">Facebook</span>
+                  </a>
+                )}
+                {article.authorTwitter && (
+                  <a
+                    href={article.authorTwitter}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100 transition"
+                  >
+                    <Twitter className="h-4 w-4" />
+                    <span className="text-sm font-medium">Twitter</span>
+                  </a>
+                )}
+                {article.authorTelegram && (
+                  <a
+                    href={article.authorTelegram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-blue-200 bg-blue-50 text-blue-500 hover:bg-blue-100 transition"
+                  >
+                    <Send className="h-4 w-4" />
+                    <span className="text-sm font-medium">Telegram</span>
+                  </a>
+                )}
+                {article.authorYoutube && (
+                  <a
+                    href={article.authorYoutube}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-red-200 bg-red-50 text-red-600 hover:bg-red-100 transition"
+                  >
+                    <Youtube className="h-4 w-4" />
+                    <span className="text-sm font-medium">YouTube</span>
+                  </a>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </article>

@@ -8,6 +8,11 @@ export interface NewsItem {
   content: string
   date: string
   author: string
+  authorInstagram?: string
+  authorFacebook?: string
+  authorTwitter?: string
+  authorTelegram?: string
+  authorYoutube?: string
   category?: string
   section?: 'hero' | 'breaking' | 'general'
   image?: string

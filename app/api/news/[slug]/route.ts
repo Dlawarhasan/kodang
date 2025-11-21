@@ -28,6 +28,12 @@ export async function GET(
       title: data.translations?.[locale]?.title || data.translations?.fa?.title || '',
       excerpt: data.translations?.[locale]?.excerpt || data.translations?.fa?.excerpt || '',
       content: data.translations?.[locale]?.content || data.translations?.fa?.content || '',
+      // Map database column names to camelCase for frontend
+      authorInstagram: data.author_instagram || null,
+      authorFacebook: data.author_facebook || null,
+      authorTwitter: data.author_twitter || null,
+      authorTelegram: data.author_telegram || null,
+      authorYoutube: data.author_youtube || null,
     }
 
     return NextResponse.json({ news: newsItem })
@@ -80,6 +86,11 @@ export async function PUT(
       slug: body.slug || slug,
       date: body.date || new Date().toISOString().split('T')[0],
       author: body.author || 'کۆدەنگ',
+      author_instagram: body.authorInstagram || null,
+      author_facebook: body.authorFacebook || null,
+      author_twitter: body.authorTwitter || null,
+      author_telegram: body.authorTelegram || null,
+      author_youtube: body.authorYoutube || null,
       category: body.category || 'social',
       section: body.section || 'general',
       image: body.image || '',
