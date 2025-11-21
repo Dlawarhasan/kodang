@@ -34,6 +34,12 @@ export async function GET(request: NextRequest) {
       title: item.translations?.[locale]?.title || item.translations?.fa?.title || '',
       excerpt: item.translations?.[locale]?.excerpt || item.translations?.fa?.excerpt || '',
       content: item.translations?.[locale]?.content || item.translations?.fa?.content || '',
+      // Map database column names (snake_case) to camelCase for frontend
+      authorInstagram: item.author_instagram || null,
+      authorFacebook: item.author_facebook || null,
+      authorTwitter: item.author_twitter || null,
+      authorTelegram: item.author_telegram || null,
+      authorYoutube: item.author_youtube || null,
     })) || []
 
     return NextResponse.json({ news })
