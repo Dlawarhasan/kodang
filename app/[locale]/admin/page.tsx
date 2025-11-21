@@ -408,7 +408,9 @@ export default function AdminPage() {
         }
         console.error('Submit API Error:', errorData)
         const errorMessage = errorData.error || errorData.details || `HTTP error! status: ${response.status}`
-        throw new Error(errorMessage)
+        setMessage({ type: 'error', text: errorMessage })
+        setIsSubmitting(false)
+        return
       }
 
       const data = await response.json()

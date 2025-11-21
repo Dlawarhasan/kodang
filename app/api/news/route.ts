@@ -64,10 +64,30 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate slug
-    const slug = body.slug || body.titleKu
+    let baseSlug = body.slug || body.titleKu
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/(^-|-$)/g, '')
+    
+    // Check if slug exists and make it unique
+    let slug = baseSlug
+    let counter = 1
+    let slugExists = true
+    
+    while (slugExists) {
+      const { data: existingPost } = await supabase
+        .from('news')
+        .select('slug')
+        .eq('slug', slug)
+        .single()
+      
+      if (!existingPost) {
+        slugExists = false
+      } else {
+        slug = `${baseSlug}-${counter}`
+        counter++
+      }
+    }
 
     // Prepare translations
     const translations = {
@@ -111,11 +131,27 @@ export async function POST(request: NextRequest) {
       .select()
       .single()
 
-    if (error) throw error
+    if (error) {
+      // Handle duplicate slug error with better message
+      if (error.code === '23505' || error.message?.includes('duplicate key') || error.message?.includes('unique constraint')) {
+        return NextResponse.json(
+          { error: 'پۆستێک بەم ناونیشانە هەیە. تکایە ناونیشانێکی جیاواز بنووسە یان slug بگۆڕە.' },
+          { status: 400 }
+        )
+      }
+      throw error
+    }
 
     return NextResponse.json({ success: true, data })
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    // Better error handling for duplicate slug
+    if (error.code === '23505' || error.message?.includes('duplicate key') || error.message?.includes('unique constraint')) {
+      return NextResponse.json(
+        { error: 'پۆستێک بەم ناونیشانە هەیە. تکایە ناونیشانێکی جیاواز بنووسە.' },
+        { status: 400 }
+      )
+    }
+    return NextResponse.json({ error: error.message || 'هەڵەیەک ڕوویدا' }, { status: 500 })
   }
 }
 
