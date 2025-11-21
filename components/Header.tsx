@@ -165,8 +165,13 @@ export default function Header() {
               {isLangMenuOpen && (
                   <div className="absolute right-0 mt-2 w-48 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl z-20">
                   {languages.map((lang) => {
+                      // Get current path from window.location to ensure we have the actual pathname with locale
+                      const currentPath = typeof window !== 'undefined' 
+                        ? window.location.pathname 
+                        : pathname
+                      
                       // Get current path and remove locale prefix
-                      let pathWithoutLocale = pathname
+                      let pathWithoutLocale = currentPath
                       
                       // Remove any locale prefix from path (check all locales)
                       for (const loc of locales) {
@@ -193,8 +198,10 @@ export default function Header() {
                       }
                       
                       // Preserve query parameters
-                      const queryString = searchParams.toString()
-                      const query = queryString ? `?${queryString}` : ''
+                      const queryString = typeof window !== 'undefined' 
+                        ? window.location.search 
+                        : searchParams.toString()
+                      const query = queryString ? queryString : ''
                       
                       // Build target href
                       // Always add locale prefix for consistent navigation
@@ -227,10 +234,12 @@ export default function Header() {
                           }
                           
                           // Navigate to new locale with full page reload
+                          const currentPathForLog = typeof window !== 'undefined' ? window.location.pathname : pathname
                           console.log('Language Switch Debug:', {
                             currentLocale: locale,
                             targetLocale: lang.code,
                             currentPathname: pathname,
+                            windowPathname: currentPathForLog,
                             pathWithoutLocale: pathWithoutLocale,
                             targetHref: targetHref,
                             fullUrl: fullUrl,
@@ -238,22 +247,11 @@ export default function Header() {
                           })
                           
                           // Force a full page reload to ensure locale change
-                          // For admin pages, ensure we clear any cached state
                           if (typeof window !== 'undefined') {
-                            // Clear session storage if needed (optional)
-                            // sessionStorage.clear()
-                            
-                            // Use immediate navigation for admin pages
-                            if (pathname.includes('/admin')) {
-                              console.log('Admin page detected, forcing immediate navigation')
-                              window.location.replace(fullUrl)
-                            } else {
-                              // Use setTimeout for other pages
-                              setTimeout(() => {
-                                console.log('Navigating to:', fullUrl)
-                                window.location.href = fullUrl
-                              }, 50)
-                            }
+                            // Always use window.location.replace for immediate navigation
+                            // This ensures the browser history is updated and locale change is immediate
+                            console.log('Navigating to:', fullUrl)
+                            window.location.replace(fullUrl)
                           }
                         }}
                         className={`flex w-full items-center gap-3 px-4 py-3 text-sm font-medium transition hover:bg-slate-50 text-left ${
