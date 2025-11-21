@@ -61,13 +61,28 @@ export default function Footer() {
             <div className="flex gap-4 mt-6">
               {socialLinks.map((social) => {
                 const Icon = social.icon
+                // Different styling for each social media platform
+                const getIconStyles = (label: string) => {
+                  switch (label) {
+                    case 'Instagram':
+                      return 'hover:bg-gradient-to-br hover:from-purple-600 hover:via-pink-500 hover:to-orange-500 hover:text-white'
+                    case 'Facebook':
+                      return 'hover:bg-blue-600 hover:text-white'
+                    case 'Telegram':
+                      return 'hover:bg-blue-500 hover:text-white'
+                    case 'YouTube':
+                      return 'hover:bg-red-600 hover:text-white'
+                    default:
+                      return 'hover:bg-primary-600 hover:text-white'
+                  }
+                }
                 return (
                   <a
                     key={social.label}
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-2 bg-gray-100 rounded-full hover:bg-primary-600 hover:text-white transition-colors"
+                    className={`p-2 bg-gray-100 rounded-full transition-all duration-300 hover:scale-110 ${getIconStyles(social.label)}`}
                     aria-label={social.label}
                   >
                     <Icon className="h-5 w-5" />
