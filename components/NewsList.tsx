@@ -30,32 +30,70 @@ export default function NewsList({ news }: NewsListProps) {
         <Link
           key={item.id}
           href={`/${locale}/news/${item.slug}`}
-          className="relative overflow-hidden rounded-2xl border border-slate-200/60 bg-white/95 shadow-sm transition hover:-translate-y-1 hover:border-red-500/60 hover:shadow-xl hover:shadow-red-500/10 group animate-fade-up"
+          className="group relative overflow-hidden rounded-3xl border-2 border-slate-200/60 bg-gradient-to-br from-white via-slate-50/30 to-white shadow-lg shadow-slate-200/20 transition-all duration-500 hover:-translate-y-2 hover:border-red-500/50 hover:shadow-2xl hover:shadow-red-500/20 animate-fade-up"
           style={{ animationDelay: `${index * 0.08}s` }}
         >
-          <span className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-red-500 via-red-400 to-blue-600 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+          {/* Decorative Border Lines */}
+          <div className="absolute inset-0 z-10 pointer-events-none rounded-3xl">
+            {/* Top Border */}
+            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-red-500/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            {/* Bottom Border */}
+            <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-red-500/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            {/* Left Border */}
+            <div className="absolute top-0 bottom-0 left-0 w-[2px] bg-gradient-to-b from-transparent via-red-500/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            {/* Right Border */}
+            <div className="absolute top-0 bottom-0 right-0 w-[2px] bg-gradient-to-b from-transparent via-red-500/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            
+            {/* Corner Accents */}
+            <div className="absolute top-3 left-3 w-6 h-6 border-t-2 border-l-2 border-red-500/30 rounded-tl-lg opacity-0 group-hover:opacity-100 group-hover:border-red-500/60 transition-all duration-500" />
+            <div className="absolute top-3 right-3 w-6 h-6 border-t-2 border-r-2 border-red-500/30 rounded-tr-lg opacity-0 group-hover:opacity-100 group-hover:border-red-500/60 transition-all duration-500" />
+            <div className="absolute bottom-3 left-3 w-6 h-6 border-b-2 border-l-2 border-red-500/30 rounded-bl-lg opacity-0 group-hover:opacity-100 group-hover:border-red-500/60 transition-all duration-500" />
+            <div className="absolute bottom-3 right-3 w-6 h-6 border-b-2 border-r-2 border-red-500/30 rounded-br-lg opacity-0 group-hover:opacity-100 group-hover:border-red-500/60 transition-all duration-500" />
+          </div>
+
+          {/* Top Gradient Bar */}
+          <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-red-500 via-red-400 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
+
+          {/* Image Section */}
           {item.image && (
             <div className="relative w-full aspect-[4/5] overflow-hidden">
               <Image
                 src={item.image}
                 alt={item.title}
                 fill
-                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                className="object-cover transition-transform duration-700 group-hover:scale-110"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+              {/* Gradient Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
+              {/* Animated Gradient Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-r from-red-600/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              
+              {/* Category Badge on Image */}
+              {item.category && (
+                <div className="absolute top-4 left-4 z-20">
+                  <span className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-red-500/90 to-red-600/90 backdrop-blur-sm border-2 border-white/30 px-3 py-1.5 text-[11px] font-bold text-white shadow-lg">
+                    {getCategoryName(item.category, locale)}
+                  </span>
+                </div>
+              )}
             </div>
           )}
 
-          <div className="space-y-4 p-6">
-            <div className="flex items-center gap-3 text-xs font-semibold uppercase tracking-wider text-slate-500">
-              {item.category && (
-                <span className="inline-flex items-center gap-2 rounded-full bg-red-500/10 px-3 py-1 text-[11px] font-semibold text-red-600">
+          {/* Content Section */}
+          <div className="relative space-y-4 p-6 bg-white/95 backdrop-blur-sm">
+            {/* Decorative Line Above Content */}
+            <div className="absolute -top-1 left-6 right-6 h-[1px] bg-gradient-to-r from-transparent via-red-200 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+            {/* Meta Information */}
+            <div className="flex items-center gap-3 text-xs font-semibold uppercase tracking-wider">
+              {!item.image && item.category && (
+                <span className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-red-500/15 to-red-600/15 backdrop-blur-sm border-2 border-red-500/30 px-3 py-1.5 text-[11px] font-bold text-red-600 group-hover:border-red-500/50 group-hover:from-red-500/20 group-hover:to-red-600/20 transition-all duration-300">
                   {getCategoryName(item.category, locale)}
                 </span>
               )}
-              <span className="flex items-center gap-2 text-slate-500">
-                <Calendar className="h-4 w-4 text-red-500" />
+              <span className="flex items-center gap-2 text-slate-500 group-hover:text-red-600 transition-colors duration-300">
+                <Calendar className="h-4 w-4 text-red-500 group-hover:scale-110 transition-transform duration-300" />
                 {new Date(item.date).toLocaleDateString(
                   locale === 'ku' ? 'ckb-IQ' : locale === 'fa' ? 'fa-IR' : 'en-US',
                   {
@@ -67,25 +105,32 @@ export default function NewsList({ news }: NewsListProps) {
               </span>
             </div>
 
-            <h2 className="text-2xl font-extrabold leading-tight text-slate-900 transition-colors duration-300 group-hover:text-red-600 line-clamp-2">
+            {/* Title */}
+            <h2 className="text-2xl font-black leading-tight text-slate-900 transition-all duration-300 group-hover:text-red-600 line-clamp-2 relative">
+              <span className="absolute -bottom-1 left-0 w-0 h-[3px] bg-gradient-to-r from-red-500 to-red-400 rounded-full group-hover:w-full transition-all duration-500" />
               {item.title}
             </h2>
 
-            <p className="text-sm text-slate-600 line-clamp-3">
+            {/* Excerpt */}
+            <p className="text-sm text-slate-600 line-clamp-3 leading-relaxed relative pl-4 border-l-2 border-slate-200 group-hover:border-red-300 transition-colors duration-300">
               {item.excerpt}
             </p>
 
-            <div className="flex items-center justify-between text-sm">
-              <span className="flex items-center gap-2 font-medium text-slate-500">
-                <User className="h-4 w-4 text-slate-400" />
+            {/* Footer */}
+            <div className="flex items-center justify-between pt-2 border-t border-slate-200/60 group-hover:border-red-200 transition-colors duration-300">
+              <span className="flex items-center gap-2 font-semibold text-slate-500 group-hover:text-slate-700 transition-colors duration-300">
+                <User className="h-4 w-4 text-slate-400 group-hover:text-red-500 transition-colors duration-300" />
                 {item.author}
               </span>
-              <span className="flex items-center gap-1 text-red-600 font-semibold transition-all duration-300 group-hover:gap-2">
+              <span className="flex items-center gap-1 text-red-600 font-bold transition-all duration-300 group-hover:gap-2 group-hover:text-red-500">
                 {tCommon('readMore')}
-                <ArrowLeft className={locale === 'en' ? 'mr-2 h-4 w-4 rotate-180' : 'ml-2 h-4 w-4'} />
+                <ArrowLeft className={`h-4 w-4 transition-transform duration-300 group-hover:translate-x-1 ${locale === 'en' ? 'mr-2 rotate-180' : 'ml-2'}`} />
               </span>
             </div>
           </div>
+
+          {/* Decorative Glow Effect */}
+          <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-red-500/0 via-red-500/0 to-red-500/0 opacity-0 group-hover:opacity-10 group-hover:via-red-500/5 group-hover:to-red-500/10 transition-opacity duration-500 pointer-events-none" />
         </Link>
       ))}
     </div>
