@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useTranslations, useLocale } from 'next-intl'
-import { Menu, X, Globe, Search, Flame, Facebook, Send, Instagram } from 'lucide-react'
+import { Menu, X, Globe, Search, Flame, Facebook, Send, Instagram, Youtube } from 'lucide-react'
 import { locales, defaultLocale } from '@/i18n'
 import Logo from './Logo'
 import CategoryFilter from './CategoryFilter'
@@ -132,6 +132,15 @@ export default function Header() {
                 aria-label="Telegram"
               >
                 <Send className="h-5 w-5" />
+              </a>
+              <a
+                href="https://youtube.com/@kodangnews?si=KNdtPuv8XCvCwp93"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white/70 p-2 text-slate-600 transition hover:border-red-500 hover:text-red-600 hover:bg-red-50"
+                aria-label="YouTube"
+              >
+                <Youtube className="h-5 w-5" />
               </a>
             </div>
 
