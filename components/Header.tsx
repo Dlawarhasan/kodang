@@ -168,12 +168,15 @@ export default function Header() {
                       // Get current path and remove locale prefix
                       let pathWithoutLocale = pathname
                       
-                      // Remove any locale prefix from path
+                      // Remove any locale prefix from path (check all locales)
                       for (const loc of locales) {
+                        // Check for paths like /fa/admin, /ku/admin, etc.
                         if (pathWithoutLocale.startsWith(`/${loc}/`)) {
                           pathWithoutLocale = pathWithoutLocale.replace(`/${loc}`, '')
                           break
-                        } else if (pathWithoutLocale === `/${loc}`) {
+                        } 
+                        // Check for exact locale match like /fa, /ku
+                        else if (pathWithoutLocale === `/${loc}`) {
                           pathWithoutLocale = '/'
                           break
                         }
@@ -230,14 +233,18 @@ export default function Header() {
                             currentPathname: pathname,
                             pathWithoutLocale: pathWithoutLocale,
                             targetHref: targetHref,
-                            fullUrl: fullUrl
+                            fullUrl: fullUrl,
+                            windowLocation: typeof window !== 'undefined' ? window.location.href : 'N/A'
                           })
                           
                           // Force a full page reload to ensure locale change
                           // Use setTimeout to ensure state updates complete first
                           setTimeout(() => {
-                            window.location.href = fullUrl
-                          }, 100)
+                            if (typeof window !== 'undefined') {
+                              console.log('Navigating to:', fullUrl)
+                              window.location.href = fullUrl
+                            }
+                          }, 50)
                         }}
                         className={`flex w-full items-center gap-3 px-4 py-3 text-sm font-medium transition hover:bg-slate-50 text-left ${
                           lang.code === locale ? 'bg-slate-100 text-slate-900' : 'text-slate-600'
