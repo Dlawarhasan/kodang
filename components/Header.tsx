@@ -238,13 +238,23 @@ export default function Header() {
                           })
                           
                           // Force a full page reload to ensure locale change
-                          // Use setTimeout to ensure state updates complete first
-                          setTimeout(() => {
-                            if (typeof window !== 'undefined') {
-                              console.log('Navigating to:', fullUrl)
-                              window.location.href = fullUrl
+                          // For admin pages, ensure we clear any cached state
+                          if (typeof window !== 'undefined') {
+                            // Clear session storage if needed (optional)
+                            // sessionStorage.clear()
+                            
+                            // Use immediate navigation for admin pages
+                            if (pathname.includes('/admin')) {
+                              console.log('Admin page detected, forcing immediate navigation')
+                              window.location.replace(fullUrl)
+                            } else {
+                              // Use setTimeout for other pages
+                              setTimeout(() => {
+                                console.log('Navigating to:', fullUrl)
+                                window.location.href = fullUrl
+                              }, 50)
                             }
-                          }, 50)
+                          }
                         }}
                         className={`flex w-full items-center gap-3 px-4 py-3 text-sm font-medium transition hover:bg-slate-50 text-left ${
                           lang.code === locale ? 'bg-slate-100 text-slate-900' : 'text-slate-600'
