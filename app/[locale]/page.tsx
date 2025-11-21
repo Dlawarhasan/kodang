@@ -131,7 +131,8 @@ export default function Home() {
       </header>
 
       {heroArticle && (
-        <section className="relative overflow-hidden rounded-3xl bg-slate-950 text-white shadow-2xl ring-1 ring-white/10 animate-fade-in">
+        <section className="group relative overflow-hidden rounded-3xl bg-slate-950 text-white shadow-2xl ring-1 ring-white/10 animate-fade-in transition-all duration-500 hover:shadow-red-500/20 hover:ring-red-500/30">
+          {/* Background Image with Parallax Effect */}
           <div className="absolute inset-0 -z-10">
             {heroArticle.image && (
               <Image
@@ -139,25 +140,33 @@ export default function Home() {
                 alt={heroArticle.title}
                 fill
                 priority
-                className="object-cover opacity-60"
+                className="object-cover opacity-50 transition-transform duration-700 group-hover:scale-110"
                 sizes="(max-width: 768px) 100vw, (max-width: 1280px) 70vw, 1200px"
               />
             )}
-            <div className="absolute inset-0 bg-gradient-to-br from-slate-950/90 via-slate-900/80 to-red-900/60" />
+            {/* Enhanced Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-slate-950/95 via-slate-900/85 to-red-900/70" />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
+            {/* Animated Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-r from-red-600/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
           </div>
 
+          {/* Content Grid */}
           <div className="relative grid gap-8 p-8 md:grid-cols-[2fr,1fr] md:p-12 lg:p-16">
+            {/* Main Content */}
             <div className="space-y-6 max-w-2xl">
-              <div className="flex flex-wrap items-center gap-4 text-sm text-slate-200/80">
-                <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 font-semibold">
+              {/* Badges */}
+              <div className="flex flex-wrap items-center gap-3 text-sm">
+                <span className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-red-500/30 to-red-600/30 backdrop-blur-sm border border-red-400/30 px-4 py-1.5 font-semibold text-red-100 shadow-lg shadow-red-500/20">
+                  <Flame className="h-4 w-4 animate-pulse" />
                   {t('topStory')}
                 </span>
                 {heroArticle.category && (
-                  <span className="inline-flex items-center gap-2 rounded-full bg-red-500/20 px-3 py-1 font-semibold text-red-100">
+                  <span className="inline-flex items-center gap-2 rounded-full bg-white/15 backdrop-blur-sm border border-white/20 px-4 py-1.5 font-semibold text-white shadow-lg">
                     {getCategoryName(heroArticle.category, locale)}
                   </span>
                 )}
-                <span className="inline-flex items-center gap-2">
+                <span className="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 px-4 py-1.5 text-white/90">
                   <Calendar className="h-4 w-4" />
                   {new Date(heroArticle.date).toLocaleDateString(
                     locale === 'ku' ? 'ckb-IQ' : locale === 'fa' ? 'fa-IR' : 'en-US',
@@ -166,42 +175,46 @@ export default function Home() {
                 </span>
               </div>
 
-              <div className="space-y-3">
-                <h2 className="text-3xl md:text-4xl lg:text-5xl font-black leading-tight drop-shadow-lg">
+              {/* Title and Excerpt */}
+              <div className="space-y-4">
+                <h2 className="text-3xl md:text-4xl lg:text-6xl font-black leading-[1.1] drop-shadow-2xl bg-gradient-to-br from-white via-white to-slate-200 bg-clip-text text-transparent group-hover:from-red-100 group-hover:via-white group-hover:to-white transition-all duration-500">
                   {heroArticle.title}
                 </h2>
-                <p className="text-lg md:text-xl text-slate-200/90 max-w-2xl">
+                <p className="text-lg md:text-xl lg:text-2xl text-slate-200/95 max-w-2xl leading-relaxed font-medium">
                   {heroArticle.excerpt}
                 </p>
               </div>
 
-              <div className="flex flex-wrap items-center gap-4">
+              {/* Action Buttons */}
+              <div className="flex flex-wrap items-center gap-4 pt-2">
                 <Link
                   href={`/${locale}/news/${heroArticle.slug}`}
-                  className="inline-flex items-center gap-2 rounded-full bg-red-500 px-6 py-3 text-base font-semibold text-white shadow-lg shadow-red-500/40 transition hover:bg-red-400 hover:shadow-red-400/40"
+                  className="group/btn inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-red-500 to-red-600 px-8 py-4 text-base font-bold text-white shadow-xl shadow-red-500/40 transition-all duration-300 hover:from-red-400 hover:to-red-500 hover:shadow-2xl hover:shadow-red-500/50 hover:scale-105 active:scale-95"
                 >
-                  {t('heroButton')}
-                  <ArrowRight className="h-5 w-5" />
+                  <span>{t('heroButton')}</span>
+                  <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover/btn:translate-x-1" />
                 </Link>
                 <Link
                   href={`/${locale}/news`}
-                  className="inline-flex items-center gap-2 rounded-full border border-white/30 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
+                  className="inline-flex items-center gap-2 rounded-full border-2 border-white/40 backdrop-blur-sm bg-white/5 px-6 py-4 text-sm font-semibold text-white transition-all duration-300 hover:bg-white/20 hover:border-white/60 hover:scale-105 active:scale-95"
                 >
                   {t('heroSecondary')}
                 </Link>
               </div>
-      </div>
+            </div>
 
+            {/* Sidebar - Tags */}
             {heroArticle.tags && heroArticle.tags.length > 0 && (
-              <aside className="rounded-2xl bg-white/10 p-6 backdrop-blur-lg">
-                <h3 className="mb-4 text-sm font-semibold uppercase tracking-widest text-white/70">
+              <aside className="rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 p-6 shadow-2xl h-fit">
+                <h3 className="mb-4 text-xs font-bold uppercase tracking-widest text-white/80 flex items-center gap-2">
+                  <span className="h-1 w-1 rounded-full bg-red-400 animate-pulse" />
                   Tags
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {heroArticle.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="rounded-full bg-white/15 px-3 py-1 text-sm font-medium text-white/90"
+                      className="rounded-full bg-gradient-to-r from-white/20 to-white/10 backdrop-blur-sm border border-white/20 px-4 py-2 text-sm font-medium text-white/95 shadow-lg hover:from-white/30 hover:to-white/20 hover:scale-105 transition-all duration-200 cursor-default"
                     >
                       #{tag}
                     </span>
@@ -210,6 +223,10 @@ export default function Home() {
               </aside>
             )}
           </div>
+
+          {/* Decorative Elements */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-red-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-red-500/20 transition-all duration-500" />
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-slate-800/20 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
         </section>
       )}
 
