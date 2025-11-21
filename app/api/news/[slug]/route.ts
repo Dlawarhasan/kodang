@@ -10,7 +10,7 @@ export async function GET(
     const slug = decodeURIComponent(resolvedParams.slug)
     const supabase = createServerClient()
     const { searchParams } = new URL(request.url)
-    const locale = searchParams.get('locale') || 'ku'
+    const locale = searchParams.get('locale') || 'fa' // Default to Farsi
 
     const { data, error } = await supabase
       .from('news')
