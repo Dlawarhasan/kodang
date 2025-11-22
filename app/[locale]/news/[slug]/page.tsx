@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation'
 import { useTranslations, useLocale } from 'next-intl'
 import { getNews, getNewsBySlug, type NewsItem } from '@/lib/news'
 import { translateText } from '@/lib/translate'
-import { Calendar, User, ArrowRight, Instagram, Facebook, Twitter, Send, Youtube, Eye, Languages } from 'lucide-react'
+import { Calendar, User, ArrowRight, Instagram, Facebook, Twitter, Send, Youtube, Eye, Languages, Share2, Copy, Check } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { use } from 'react'
@@ -31,6 +31,7 @@ export default function NewsDetail({
     excerpt?: string
     content?: string
   }>({})
+  const [linkCopied, setLinkCopied] = useState(false)
 
   useEffect(() => {
     // Clear article state when locale changes to force re-render
@@ -254,6 +255,86 @@ export default function NewsDetail({
                 </div>
               </div>
             )}
+          </div>
+
+          {/* Share Buttons */}
+          <div className="mt-8 pt-8 border-t border-slate-200">
+            <h3 className="text-lg font-semibold text-slate-900 mb-4">
+              {locale === 'fa' ? 'اشتراک‌گذاری' : locale === 'ku' ? 'هاوبەشکردن' : 'Share'}
+            </h3>
+            <div className="flex flex-wrap items-center gap-3">
+              {/* Facebook Share */}
+              <a
+                href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(typeof window !== 'undefined' ? window.location.href : `/${locale}/news/${resolvedParams.slug}`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-blue-200 bg-blue-50 text-blue-600 hover:bg-blue-100 transition"
+              >
+                <Facebook className="h-4 w-4" />
+                <span className="text-sm font-medium">Facebook</span>
+              </a>
+
+              {/* Twitter Share */}
+              <a
+                href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(typeof window !== 'undefined' ? window.location.href : `/${locale}/news/${resolvedParams.slug}`)}&text=${encodeURIComponent(article.title)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100 transition"
+              >
+                <Twitter className="h-4 w-4" />
+                <span className="text-sm font-medium">Twitter</span>
+              </a>
+
+              {/* Telegram Share */}
+              <a
+                href={`https://t.me/share/url?url=${encodeURIComponent(typeof window !== 'undefined' ? window.location.href : `/${locale}/news/${resolvedParams.slug}`)}&text=${encodeURIComponent(article.title)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-blue-200 bg-blue-50 text-blue-500 hover:bg-blue-100 transition"
+              >
+                <Send className="h-4 w-4" />
+                <span className="text-sm font-medium">Telegram</span>
+              </a>
+
+              {/* WhatsApp Share */}
+              <a
+                href={`https://wa.me/?text=${encodeURIComponent(`${article.title} ${typeof window !== 'undefined' ? window.location.href : `/${locale}/news/${resolvedParams.slug}`}`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-green-200 bg-green-50 text-green-600 hover:bg-green-100 transition"
+              >
+                <Share2 className="h-4 w-4" />
+                <span className="text-sm font-medium">WhatsApp</span>
+              </a>
+
+              {/* Copy Link */}
+              <button
+                onClick={() => {
+                  const url = typeof window !== 'undefined' ? window.location.href : `/${locale}/news/${resolvedParams.slug}`
+                  navigator.clipboard.writeText(url).then(() => {
+                    setLinkCopied(true)
+                    setTimeout(() => setLinkCopied(false), 2000)
+                  })
+                }}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100 transition"
+              >
+                {linkCopied ? (
+                  <>
+                    <Check className="h-4 w-4 text-green-600" />
+                    <span className="text-sm font-medium text-green-600">
+                      {locale === 'fa' ? 'کپی شد!' : locale === 'ku' ? 'کۆپی کرا!' : 'Copied!'}
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="h-4 w-4" />
+                    <span className="text-sm font-medium">
+                      {locale === 'fa' ? 'کپی لینک' : locale === 'ku' ? 'کۆپی لینک' : 'Copy Link'}
+                    </span>
+                  </>
+                )}
+              </button>
+            </div>
           </div>
 
           {/* Author Social Media Links */}
