@@ -374,7 +374,7 @@ export default function Home() {
         {searchQuery && (
           <div className="mb-4 px-4">
             <h2 className="text-xl font-bold text-slate-900">
-              {t('searchResults')}: "{searchQuery}"
+              {t('searchResults')}: &quot;{searchQuery}&quot;
             </h2>
             {remainingNews.length === 0 && (
               <p className="mt-2 text-slate-600">{t('noResults')}</p>
