@@ -248,10 +248,11 @@ export default function Header() {
                           
                           // Force a full page reload to ensure locale change
                           if (typeof window !== 'undefined') {
-                            // Always use window.location.replace for immediate navigation
-                            // This ensures the browser history is updated and locale change is immediate
-                            console.log('Navigating to:', fullUrl)
-                            window.location.replace(fullUrl)
+                            // Use href with cache busting to force complete reload
+                            // This ensures the locale change is applied immediately
+                            const cacheBustUrl = `${fullUrl}${query ? (query.includes('?') ? '&' : '?') : '?'}t=${Date.now()}`
+                            console.log('Navigating to:', cacheBustUrl)
+                            window.location.href = cacheBustUrl
                           }
                         }}
                         className={`flex w-full items-center gap-3 px-4 py-3 text-sm font-medium transition hover:bg-slate-50 text-left ${

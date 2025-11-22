@@ -722,56 +722,6 @@ export default function AdminPage() {
     alert('JSON کۆپی کرا! دەتوانیت لە فایلی news-translations.ts بچێژیت')
   }
 
-  // Language switcher for admin page
-  const handleLanguageSwitch = (targetLocale: string) => {
-    if (targetLocale === locale) return
-    
-    const currentPath = typeof window !== 'undefined' ? window.location.pathname : ''
-    let pathWithoutLocale = currentPath
-    
-    // Remove current locale prefix
-    for (const loc of locales) {
-      if (pathWithoutLocale.startsWith(`/${loc}/`)) {
-        pathWithoutLocale = pathWithoutLocale.replace(`/${loc}`, '')
-        break
-      } else if (pathWithoutLocale === `/${loc}`) {
-        pathWithoutLocale = '/'
-        break
-      }
-    }
-    
-    // Ensure path starts with /
-    if (!pathWithoutLocale.startsWith('/')) {
-      pathWithoutLocale = '/' + pathWithoutLocale
-    }
-    
-    // Build new URL
-    const newPath = `/${targetLocale}${pathWithoutLocale}`
-    const fullUrl = typeof window !== 'undefined' 
-      ? `${window.location.origin}${newPath}${window.location.search}`
-      : newPath
-    
-    console.log('Admin Language Switch:', {
-      currentLocale: locale,
-      targetLocale: targetLocale,
-      currentPath: currentPath,
-      pathWithoutLocale: pathWithoutLocale,
-      newPath: newPath,
-      fullUrl: fullUrl
-    })
-    
-    // Force navigation with cache busting
-    if (typeof window !== 'undefined') {
-      // Use href with timestamp to force reload
-      window.location.href = `${fullUrl}?t=${Date.now()}`
-    }
-  }
-
-  const languages = [
-    { code: 'ku', name: 'کوردی', flag: '🇹🇯' },
-    { code: 'fa', name: 'فارسی', flag: '🇮🇷' },
-    { code: 'en', name: 'English', flag: '🇬🇧' },
-  ]
 
   // Show loading while checking authentication
   if (isCheckingAuth) {
@@ -802,7 +752,7 @@ export default function AdminPage() {
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
               <label className="block text-sm font-semibold text-slate-700 mb-2">
-                Username
+                {t('username')}
               </label>
               <input
                 type="text"
@@ -817,7 +767,7 @@ export default function AdminPage() {
 
             <div>
               <label className="block text-sm font-semibold text-slate-700 mb-2">
-                Password
+                {t('password')}
               </label>
               <input
                 type="password"
@@ -840,7 +790,7 @@ export default function AdminPage() {
               className="w-full flex items-center justify-center gap-2 bg-red-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-600 transition"
             >
               <Lock className="h-5 w-5" />
-              چوونەژوورەوە
+              {t('loginButton')}
             </button>
           </form>
         </div>
@@ -854,47 +804,23 @@ export default function AdminPage() {
         <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8 space-y-6">
           <div className="flex items-center justify-between border-b border-slate-200 pb-4">
             <div>
-              <h1 className="text-3xl font-bold text-slate-900">بەڕێوەبردنی پۆستەکان</h1>
-              <p className="text-slate-600 mt-2">لیستی هەموو پۆستەکان</p>
+              <h1 className="text-3xl font-bold text-slate-900">{t('postManagement')}</h1>
+              <p className="text-slate-600 mt-2">{t('postList')}</p>
             </div>
             <div className="flex items-center gap-4">
-              {/* Language Switcher */}
-              <div className="relative group">
-                <button
-                  className="flex items-center gap-2 bg-white border-2 border-slate-300 text-slate-700 px-4 py-2 rounded-lg font-semibold hover:border-red-500 hover:text-red-600 transition"
-                >
-                  <Globe className="h-5 w-5" />
-                  <span className="hidden sm:inline">{languages.find(l => l.code === locale)?.name || locale}</span>
-                </button>
-                <div className="absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                  {languages.map((lang) => (
-                    <button
-                      key={lang.code}
-                      onClick={() => handleLanguageSwitch(lang.code)}
-                      className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition hover:bg-slate-50 text-left ${
-                        lang.code === locale ? 'bg-slate-100 text-slate-900' : 'text-slate-600'
-                      }`}
-                    >
-                      <span className="text-lg">{lang.flag}</span>
-                      <span>{lang.name}</span>
-                      {lang.code === locale && <span className="ml-auto text-xs">✓</span>}
-                    </button>
-                  ))}
-                </div>
-              </div>
               <button
                 onClick={handleLogout}
                 className="flex items-center gap-2 bg-slate-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-slate-600 transition"
               >
                 <Lock className="h-5 w-5" />
-                دەرچوون
+                {t('logout')}
               </button>
               <button
                 onClick={() => setMode('users')}
                 className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-600 transition"
               >
                 <Users className="h-5 w-5" />
-                بەکارهێنەران
+                {t('users')}
               </button>
               {userPermissions.can_create && (
                 <button
@@ -929,7 +855,7 @@ export default function AdminPage() {
                   className="flex items-center gap-2 bg-red-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-600 transition"
                 >
                   <Plus className="h-5 w-5" />
-                  پۆستی نوێ
+                  {t('addPost')}
                 </button>
               )}
             </div>
@@ -1013,30 +939,6 @@ export default function AdminPage() {
               <p className="text-slate-600 mt-2">دروستکردن و بەڕێوەبردنی بەکارهێنەران</p>
             </div>
             <div className="flex items-center gap-4">
-              {/* Language Switcher */}
-              <div className="relative group">
-                <button
-                  className="flex items-center gap-2 bg-white border-2 border-slate-300 text-slate-700 px-4 py-2 rounded-lg font-semibold hover:border-red-500 hover:text-red-600 transition"
-                >
-                  <Globe className="h-5 w-5" />
-                  <span className="hidden sm:inline">{languages.find(l => l.code === locale)?.name || locale}</span>
-                </button>
-                <div className="absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                  {languages.map((lang) => (
-                    <button
-                      key={lang.code}
-                      onClick={() => handleLanguageSwitch(lang.code)}
-                      className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition hover:bg-slate-50 text-left ${
-                        lang.code === locale ? 'bg-slate-100 text-slate-900' : 'text-slate-600'
-                      }`}
-                    >
-                      <span className="text-lg">{lang.flag}</span>
-                      <span>{lang.name}</span>
-                      {lang.code === locale && <span className="ml-auto text-xs">✓</span>}
-                    </button>
-                  ))}
-                </div>
-              </div>
               <button
                 onClick={handleLogout}
                 className="flex items-center gap-2 bg-slate-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-slate-600 transition"
@@ -1049,7 +951,7 @@ export default function AdminPage() {
                 className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-600 transition"
               >
                 <List className="h-5 w-5" />
-                پۆستەکان
+                {t('posts')}
               </button>
             </div>
           </div>
