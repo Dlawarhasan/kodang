@@ -62,18 +62,19 @@ export async function POST(request: NextRequest) {
     const supabase = createServerClient()
     const body = await request.json()
 
-    // Validate required fields (Farsi is required)
-    if (!body.titleFa || !body.excerptFa || !body.contentFa) {
+    // Validate: At least one language must be provided
+    if (!body.titleFa && !body.titleKu && !body.titleEn) {
       return NextResponse.json(
-        { error: 'ناونیشان، خلاصه و محتوای فارسی الزامی است' },
+        { error: 'لطفاً حداقل ناونیشان را به یکی از زبان‌ها (فارسی، کردی یا انگلیسی) وارد کنید' },
         { status: 400 }
       )
     }
 
-    // Generate slug from Farsi title
-    let baseSlug = body.slug || body.titleFa
+    // Generate slug from any available title (prefer Farsi, then Kurdish, then English)
+    const titleForSlug = body.titleFa || body.titleKu || body.titleEn || 'post'
+    let baseSlug = body.slug || titleForSlug
       .toLowerCase()
-      .replace(/[^a-z0-9\u0600-\u06FF]+/g, '-') // Support Persian characters
+      .replace(/[^a-z0-9\u0600-\u06FF\u0621-\u064A]+/g, '-') // Support Persian, Kurdish, and English characters
       .replace(/(^-|-$)/g, '')
     
     // Check if slug exists and make it unique
@@ -96,22 +97,27 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Prepare translations (Farsi is required, Kurdish and English are optional)
+    // Prepare translations (all languages are optional)
+    // Use fallback: if a language is missing, use another available language
+    const getFallback = (field: 'title' | 'excerpt' | 'content') => {
+      return body[`${field}Fa`] || body[`${field}Ku`] || body[`${field}En`] || ''
+    }
+
     const translations = {
       fa: {
-        title: body.titleFa,
-        excerpt: body.excerptFa,
-        content: body.contentFa,
+        title: body.titleFa || getFallback('title'),
+        excerpt: body.excerptFa || getFallback('excerpt'),
+        content: body.contentFa || getFallback('content'),
       },
       ku: {
-        title: body.titleKu || body.titleFa,
-        excerpt: body.excerptKu || body.excerptFa,
-        content: body.contentKu || body.contentFa,
+        title: body.titleKu || body.titleFa || body.titleEn || '',
+        excerpt: body.excerptKu || body.excerptFa || body.excerptEn || '',
+        content: body.contentKu || body.contentFa || body.contentEn || '',
       },
       en: {
-        title: body.titleEn || body.titleFa,
-        excerpt: body.excerptEn || body.excerptFa,
-        content: body.contentEn || body.contentFa,
+        title: body.titleEn || body.titleFa || body.titleKu || '',
+        excerpt: body.excerptEn || body.excerptFa || body.excerptKu || '',
+        content: body.contentEn || body.contentFa || body.contentKu || '',
       },
     }
 

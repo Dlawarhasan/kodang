@@ -566,9 +566,16 @@ export default function AdminPage() {
       return
     }
 
-    // Validate required fields (Farsi is required)
-    if (!formData.titleFa || !formData.excerptFa || !formData.contentFa) {
-      setMessage({ type: 'error', text: t('farsiFieldsRequired') })
+    // Validate: At least one language must be provided
+    if (!formData.titleFa && !formData.titleKu && !formData.titleEn) {
+      setMessage({ 
+        type: 'error', 
+        text: locale === 'fa' 
+          ? 'لطفاً حداقل ناونیشان را به یکی از زبان‌ها وارد کنید' 
+          : locale === 'ku'
+          ? 'تکایە لانیکەم ناونیشانێک بە یەکێک لە زمانەکان بنووسە'
+          : 'Please enter at least a title in one language'
+      })
       return
     }
 
@@ -1457,49 +1464,46 @@ export default function AdminPage() {
           />
         </div>
 
-        {/* Persian - Required */}
+        {/* Persian - Optional */}
         <div className="border-t border-slate-200 pt-6">
           <h2 className="text-xl font-bold text-slate-900 mb-4">
-            {t('farsi')} <span className="text-red-500 text-sm">({t('required')})</span>
+            {t('farsi')} <span className="text-slate-500 text-sm">({t('optional')})</span>
           </h2>
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-semibold text-slate-700 mb-2">
-                {t('title')} ({t('farsi')}) *
+                {t('title')} ({t('farsi')})
               </label>
               <input
                 type="text"
                 value={formData.titleFa}
                 onChange={(e) => setFormData({ ...formData, titleFa: e.target.value })}
                 className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                placeholder={`${t('title')} (${t('farsi')}) *`}
-                required
+                placeholder={`${t('title')} (${t('farsi')})`}
               />
             </div>
             <div>
               <label className="block text-sm font-semibold text-slate-700 mb-2">
-                {t('excerpt')} ({t('farsi')}) *
+                {t('excerpt')} ({t('farsi')})
               </label>
               <textarea
                 value={formData.excerptFa}
                 onChange={(e) => setFormData({ ...formData, excerptFa: e.target.value })}
                 className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                placeholder={`${t('excerpt')} (${t('farsi')}) *`}
+                placeholder={`${t('excerpt')} (${t('farsi')})`}
                 rows={2}
-                required
               />
             </div>
             <div>
               <label className="block text-sm font-semibold text-slate-700 mb-2">
-                {t('content')} ({t('farsi')}) *
+                {t('content')} ({t('farsi')})
               </label>
               <textarea
                 value={formData.contentFa}
                 onChange={(e) => setFormData({ ...formData, contentFa: e.target.value })}
                 className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                placeholder={`${t('content')} (${t('farsi')}) *`}
+                placeholder={`${t('content')} (${t('farsi')})`}
                 rows={6}
-                required
               />
             </div>
           </div>
