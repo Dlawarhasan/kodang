@@ -368,18 +368,50 @@ export default function AdminPage() {
       formData.append('file', file)
       formData.append('type', type)
 
+      console.log('Uploading file:', { name: file.name, type: file.type, size: file.size, uploadType: type })
+
       const response = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
       })
 
+      // Check if response is OK before parsing JSON
+      if (!response.ok) {
+        const errorText = await response.text()
+        console.error('Upload response error:', response.status, errorText)
+        
+        // Try to parse as JSON if possible
+        let errorMessage = 'Upload failed'
+        try {
+          const errorData = JSON.parse(errorText)
+          errorMessage = errorData.error || errorMessage
+        } catch {
+          errorMessage = errorText || `Upload failed with status ${response.status}`
+        }
+        
+        throw new Error(errorMessage)
+      }
+
+      // Parse JSON response
+      const contentType = response.headers.get('content-type')
+      if (!contentType || !contentType.includes('application/json')) {
+        const text = await response.text()
+        console.error('Unexpected response type:', contentType, text.substring(0, 100))
+        throw new Error('Server returned invalid response format')
+      }
+
       const data = await response.json()
-      if (data.success) {
+      
+      if (data.success && data.url) {
+        console.log('Upload successful:', data.url)
         return data.url
       }
+      
       throw new Error(data.error || 'Upload failed')
     } catch (error: any) {
-      setMessage({ type: 'error', text: `هەڵە لە upload: ${error.message}` })
+      console.error('Upload error:', error)
+      const errorMessage = error.message || 'Upload failed'
+      setMessage({ type: 'error', text: `هەڵە لە upload: ${errorMessage}` })
       return null
     }
   }

@@ -8,7 +8,18 @@ export async function POST(request: NextRequest) {
     const fileType = formData.get('type') as string || 'image'
 
     if (!file) {
-      return NextResponse.json({ error: 'هیچ فایلێک نەدراوە' }, { status: 400 })
+      return NextResponse.json(
+        { 
+          success: false,
+          error: 'هیچ فایلێک نەدراوە' 
+        }, 
+        { 
+          status: 400,
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        }
+      )
     }
 
     const supabase = createServerClient()
@@ -58,7 +69,24 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       console.error('Upload error:', error)
-      throw error
+      return NextResponse.json(
+        { 
+          success: false,
+          error: error.message || 'Upload failed',
+          details: error 
+        }, 
+        { status: 500 }
+      )
+    }
+
+    if (!data) {
+      return NextResponse.json(
+        { 
+          success: false,
+          error: 'Upload failed: No data returned'
+        }, 
+        { status: 500 }
+      )
     }
 
     // Get public URL
@@ -66,13 +94,32 @@ export async function POST(request: NextRequest) {
       .from(bucket)
       .getPublicUrl(filePath)
 
+    console.log('Upload successful:', { bucket, filePath, url: urlData.publicUrl })
+
     return NextResponse.json({
       success: true,
       url: urlData.publicUrl,
       path: filePath
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+      }
     })
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('Upload route error:', error)
+    return NextResponse.json(
+      { 
+        success: false,
+        error: error.message || 'Upload failed',
+        details: error.toString()
+      }, 
+      { 
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      }
+    )
   }
 }
 
