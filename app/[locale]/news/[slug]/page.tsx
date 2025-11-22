@@ -26,13 +26,23 @@ export default function NewsDetail({
   const [views, setViews] = useState<number>(0)
 
   useEffect(() => {
+    // Clear article state when locale changes to force re-render
+    setArticle(undefined)
+    setLoading(true)
+    
+    console.log('Loading article with locale:', locale, 'slug:', resolvedParams.slug)
+    
     getNewsBySlug(resolvedParams.slug, locale).then(data => {
+      console.log('Article loaded:', { locale, hasData: !!data, title: data?.title?.substring(0, 50) })
       setArticle(data)
       setViews(data?.views || 0)
       setLoading(false)
       if (!data) {
         notFound()
       }
+    }).catch(error => {
+      console.error('Error loading article:', error)
+      setLoading(false)
     })
   }, [resolvedParams.slug, locale])
 

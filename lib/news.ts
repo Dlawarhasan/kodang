@@ -226,9 +226,12 @@ export async function getNewsBySlug(slug: string, locale: string = 'fa'): Promis
       ? window.location.origin 
       : (process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000')
     
-    // Add timestamp to prevent caching
+    // Add timestamp and locale to prevent caching
     const timestamp = new Date().getTime()
-    const response = await fetch(`${baseUrl}/api/news/${encodeURIComponent(slug)}?locale=${locale}&_t=${timestamp}`, {
+    const apiUrl = `${baseUrl}/api/news/${encodeURIComponent(slug)}?locale=${locale}&_t=${timestamp}&_l=${locale}`
+    console.log('Fetching post with locale:', locale, 'URL:', apiUrl)
+    
+    const response = await fetch(apiUrl, {
       cache: 'no-store',
       headers: {
         'Content-Type': 'application/json',
@@ -239,6 +242,7 @@ export async function getNewsBySlug(slug: string, locale: string = 'fa'): Promis
     
     if (response.ok) {
       const data = await response.json()
+      console.log('Fetched post data:', { slug, locale, hasTitle: !!data.news?.title, title: data.news?.title?.substring(0, 50) })
       return data.news
     } else {
       console.log('API response not OK for slug:', response.status, response.statusText)
@@ -251,7 +255,12 @@ export async function getNewsBySlug(slug: string, locale: string = 'fa'): Promis
   const item = newsDataWithTranslations.find(item => item.slug === slug)
   if (!item) return undefined
   
-  const translation = item.translations[locale as keyof typeof item.translations] || item.translations.ku
+  // Get translation for the requested locale, fallback to Farsi, then Kurdish
+  const translation = item.translations[locale as keyof typeof item.translations] 
+    || item.translations.fa 
+    || item.translations.ku
+  
+  console.log('Using static data fallback:', { slug, locale, hasTranslation: !!translation })
   
   return {
     ...item,
