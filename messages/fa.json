@@ -127,7 +127,26 @@
     "facebook": "فیسبوک",
     "twitter": "توییتر",
     "telegram": "تلگرام",
-    "youtube": "یوتیوب"
+    "youtube": "یوتیوب",
+    "loading": "در حال بارگذاری...",
+    "selectImage": "تصویر را انتخاب کنید",
+    "selectVideo": "ویدیو را آپلود کنید",
+    "selectAudio": "صوت را آپلود کنید",
+    "imageLink": "لینک تصویر",
+    "videoLink": "لینک ویدیو",
+    "audioLink": "لینک صوت",
+    "postSection": "بخش پست",
+    "postSectionDesc": "پست شما در کدام بخش وب‌سایت نمایش داده شود؟",
+    "generalSection": "بخش عمومی",
+    "heroSection": "خبر ویژه",
+    "breakingSection": "خبر فوری",
+    "tags": "تگ‌ها",
+    "upload": "آپلود",
+    "orLink": "یا لینک",
+    "confirmDelete": "آیا از حذف این پست مطمئن هستید؟",
+    "confirmDeleteUser": "آیا از حذف این کاربر مطمئن هستید؟",
+    "usernamePasswordRequired": "نام کاربری و رمز عبور الزامی است",
+    "farsiFieldsRequired": "لطفاً عنوان، خلاصه و محتوای فارسی را پر کنید"
   }
 }
 

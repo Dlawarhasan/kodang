@@ -290,7 +290,7 @@ export default function AdminPage() {
       return
     }
 
-    if (!confirm('دڵنیایت لە سڕینەوەی ئەم پۆستە؟')) {
+    if (!confirm(t('confirmDelete'))) {
       return
     }
 
@@ -485,7 +485,7 @@ export default function AdminPage() {
   }
 
   const handleDeleteUser = async (userId: string) => {
-    if (!confirm('آیا از حذف این کاربر مطمئن هستید؟')) {
+    if (!confirm(t('confirmDeleteUser'))) {
       return
     }
 
@@ -535,7 +535,7 @@ export default function AdminPage() {
 
     // Validate required fields (Farsi is required)
     if (!formData.titleFa || !formData.excerptFa || !formData.contentFa) {
-      setMessage({ type: 'error', text: 'لطفاً عنوان، خلاصه و محتوای فارسی را پر کنید' })
+      setMessage({ type: 'error', text: t('farsiFieldsRequired') })
       return
     }
 
@@ -1118,10 +1118,10 @@ export default function AdminPage() {
         <div className="flex items-center justify-between border-b border-slate-200 pb-4">
           <div>
             <h1 className="text-3xl font-bold text-slate-900">
-              {editingSlug ? 'دەستکاریکردنی پۆست' : 'زیادکردنی پۆستی نوێ'}
+              {editingSlug ? t('editPost') : t('addPost')}
             </h1>
             <p className="text-slate-600 mt-2">
-              {editingSlug ? 'پۆستەکە دەستکاری بکە' : 'فۆرمێکی سادە بۆ زیادکردنی پۆستی نوێ'}
+              {editingSlug ? (locale === 'fa' ? 'پست را ویرایش کنید' : locale === 'ku' ? 'پۆستەکە دەستکاری بکە' : 'Edit the post') : (locale === 'fa' ? 'فرم ساده برای افزودن پست جدید' : locale === 'ku' ? 'فۆرمێکی سادە بۆ زیادکردنی پۆستی نوێ' : 'Simple form to add a new post')}
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -1130,7 +1130,7 @@ export default function AdminPage() {
               className="flex items-center gap-2 bg-slate-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-slate-600 transition"
             >
               <Lock className="h-5 w-5" />
-              دەرچوون
+              {t('logout')}
             </button>
             <button
               onClick={() => {
@@ -1140,7 +1140,7 @@ export default function AdminPage() {
               className="flex items-center gap-2 bg-slate-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-slate-700 transition"
             >
               <List className="h-5 w-5" />
-              لیست
+              {t('posts')}
             </button>
           </div>
         </div>
@@ -1173,26 +1173,26 @@ export default function AdminPage() {
           {/* Section/Position */}
           <div>
             <label className="block text-sm font-semibold text-slate-700 mb-2">
-              بەشی پۆست
+              {t('postSection')}
             </label>
             <select
               value={formData.section}
               onChange={(e) => setFormData({ ...formData, section: e.target.value })}
               className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
             >
-              <option value="general">بەشە گشتیەکە (General Section)</option>
-              <option value="hero">سەرەوەی هەواڵ (Hero/Top Story)</option>
-              <option value="breaking">هەواڵی گەرم (Breaking News)</option>
+              <option value="general">{t('generalSection')}</option>
+              <option value="hero">{t('heroSection')}</option>
+              <option value="breaking">{t('breakingSection')}</option>
             </select>
             <p className="mt-1 text-xs text-slate-500">
-              پۆستەکەت لە کام بەشی وێبسایتەکە دەرکەوێت؟
+              {t('postSectionDesc')}
             </p>
           </div>
 
           {/* Author */}
           <div>
             <label className="block text-sm font-semibold text-slate-700 mb-2">
-              نووسەر
+              {t('author')}
             </label>
             <input
               type="text"
@@ -1206,11 +1206,11 @@ export default function AdminPage() {
           {/* Author Social Media Links */}
           <div className="md:col-span-2">
             <label className="block text-sm font-semibold text-slate-700 mb-3">
-              لینکەکانی سۆشیاڵ میدیای نووسەر (ئیختیاری)
+              {t('authorSocialMedia')} ({t('optional')})
             </label>
             <div className="grid gap-4 md:grid-cols-2">
               <div>
-                <label className="block text-xs text-slate-600 mb-1">Instagram</label>
+                <label className="block text-xs text-slate-600 mb-1">{t('instagram')}</label>
                 <input
                   type="url"
                   value={formData.authorInstagram}
@@ -1220,7 +1220,7 @@ export default function AdminPage() {
                 />
               </div>
               <div>
-                <label className="block text-xs text-slate-600 mb-1">Facebook</label>
+                <label className="block text-xs text-slate-600 mb-1">{t('facebook')}</label>
                 <input
                   type="url"
                   value={formData.authorFacebook}
@@ -1230,7 +1230,7 @@ export default function AdminPage() {
                 />
               </div>
               <div>
-                <label className="block text-xs text-slate-600 mb-1">Twitter/X</label>
+                <label className="block text-xs text-slate-600 mb-1">{t('twitter')}</label>
                 <input
                   type="url"
                   value={formData.authorTwitter}
@@ -1240,7 +1240,7 @@ export default function AdminPage() {
                 />
               </div>
               <div>
-                <label className="block text-xs text-slate-600 mb-1">Telegram</label>
+                <label className="block text-xs text-slate-600 mb-1">{t('telegram')}</label>
                 <input
                   type="url"
                   value={formData.authorTelegram}
@@ -1250,7 +1250,7 @@ export default function AdminPage() {
                 />
               </div>
               <div>
-                <label className="block text-xs text-slate-600 mb-1">YouTube</label>
+                <label className="block text-xs text-slate-600 mb-1">{t('youtube')}</label>
                 <input
                   type="url"
                   value={formData.authorYoutube}
@@ -1265,7 +1265,7 @@ export default function AdminPage() {
           {/* Date */}
           <div>
             <label className="block text-sm font-semibold text-slate-700 mb-2">
-              بەروار
+              {t('date')}
             </label>
             <input
               type="date"
@@ -1278,7 +1278,7 @@ export default function AdminPage() {
           {/* Image URL */}
           <div>
             <label className="block text-sm font-semibold text-slate-700 mb-2">
-              لینکی وێنە
+              {t('imageLink')}
             </label>
             <input
               type="text"
@@ -1293,12 +1293,12 @@ export default function AdminPage() {
         {/* Image Upload */}
         <div>
           <label className="block text-sm font-semibold text-slate-700 mb-2">
-            وێنە (Upload)
+            {t('image')} ({t('upload')})
           </label>
           <div className="flex items-center gap-4">
             <label className="flex items-center gap-2 px-4 py-2 bg-slate-100 rounded-lg cursor-pointer hover:bg-slate-200 transition">
               <ImageIcon className="h-5 w-5" />
-              <span>وێنە هەڵبژێرە</span>
+              <span>{t('selectImage')}</span>
               <input
                 type="file"
                 accept="image/*"
@@ -1327,7 +1327,7 @@ export default function AdminPage() {
         {/* Video Upload */}
         <div>
           <label className="block text-sm font-semibold text-slate-700 mb-2">
-            ڤیدیۆ (Upload یان لینک)
+            {t('video')} ({t('upload')} {t('orLink')})
           </label>
           <div className="space-y-3">
             <input
@@ -1335,11 +1335,11 @@ export default function AdminPage() {
               value={formData.video}
               onChange={(e) => setFormData({ ...formData, video: e.target.value })}
               className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
-              placeholder="لینکی ڤیدیۆ (YouTube, Vimeo, یان لینکی دایەکت)"
+              placeholder={t('videoLink')}
             />
             <label className="flex items-center gap-2 px-4 py-2 bg-slate-100 rounded-lg cursor-pointer hover:bg-slate-200 transition w-fit">
               <Video className="h-5 w-5" />
-              <span>ڤیدیۆ upload بکە</span>
+              <span>{t('selectVideo')}</span>
               <input
                 type="file"
                 accept="video/*"
@@ -1409,7 +1409,7 @@ export default function AdminPage() {
         {/* Tags */}
         <div>
           <label className="block text-sm font-semibold text-slate-700 mb-2">
-            Tags (بە کۆما جیا بکەرەوە)
+            {t('tags')} ({locale === 'fa' ? 'با کاما جدا کنید' : locale === 'ku' ? 'بە کۆما جیا بکەرەوە' : 'separate with comma'})
           </label>
           <input
             type="text"
@@ -1423,91 +1423,138 @@ export default function AdminPage() {
         {/* Persian - Required */}
         <div className="border-t border-slate-200 pt-6">
           <h2 className="text-xl font-bold text-slate-900 mb-4">
-            فارسی <span className="text-red-500 text-sm">(الزامی)</span>
+            {t('farsi')} <span className="text-red-500 text-sm">({t('required')})</span>
           </h2>
           <div className="space-y-4">
-            <input
-              type="text"
-              value={formData.titleFa}
-              onChange={(e) => setFormData({ ...formData, titleFa: e.target.value })}
-              className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
-              placeholder="ناونیشان (فارسی) *"
-              required
-            />
-            <textarea
-              value={formData.excerptFa}
-              onChange={(e) => setFormData({ ...formData, excerptFa: e.target.value })}
-              className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
-              placeholder="خلاصه (فارسی) *"
-              rows={2}
-              required
-            />
-            <textarea
-              value={formData.contentFa}
-              onChange={(e) => setFormData({ ...formData, contentFa: e.target.value })}
-              className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
-              placeholder="محتوا (فارسی) *"
-              rows={6}
-              required
-            />
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-2">
+                {t('title')} ({t('farsi')}) *
+              </label>
+              <input
+                type="text"
+                value={formData.titleFa}
+                onChange={(e) => setFormData({ ...formData, titleFa: e.target.value })}
+                className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                placeholder={`${t('title')} (${t('farsi')}) *`}
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-2">
+                {t('excerpt')} ({t('farsi')}) *
+              </label>
+              <textarea
+                value={formData.excerptFa}
+                onChange={(e) => setFormData({ ...formData, excerptFa: e.target.value })}
+                className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                placeholder={`${t('excerpt')} (${t('farsi')}) *`}
+                rows={2}
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-2">
+                {t('content')} ({t('farsi')}) *
+              </label>
+              <textarea
+                value={formData.contentFa}
+                onChange={(e) => setFormData({ ...formData, contentFa: e.target.value })}
+                className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                placeholder={`${t('content')} (${t('farsi')}) *`}
+                rows={6}
+                required
+              />
+            </div>
           </div>
         </div>
 
         {/* Kurdish - Optional */}
         <div className="border-t border-slate-200 pt-6">
           <h2 className="text-xl font-bold text-slate-900 mb-4">
-            کوردی <span className="text-slate-500 text-sm">(ئیختیاری)</span>
+            {t('kurdish')} <span className="text-slate-500 text-sm">({t('optional')})</span>
           </h2>
           <div className="space-y-4">
-            <input
-              type="text"
-              value={formData.titleKu}
-              onChange={(e) => setFormData({ ...formData, titleKu: e.target.value })}
-              className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
-              placeholder="ناونیشان (کوردی)"
-            />
-            <textarea
-              value={formData.excerptKu}
-              onChange={(e) => setFormData({ ...formData, excerptKu: e.target.value })}
-              className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
-              placeholder="دەربارە (کوردی)"
-              rows={2}
-            />
-            <textarea
-              value={formData.contentKu}
-              onChange={(e) => setFormData({ ...formData, contentKu: e.target.value })}
-              className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
-              placeholder="ناوەڕۆک (کوردی)"
-              rows={6}
-            />
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-2">
+                {t('title')} ({t('kurdish')})
+              </label>
+              <input
+                type="text"
+                value={formData.titleKu}
+                onChange={(e) => setFormData({ ...formData, titleKu: e.target.value })}
+                className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                placeholder={`${t('title')} (${t('kurdish')})`}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-2">
+                {t('excerpt')} ({t('kurdish')})
+              </label>
+              <textarea
+                value={formData.excerptKu}
+                onChange={(e) => setFormData({ ...formData, excerptKu: e.target.value })}
+                className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                placeholder={`${t('excerpt')} (${t('kurdish')})`}
+                rows={2}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-2">
+                {t('content')} ({t('kurdish')})
+              </label>
+              <textarea
+                value={formData.contentKu}
+                onChange={(e) => setFormData({ ...formData, contentKu: e.target.value })}
+                className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                placeholder={`${t('content')} (${t('kurdish')})`}
+                rows={6}
+              />
+            </div>
           </div>
         </div>
 
         {/* English */}
         <div className="border-t border-slate-200 pt-6">
-          <h2 className="text-xl font-bold text-slate-900 mb-4">English</h2>
+          <h2 className="text-xl font-bold text-slate-900 mb-4">
+            {t('english')} <span className="text-slate-500 text-sm">({t('optional')})</span>
+          </h2>
           <div className="space-y-4">
-            <input
-              type="text"
-              value={formData.titleEn}
-              onChange={(e) => setFormData({ ...formData, titleEn: e.target.value })}
-              className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
-              placeholder="Title (English)"
-            />
-            <textarea
-              value={formData.excerptEn}
-              onChange={(e) => setFormData({ ...formData, excerptEn: e.target.value })}
-              className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
-              placeholder="Excerpt (English)"
-              rows={2}
-            />
-            <textarea
-              value={formData.contentEn}
-              onChange={(e) => setFormData({ ...formData, contentEn: e.target.value })}
-              className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
-              placeholder="Content (English)"
-              rows={6}
-            />
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-2">
+                {t('title')} ({t('english')})
+              </label>
+              <input
+                type="text"
+                value={formData.titleEn}
+                onChange={(e) => setFormData({ ...formData, titleEn: e.target.value })}
+                className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                placeholder={`${t('title')} (${t('english')})`}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-2">
+                {t('excerpt')} ({t('english')})
+              </label>
+              <textarea
+                value={formData.excerptEn}
+                onChange={(e) => setFormData({ ...formData, excerptEn: e.target.value })}
+                className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                placeholder={`${t('excerpt')} (${t('english')})`}
+                rows={2}
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-2">
+                {t('content')} ({t('english')})
+              </label>
+              <textarea
+                value={formData.contentEn}
+                onChange={(e) => setFormData({ ...formData, contentEn: e.target.value })}
+                className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+                placeholder={`${t('content')} (${t('english')})`}
+                rows={6}
+              />
+            </div>
           </div>
         </div>
 

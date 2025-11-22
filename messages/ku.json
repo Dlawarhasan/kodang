@@ -127,7 +127,26 @@
     "facebook": "فەیسبووک",
     "twitter": "تویتەر",
     "telegram": "تێلەگرام",
-    "youtube": "یوتیوب"
+    "youtube": "یوتیوب",
+    "loading": "بارکردن...",
+    "selectImage": "وێنە هەڵبژێرە",
+    "selectVideo": "ڤیدیۆ upload بکە",
+    "selectAudio": "دەنگ upload بکە",
+    "imageLink": "لینکی وێنە",
+    "videoLink": "لینکی ڤیدیۆ",
+    "audioLink": "لینکی دەنگ",
+    "postSection": "بەشی پۆست",
+    "postSectionDesc": "پۆستەکەت لە کام بەشی وێبسایتەکە دەرکەوێت؟",
+    "generalSection": "بەشە گشتیەکە",
+    "heroSection": "سەرەوەی هەواڵ",
+    "breakingSection": "هەواڵی گەرم",
+    "tags": "تاگەکان",
+    "upload": "Upload",
+    "orLink": "یان لینک",
+    "confirmDelete": "دڵنیایت لە سڕینەوەی ئەم پۆستە؟",
+    "confirmDeleteUser": "دڵنیایت لە سڕینەوەی ئەم بەکارهێنەرە؟",
+    "usernamePasswordRequired": "ناوی بەکارهێنەر و تێپەڕەوشە پێویستە",
+    "farsiFieldsRequired": "تکایە ناونیشان، پوختە و ناوەڕۆکی فارسی پڕ بکەوە"
   }
 }
 
