@@ -40,6 +40,7 @@ export async function GET(request: NextRequest) {
       authorTwitter: item.author_twitter || null,
       authorTelegram: item.author_telegram || null,
       authorYoutube: item.author_youtube || null,
+      views: item.views || 0,
     })) || []
 
     return NextResponse.json({ news })

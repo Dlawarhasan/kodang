@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
-import { Save, Upload, Image as ImageIcon, Video, Music, X, Edit, Trash2, Plus, List, Lock, Users, UserPlus } from 'lucide-react'
+import { Save, Upload, Image as ImageIcon, Video, Music, X, Edit, Trash2, Plus, List, Lock, Users, UserPlus, Eye } from 'lucide-react'
 import { getNews, type NewsItem } from '@/lib/news'
 import { newsDataWithTranslations } from '@/lib/news-translations'
 import Link from 'next/link'
@@ -889,6 +889,10 @@ export default function AdminPage() {
                       <span>{item.category}</span>
                       <span>{new Date(item.date).toLocaleDateString()}</span>
                       <span>{item.author}</span>
+                      <span className="flex items-center gap-1">
+                        <Eye className="h-3 w-3" />
+                        {item.views || 0} {t('views')}
+                      </span>
                     </div>
                   </div>
                   <div className="flex items-center gap-2 ml-4">

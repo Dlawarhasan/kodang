@@ -20,6 +20,7 @@ export interface NewsItem {
   audio?: string
   images?: string[]
   tags?: string[]
+  views?: number
 }
 
 // Old data removed - now using news-translations.ts

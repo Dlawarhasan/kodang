@@ -34,6 +34,7 @@ export async function GET(
       authorTwitter: data.author_twitter || null,
       authorTelegram: data.author_telegram || null,
       authorYoutube: data.author_youtube || null,
+      views: data.views || 0,
     }
 
     return NextResponse.json({ news: newsItem })

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { notFound } from 'next/navigation'
 import { useTranslations, useLocale } from 'next-intl'
 import { getNews, getNewsBySlug, type NewsItem } from '@/lib/news'
-import { Calendar, User, ArrowRight, Instagram, Facebook, Twitter, Send, Youtube } from 'lucide-react'
+import { Calendar, User, ArrowRight, Instagram, Facebook, Twitter, Send, Youtube, Eye } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { use } from 'react'
@@ -23,16 +23,59 @@ export default function NewsDetail({
   const locale = useLocale()
   const [article, setArticle] = useState<NewsItem | undefined>(undefined)
   const [loading, setLoading] = useState(true)
+  const [views, setViews] = useState<number>(0)
 
   useEffect(() => {
     getNewsBySlug(resolvedParams.slug, locale).then(data => {
       setArticle(data)
+      setViews(data?.views || 0)
       setLoading(false)
       if (!data) {
         notFound()
       }
     })
   }, [resolvedParams.slug, locale])
+
+  // Track view when article is loaded
+  useEffect(() => {
+    if (article && !loading) {
+      const baseUrl = typeof window !== 'undefined' ? window.location.origin : ''
+      const encodedSlug = encodeURIComponent(resolvedParams.slug)
+      const apiUrl = `${baseUrl}/api/news/views?slug=${encodedSlug}`
+      
+      console.log('Tracking view for:', resolvedParams.slug, 'API URL:', apiUrl)
+      
+      // Increment view count
+      fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+        .then(res => {
+          console.log('Views API response status:', res.status)
+          if (!res.ok) {
+            return res.json().then(err => {
+              console.error('Views API error:', err)
+              throw new Error(err.error || 'Failed to increment views')
+            })
+          }
+          return res.json()
+        })
+        .then(data => {
+          console.log('Views API response:', data)
+          if (data.success && data.views !== undefined) {
+            setViews(data.views)
+            console.log('Views updated to:', data.views)
+          } else {
+            console.warn('Views API response missing success or views:', data)
+          }
+        })
+        .catch(error => {
+          console.error('Error tracking view:', error)
+        })
+    }
+  }, [article, loading, resolvedParams.slug])
 
   if (loading) {
     return (
@@ -95,7 +138,7 @@ export default function NewsDetail({
         )}
 
         <div className="p-8">
-          <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
+          <div className="flex items-center gap-4 text-sm text-gray-600 mb-4 flex-wrap">
             <span className="flex items-center gap-1">
               <Calendar className="h-4 w-4" />
               {new Date(article.date).toLocaleDateString(locale === 'ku' ? 'ku' : locale === 'fa' ? 'fa-IR' : 'en-US', {
@@ -107,6 +150,10 @@ export default function NewsDetail({
             <span className="flex items-center gap-1">
               <User className="h-4 w-4" />
               {article.author}
+            </span>
+            <span className="flex items-center gap-1">
+              <Eye className="h-4 w-4" />
+              {views.toLocaleString()} {t('views')}
             </span>
             {article.category && (
               <span className="px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-xs">

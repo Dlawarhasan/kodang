@@ -27,7 +27,8 @@
     "publishedOn": "منتشر شده در",
     "author": "نویسنده",
     "category": "دسته‌بندی",
-    "noNews": "خبری یافت نشد"
+    "noNews": "خبری یافت نشد",
+    "views": "بازدید"
   },
   "categories": {
     "title": "دسته‌بندی‌ها",
@@ -144,7 +145,8 @@
     "confirmDelete": "آیا از حذف این پست مطمئن هستید؟",
     "confirmDeleteUser": "آیا از حذف این کاربر مطمئن هستید؟",
     "usernamePasswordRequired": "نام کاربری و رمز عبور الزامی است",
-    "farsiFieldsRequired": "لطفاً عنوان، خلاصه و محتوای فارسی را پر کنید"
+    "farsiFieldsRequired": "لطفاً عنوان، خلاصه و محتوای فارسی را پر کنید",
+    "views": "بازدید"
   }
 }
 
