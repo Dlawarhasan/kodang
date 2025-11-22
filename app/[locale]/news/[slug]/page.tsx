@@ -126,6 +126,65 @@ export default function NewsDetail({
     }
   }, [article, loading, resolvedParams.slug])
 
+  // Update meta tags for social sharing
+  useEffect(() => {
+    if (!article) return
+
+    const siteUrl = typeof window !== 'undefined' ? window.location.origin : (process.env.NEXT_PUBLIC_SITE_URL || 'https://kodang.news')
+    const postUrl = `${siteUrl}/${locale}/news/${resolvedParams.slug}`
+    const postTitle = translatedContent.title || article.title
+    const postExcerpt = translatedContent.excerpt || article.excerpt
+    const postImage = article.image || `${siteUrl}/og-image.jpg`
+
+    // Update or create meta tags
+    const updateMetaTag = (property: string, content: string, isProperty = true) => {
+      const selector = isProperty ? `meta[property="${property}"]` : `meta[name="${property}"]`
+      let meta = document.querySelector(selector) as HTMLMetaElement
+      
+      if (!meta) {
+        meta = document.createElement('meta')
+        if (isProperty) {
+          meta.setAttribute('property', property)
+        } else {
+          meta.setAttribute('name', property)
+        }
+        document.head.appendChild(meta)
+      }
+      meta.setAttribute('content', content)
+    }
+
+    // Update title
+    document.title = `${postTitle} | کۆدەنگ | KODANG`
+
+    // Basic meta tags
+    updateMetaTag('description', postExcerpt, false)
+    
+    // Open Graph tags
+    updateMetaTag('og:type', 'article')
+    updateMetaTag('og:url', postUrl)
+    updateMetaTag('og:title', postTitle)
+    updateMetaTag('og:description', postExcerpt)
+    updateMetaTag('og:image', postImage)
+    updateMetaTag('og:image:width', '1200')
+    updateMetaTag('og:image:height', '630')
+    updateMetaTag('og:locale', locale === 'fa' ? 'fa_IR' : locale === 'ku' ? 'ku' : 'en_US')
+    updateMetaTag('og:site_name', 'کۆدەنگ | KODANG')
+    
+    // Twitter Card tags
+    updateMetaTag('twitter:card', 'summary_large_image', false)
+    updateMetaTag('twitter:url', postUrl, false)
+    updateMetaTag('twitter:title', postTitle, false)
+    updateMetaTag('twitter:description', postExcerpt, false)
+    updateMetaTag('twitter:image', postImage, false)
+    
+    // Article meta tags
+    updateMetaTag('article:author', article.author, false)
+    updateMetaTag('article:published_time', article.date, false)
+    if (article.category) {
+      updateMetaTag('article:section', article.category, false)
+    }
+  }, [article, locale, resolvedParams.slug, translatedContent])
+
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-8 text-center">
