@@ -21,6 +21,8 @@ export interface NewsItem {
   images?: string[]
   tags?: string[]
   views?: number
+  needsTranslation?: boolean
+  originalLocale?: string
 }
 
 // Old data removed - now using news-translations.ts

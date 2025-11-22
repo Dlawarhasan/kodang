@@ -22,12 +22,36 @@ export async function GET(
       return NextResponse.json({ error: 'پۆست نەدۆزرایەوە' }, { status: 404 })
     }
 
+    // Get translations - prioritize requested locale, fallback to Farsi
+    const getTranslation = (field: 'title' | 'excerpt' | 'content') => {
+      // First try requested locale
+      if (data.translations?.[locale]?.[field]) {
+        return data.translations[locale][field]
+      }
+      // Fallback to Farsi
+      if (data.translations?.fa?.[field]) {
+        return data.translations.fa[field]
+      }
+      // Fallback to Kurdish
+      if (data.translations?.ku?.[field]) {
+        return data.translations.ku[field]
+      }
+      // Fallback to English
+      if (data.translations?.en?.[field]) {
+        return data.translations.en[field]
+      }
+      return ''
+    }
+
     // Map translations based on locale
     const newsItem = {
       ...data,
-      title: data.translations?.[locale]?.title || data.translations?.fa?.title || '',
-      excerpt: data.translations?.[locale]?.excerpt || data.translations?.fa?.excerpt || '',
-      content: data.translations?.[locale]?.content || data.translations?.fa?.content || '',
+      title: getTranslation('title'),
+      excerpt: getTranslation('excerpt'),
+      content: getTranslation('content'),
+      // Indicate if translation is needed (not in requested locale)
+      needsTranslation: !data.translations?.[locale],
+      originalLocale: data.translations?.fa ? 'fa' : data.translations?.ku ? 'ku' : 'en',
       // Map database column names to camelCase for frontend
       authorInstagram: data.author_instagram || null,
       authorFacebook: data.author_facebook || null,

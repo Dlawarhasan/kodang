@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react'
 import { notFound } from 'next/navigation'
 import { useTranslations, useLocale } from 'next-intl'
 import { getNews, getNewsBySlug, type NewsItem } from '@/lib/news'
-import { Calendar, User, ArrowRight, Instagram, Facebook, Twitter, Send, Youtube, Eye } from 'lucide-react'
+import { translateText } from '@/lib/translate'
+import { Calendar, User, ArrowRight, Instagram, Facebook, Twitter, Send, Youtube, Eye, Languages } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { use } from 'react'
@@ -24,27 +25,64 @@ export default function NewsDetail({
   const [article, setArticle] = useState<NewsItem | undefined>(undefined)
   const [loading, setLoading] = useState(true)
   const [views, setViews] = useState<number>(0)
+  const [translating, setTranslating] = useState(false)
+  const [translatedContent, setTranslatedContent] = useState<{
+    title?: string
+    excerpt?: string
+    content?: string
+  }>({})
 
   useEffect(() => {
     // Clear article state when locale changes to force re-render
     setArticle(undefined)
+    setTranslatedContent({})
     setLoading(true)
     
     console.log('Loading article with locale:', locale, 'slug:', resolvedParams.slug)
     
     getNewsBySlug(resolvedParams.slug, locale).then(data => {
-      console.log('Article loaded:', { locale, hasData: !!data, title: data?.title?.substring(0, 50) })
+      console.log('Article loaded:', { locale, hasData: !!data, title: data?.title?.substring(0, 50), needsTranslation: data?.needsTranslation })
       setArticle(data)
       setViews(data?.views || 0)
       setLoading(false)
       if (!data) {
         notFound()
       }
+      
+      // Auto-translate if translation is needed
+      if (data?.needsTranslation && data.originalLocale && data.originalLocale !== locale) {
+        autoTranslate(data, data.originalLocale, locale)
+      }
     }).catch(error => {
       console.error('Error loading article:', error)
       setLoading(false)
     })
   }, [resolvedParams.slug, locale])
+
+  const autoTranslate = async (articleData: NewsItem, from: string, to: string) => {
+    if (!articleData || from === to) return
+    
+    setTranslating(true)
+    
+    try {
+      // Translate title, excerpt, and content
+      const [translatedTitle, translatedExcerpt, translatedContent] = await Promise.all([
+        translateText(articleData.title || '', from, to),
+        translateText(articleData.excerpt || '', from, to),
+        translateText(articleData.content || '', from, to),
+      ])
+      
+      setTranslatedContent({
+        title: translatedTitle,
+        excerpt: translatedExcerpt,
+        content: translatedContent,
+      })
+    } catch (error) {
+      console.error('Auto-translation error:', error)
+    } finally {
+      setTranslating(false)
+    }
+  }
 
   // Track view when article is loaded
   useEffect(() => {
@@ -148,6 +186,13 @@ export default function NewsDetail({
         )}
 
         <div className="p-8">
+          {translating && (
+            <div className="mb-4 flex items-center gap-2 text-sm text-blue-600 bg-blue-50 px-4 py-2 rounded-lg">
+              <Languages className="h-4 w-4 animate-pulse" />
+              <span>{locale === 'fa' ? 'در حال ترجمه...' : locale === 'ku' ? 'وەرگێڕان...' : 'Translating...'}</span>
+            </div>
+          )}
+
           <div className="flex items-center gap-4 text-sm text-gray-600 mb-4 flex-wrap">
             <span className="flex items-center gap-1">
               <Calendar className="h-4 w-4" />
@@ -173,16 +218,16 @@ export default function NewsDetail({
           </div>
 
           <h1 className="text-4xl font-bold text-gray-900 mb-6">
-            {article.title}
+            {translatedContent.title || article.title}
           </h1>
 
           <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed">
             <p className="text-xl text-gray-600 mb-6 leading-relaxed">
-              {article.excerpt}
+              {translatedContent.excerpt || article.excerpt}
             </p>
             
             <div className="space-y-4">
-              {article.content.split('\n\n').map((paragraph, index) => (
+              {(translatedContent.content || article.content).split('\n\n').map((paragraph, index) => (
                 <p key={index} className="text-base leading-7">
                   {paragraph}
                 </p>
