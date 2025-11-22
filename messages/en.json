@@ -18,7 +18,9 @@
     "heroButton": "Read Full Story",
     "heroSecondary": "Browse All News",
     "breaking": "Breaking News",
-    "breakingPrefix": "On the Wire"
+    "breakingPrefix": "On the Wire",
+    "noResults": "No results found",
+    "searchResults": "Search Results"
   },
   "news": {
     "title": "News",

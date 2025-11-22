@@ -20,12 +20,34 @@ export default function Header() {
   const searchParams = useSearchParams()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false)
+  const [isSearchOpen, setIsSearchOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState<string>(searchParams.get('search') || '')
   const [selectedCategory, setSelectedCategory] = useState<string>(searchParams.get('category') || 'all')
 
   useEffect(() => {
     const category = searchParams.get('category') || 'all'
+    const search = searchParams.get('search') || ''
     setSelectedCategory(category)
+    setSearchQuery(search)
   }, [searchParams])
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query)
+    const params = new URLSearchParams()
+    if (selectedCategory !== 'all') {
+      params.set('category', selectedCategory)
+    }
+    if (query.trim()) {
+      params.set('search', query.trim())
+    }
+    router.push(`/${locale}?${params.toString()}`)
+  }
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    handleSearch(searchQuery)
+    setIsSearchOpen(false)
+  }
 
   const languages = [
     { code: 'ku', name: tCommon('kurdish'), flag: '🇹🇯' },
@@ -145,12 +167,54 @@ export default function Header() {
             </div>
 
             {/* Search */}
-              <button
-                className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white/70 p-2 text-slate-600 transition hover:border-red-400 hover:text-red-500"
-                aria-label={tCommon('search')}
-              >
-              <Search className="h-5 w-5" />
-            </button>
+            <div className="relative">
+              {isSearchOpen ? (
+                <form onSubmit={handleSearchSubmit} className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder={tCommon('search')}
+                    className="w-48 rounded-full border border-slate-200 bg-white/70 px-4 py-2 text-sm text-slate-900 placeholder-slate-500 focus:border-red-400 focus:outline-none focus:ring-2 focus:ring-red-400/20"
+                    autoFocus
+                    onBlur={() => {
+                      // Close search after a delay to allow form submission
+                      setTimeout(() => setIsSearchOpen(false), 200)
+                    }}
+                  />
+                  <button
+                    type="submit"
+                    className="inline-flex items-center justify-center rounded-full border border-red-400 bg-red-50 p-2 text-red-600 transition hover:bg-red-100"
+                    aria-label={tCommon('search')}
+                  >
+                    <Search className="h-5 w-5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSearchQuery('')
+                      setIsSearchOpen(false)
+                      const params = new URLSearchParams()
+                      if (selectedCategory !== 'all') {
+                        params.set('category', selectedCategory)
+                      }
+                      router.push(`/${locale}?${params.toString()}`)
+                    }}
+                    className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white/70 p-2 text-slate-600 transition hover:border-slate-300"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                </form>
+              ) : (
+                <button
+                  onClick={() => setIsSearchOpen(true)}
+                  className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white/70 p-2 text-slate-600 transition hover:border-red-400 hover:text-red-500"
+                  aria-label={tCommon('search')}
+                >
+                  <Search className="h-5 w-5" />
+                </button>
+              )}
+            </div>
 
             {/* Language Selector */}
             <div className="relative">

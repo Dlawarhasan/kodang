@@ -18,7 +18,9 @@
     "heroButton": "خوێندنی هەواڵە تەواوەکە",
     "heroSecondary": "بینینی هەموو هەواڵەکان",
     "breaking": "هەواڵی گەرم",
-    "breakingPrefix": "لە سەرخطدا"
+    "breakingPrefix": "لە سەرخطدا",
+    "noResults": "هیچ نەدۆزرایەوە",
+    "searchResults": "ئەنجامەکانی گەڕان"
   },
   "news": {
     "title": "هەواڵەکان",

@@ -17,6 +17,7 @@ export default function Home() {
   const [news, setNews] = useState<NewsItem[]>([])
   const [loading, setLoading] = useState(true)
   const selectedCategory = searchParams.get('category') || 'all'
+  const searchQuery = searchParams.get('search') || ''
 
   useEffect(() => {
     setLoading(true)
@@ -44,16 +45,34 @@ export default function Home() {
 
   const filteredNews = useMemo(() => {
     if (!Array.isArray(news)) return []
-    if (selectedCategory === 'all') {
-      // Show all posts when "all" category is selected
-      console.log('Showing all posts:', news.length)
-      return news
+    
+    let filtered = news
+    
+    // Filter by category
+    if (selectedCategory !== 'all') {
+      filtered = filtered.filter((item) => item.category === selectedCategory)
     }
-    // Filter by specific category
-    const filtered = news.filter((item) => item.category === selectedCategory)
-    console.log(`Filtered by category "${selectedCategory}":`, filtered.length, 'posts')
+    
+    // Filter by search query
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase().trim()
+      filtered = filtered.filter((item) => {
+        const title = (item.title || '').toLowerCase()
+        const excerpt = (item.excerpt || '').toLowerCase()
+        const content = (item.content || '').toLowerCase()
+        const author = (item.author || '').toLowerCase()
+        const tags = (item.tags || []).join(' ').toLowerCase()
+        
+        return title.includes(query) || 
+               excerpt.includes(query) || 
+               content.includes(query) ||
+               author.includes(query) ||
+               tags.includes(query)
+      })
+    }
+    
     return filtered
-  }, [news, selectedCategory])
+  }, [news, selectedCategory, searchQuery])
 
   // Get posts by section
   // Check for section field (might be undefined for old posts)
@@ -352,7 +371,23 @@ export default function Home() {
       )}
 
       <section className="space-y-8">
-        <NewsList news={remainingNews} />
+        {searchQuery && (
+          <div className="mb-4 px-4">
+            <h2 className="text-xl font-bold text-slate-900">
+              {t('searchResults')}: "{searchQuery}"
+            </h2>
+            {remainingNews.length === 0 && (
+              <p className="mt-2 text-slate-600">{t('noResults')}</p>
+            )}
+          </div>
+        )}
+        {remainingNews.length > 0 ? (
+          <NewsList news={remainingNews} />
+        ) : searchQuery ? (
+          <div className="text-center py-12 px-4">
+            <p className="text-slate-600 text-lg">{t('noResults')}</p>
+          </div>
+        ) : null}
       </section>
     </div>
   )
