@@ -35,13 +35,13 @@ export default function AdminPage() {
   const [newsList, setNewsList] = useState<NewsItem[]>([])
   const [loading, setLoading] = useState(true)
   const [formData, setFormData] = useState({
-    titleFa: '', // Farsi is required
+    titleFa: '', // Farsi is optional
     titleKu: '', // Kurdish is optional
     titleEn: '', // English is optional
-    excerptFa: '', // Farsi is required
+    excerptFa: '', // Farsi is optional
     excerptKu: '', // Kurdish is optional
     excerptEn: '', // English is optional
-    contentFa: '', // Farsi is required
+    contentFa: '', // Farsi is optional
     contentKu: '', // Kurdish is optional
     contentEn: '', // English is optional
     category: 'social',
