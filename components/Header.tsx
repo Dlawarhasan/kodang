@@ -248,10 +248,17 @@ export default function Header() {
                           
                           // Force a full page reload to ensure locale change
                           if (typeof window !== 'undefined') {
+                            // Clear any cached data
+                            if (sessionStorage.getItem('admin_token')) {
+                              // Keep admin token but force reload
+                            }
+                            
                             // Use href with cache busting to force complete reload
-                            // This ensures the locale change is applied immediately
-                            const cacheBustUrl = `${fullUrl}${query ? (query.includes('?') ? '&' : '?') : '?'}t=${Date.now()}`
-                            console.log('Navigating to:', cacheBustUrl)
+                            const separator = fullUrl.includes('?') ? '&' : '?'
+                            const cacheBustUrl = `${fullUrl}${separator}_t=${Date.now()}`
+                            console.log('Language Switch - Navigating to:', cacheBustUrl)
+                            
+                            // Force navigation - use href instead of replace for better cache clearing
                             window.location.href = cacheBustUrl
                           }
                         }}

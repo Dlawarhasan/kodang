@@ -2,8 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
-import { Save, Upload, Image as ImageIcon, Video, Music, X, Edit, Trash2, Plus, List, Lock, Users, UserPlus, Globe } from 'lucide-react'
-import { locales } from '@/i18n'
+import { Save, Upload, Image as ImageIcon, Video, Music, X, Edit, Trash2, Plus, List, Lock, Users, UserPlus } from 'lucide-react'
 import { getNews, type NewsItem } from '@/lib/news'
 import { newsDataWithTranslations } from '@/lib/news-translations'
 import Link from 'next/link'
@@ -974,31 +973,31 @@ export default function AdminPage() {
             <div className="grid gap-4 md:grid-cols-2">
               <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-2">
-                  نام کاربری
+                  {t('username')}
                 </label>
                 <input
                   type="text"
                   value={userFormData.username}
                   onChange={(e) => setUserFormData({ ...userFormData, username: e.target.value })}
                   className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                  placeholder="نام کاربری"
+                  placeholder={t('username')}
                 />
               </div>
               <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-2">
-                  رمز عبور {editingUserId && '(خالی بگذارید برای عدم تغییر)'}
+                  {t('password')} {editingUserId && `(${locale === 'fa' ? 'خالی بگذارید برای عدم تغییر' : locale === 'ku' ? 'بەجێی بهێڵە بۆ نەگۆڕین' : 'Leave empty to keep unchanged'})`}
                 </label>
                 <input
                   type="password"
                   value={userFormData.password}
                   onChange={(e) => setUserFormData({ ...userFormData, password: e.target.value })}
                   className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                  placeholder="رمز عبور"
+                  placeholder={t('password')}
                 />
               </div>
               <div className="md:col-span-2">
                 <label className="block text-sm font-semibold text-slate-700 mb-3">
-                  دسترسی‌ها
+                  {locale === 'fa' ? 'دسترسی‌ها' : locale === 'ku' ? 'دەسەڵاتەکان' : 'Permissions'}
                 </label>
                 <div className="grid gap-3 md:grid-cols-3">
                   <label className="flex items-center gap-2 cursor-pointer">
@@ -1008,7 +1007,7 @@ export default function AdminPage() {
                       onChange={(e) => setUserFormData({ ...userFormData, can_create: e.target.checked })}
                       className="rounded border-slate-300 text-red-600 focus:ring-red-500"
                     />
-                    <span className="text-sm text-slate-700">ایجاد پست</span>
+                    <span className="text-sm text-slate-700">{locale === 'fa' ? 'ایجاد پست' : locale === 'ku' ? 'زیادکردنی پۆست' : 'Create Post'}</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
@@ -1017,7 +1016,7 @@ export default function AdminPage() {
                       onChange={(e) => setUserFormData({ ...userFormData, can_edit: e.target.checked })}
                       className="rounded border-slate-300 text-red-600 focus:ring-red-500"
                     />
-                    <span className="text-sm text-slate-700">ویرایش پست</span>
+                    <span className="text-sm text-slate-700">{locale === 'fa' ? 'ویرایش پست' : locale === 'ku' ? 'دەستکاریکردنی پۆست' : 'Edit Post'}</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
@@ -1026,7 +1025,7 @@ export default function AdminPage() {
                       onChange={(e) => setUserFormData({ ...userFormData, can_delete: e.target.checked })}
                       className="rounded border-slate-300 text-red-600 focus:ring-red-500"
                     />
-                    <span className="text-sm text-slate-700">حذف پست</span>
+                    <span className="text-sm text-slate-700">{locale === 'fa' ? 'حذف پست' : locale === 'ku' ? 'سڕینەوەی پۆست' : 'Delete Post'}</span>
                   </label>
                 </div>
               </div>
@@ -1037,7 +1036,7 @@ export default function AdminPage() {
                 className="flex items-center gap-2 bg-red-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-red-600 transition"
               >
                 <Save className="h-5 w-5" />
-                {editingUserId ? 'ذخیره تغییرات' : 'ایجاد کاربر'}
+                {editingUserId ? t('save') : t('createUser')}
               </button>
               {editingUserId && (
                 <button
@@ -1054,7 +1053,7 @@ export default function AdminPage() {
                   className="flex items-center gap-2 bg-slate-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-slate-600 transition"
                 >
                   <X className="h-5 w-5" />
-                  لغو
+                  {t('cancel')}
                 </button>
               )}
             </div>
@@ -1062,7 +1061,7 @@ export default function AdminPage() {
 
           {/* Users List */}
           <div className="space-y-4">
-            <h2 className="text-xl font-bold text-slate-900">لیست کاربران</h2>
+            <h2 className="text-xl font-bold text-slate-900">{locale === 'fa' ? 'لیست کاربران' : locale === 'ku' ? 'لیستی بەکارهێنەران' : 'Users List'}</h2>
             <div className="grid gap-4">
               {users.map((user) => (
                 <div
@@ -1087,14 +1086,14 @@ export default function AdminPage() {
                     <button
                       onClick={() => handleEditUser(user)}
                       className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition"
-                      aria-label="ویرایش"
+                      aria-label={t('edit')}
                     >
                       <Edit className="h-5 w-5" />
                     </button>
                     <button
                       onClick={() => handleDeleteUser(user.id)}
                       className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition"
-                      aria-label="حذف"
+                      aria-label={t('delete')}
                     >
                       <Trash2 className="h-5 w-5" />
                     </button>
@@ -1103,7 +1102,7 @@ export default function AdminPage() {
               ))}
               {users.length === 0 && (
                 <div className="text-center py-12 text-slate-500">
-                  هیچ کاربری وجود ندارد
+                  {locale === 'fa' ? 'هیچ کاربری وجود ندارد' : locale === 'ku' ? 'هیچ بەکارهێنەرێک نیە' : 'No users found'}
                 </div>
               )}
             </div>
