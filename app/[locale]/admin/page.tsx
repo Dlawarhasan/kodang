@@ -10,6 +10,7 @@ import Image from 'next/image'
 
 export default function AdminPage() {
   const locale = useLocale()
+  const t = useTranslations('admin')
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [isCheckingAuth, setIsCheckingAuth] = useState(true)
   const [loginUsername, setLoginUsername] = useState('')
