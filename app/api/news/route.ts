@@ -72,10 +72,14 @@ export async function POST(request: NextRequest) {
 
     // Generate slug from any available title (prefer Farsi, then Kurdish, then English)
     const titleForSlug = body.titleFa || body.titleKu || body.titleEn || 'post'
+    
+    // Create slug and limit length to 50 characters for shorter URLs
     let baseSlug = body.slug || titleForSlug
       .toLowerCase()
       .replace(/[^a-z0-9\u0600-\u06FF\u0621-\u064A]+/g, '-') // Support Persian, Kurdish, and English characters
       .replace(/(^-|-$)/g, '')
+      .substring(0, 50) // Limit to 50 characters
+      .replace(/-+$/, '') // Remove trailing dashes
     
     // Check if slug exists and make it unique
     let slug = baseSlug
