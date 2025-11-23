@@ -210,7 +210,7 @@ export default function NewsDetail({
 
       <div className="bg-white rounded-lg shadow-lg overflow-hidden">
         {article.video && (
-          <div id="video" className="p-8 pb-0">
+          <div id="video" className="relative w-full aspect-[4/5] bg-gray-900 overflow-hidden">
             <VideoPlayer 
               videoUrl={article.video} 
               title={article.title}
