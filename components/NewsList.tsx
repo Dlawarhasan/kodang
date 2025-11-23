@@ -30,7 +30,7 @@ export default function NewsList({ news }: NewsListProps) {
       {news.map((item, index) => (
         <Link
           key={item.id}
-          href={`/${locale}/news/${item.slug}`}
+          href={`/${locale}/news/${item.slug}${item.video ? '#video' : ''}`}
           className="group relative overflow-hidden rounded-3xl border-2 border-slate-200/60 bg-gradient-to-br from-white via-slate-50/30 to-white shadow-lg shadow-slate-200/20 transition-all duration-500 hover:-translate-y-2 hover:border-red-500/50 hover:shadow-2xl hover:shadow-red-500/20 animate-fade-up"
           style={{ animationDelay: `${index * 0.08}s` }}
         >

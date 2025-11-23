@@ -210,8 +210,12 @@ export default function NewsDetail({
 
       <div className="bg-white rounded-lg shadow-lg overflow-hidden">
         {article.video && (
-          <div className="p-8 pb-0">
-            <VideoPlayer videoUrl={article.video} title={article.title} />
+          <div id="video" className="p-8 pb-0">
+            <VideoPlayer 
+              videoUrl={article.video} 
+              title={article.title}
+              autoplay={typeof window !== 'undefined' && window.location.hash === '#video'}
+            />
           </div>
         )}
         {article.audio && (
