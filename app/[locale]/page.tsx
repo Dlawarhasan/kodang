@@ -9,6 +9,7 @@ import { Calendar, Flame, ArrowRight } from 'lucide-react'
 import NewsList from '@/components/NewsList'
 import { getNews, type NewsItem } from '@/lib/news'
 import { getCategoryName } from '@/lib/category-mapping'
+import { formatDate } from '@/lib/date-format'
 
 export default function Home() {
   const t = useTranslations('home')
@@ -211,10 +212,7 @@ export default function Home() {
                 )}
                 <span className="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-sm border-2 border-white/20 px-4 py-1.5 text-white/90 group-hover:border-white/40 transition-all duration-300">
                   <Calendar className="h-4 w-4" />
-                  {new Date(heroArticle.date).toLocaleDateString(
-                    locale === 'ku' ? 'ckb-IQ' : locale === 'fa' ? 'fa-IR' : 'en-US',
-                    { year: 'numeric', month: 'long', day: 'numeric' }
-                  )}
+                  {formatDate(heroArticle.date, locale)}
                 </span>
               </div>
 

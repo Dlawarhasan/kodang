@@ -11,6 +11,7 @@ import Image from 'next/image'
 import { use } from 'react'
 import VideoPlayer from '@/components/VideoPlayer'
 import { getCategoryName } from '@/lib/category-mapping'
+import { formatDate } from '@/lib/date-format'
 
 export default function NewsDetail({ 
   params 
@@ -256,11 +257,7 @@ export default function NewsDetail({
           <div className="flex items-center gap-4 text-sm text-gray-600 mb-4 flex-wrap">
             <span className="flex items-center gap-1">
               <Calendar className="h-4 w-4" />
-              {new Date(article.date).toLocaleDateString(locale === 'ku' ? 'ku' : locale === 'fa' ? 'fa-IR' : 'en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-              })}
+              {formatDate(article.date, locale)}
             </span>
             <span className="flex items-center gap-1">
               <User className="h-4 w-4" />

@@ -6,6 +6,7 @@ import { useTranslations, useLocale } from 'next-intl'
 import { Calendar, User, ArrowLeft } from 'lucide-react'
 import type { NewsItem } from '@/lib/news'
 import { getCategoryName } from '@/lib/category-mapping'
+import { formatDateShort } from '@/lib/date-format'
 
 interface NewsListProps {
   news: NewsItem[]
@@ -94,14 +95,7 @@ export default function NewsList({ news }: NewsListProps) {
               )}
               <span className="flex items-center gap-2 text-slate-500 group-hover:text-red-600 transition-colors duration-300">
                 <Calendar className="h-4 w-4 text-red-500 group-hover:scale-110 transition-transform duration-300" />
-                {new Date(item.date).toLocaleDateString(
-                  locale === 'ku' ? 'ckb-IQ' : locale === 'fa' ? 'fa-IR' : 'en-US',
-                  {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                  }
-                )}
+                {formatDateShort(item.date, locale)}
               </span>
             </div>
 
