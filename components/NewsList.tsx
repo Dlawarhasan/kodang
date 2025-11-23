@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { useTranslations, useLocale } from 'next-intl'
-import { Calendar, User, ArrowLeft, Play } from 'lucide-react'
+import { Calendar, User, ArrowLeft, Play, Facebook, Instagram, Twitter, Share2 } from 'lucide-react'
 import type { NewsItem } from '@/lib/news'
 import { getCategoryName } from '@/lib/category-mapping'
 import { formatDateShort } from '@/lib/date-format'
