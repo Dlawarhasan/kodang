@@ -124,6 +124,50 @@ export default function NewsList({ news }: NewsListProps) {
             </div>
           )}
 
+          {/* Social Media Share Icons */}
+          {(item.video || item.image) && (
+            <div className="px-6 pt-4 pb-2 flex items-center gap-3 border-b border-slate-200/60">
+              <div className="flex items-center gap-2">
+                {item.video && (
+                  <div className="p-1.5 rounded-full bg-red-100 text-red-600">
+                    <Play className="h-3.5 w-3.5 fill-red-600" />
+                  </div>
+                )}
+                <a
+                  href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(typeof window !== 'undefined' ? `${window.location.origin}/${locale}/news/${item.slug}` : `/${locale}/news/${item.slug}`)}`}
+                  onClick={(e) => e.stopPropagation()}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-1.5 rounded-full hover:bg-blue-50 text-slate-600 hover:text-blue-600 transition-colors"
+                  aria-label="Share on Facebook"
+                >
+                  <Facebook className="h-3.5 w-3.5" />
+                </a>
+                <a
+                  href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(typeof window !== 'undefined' ? `${window.location.origin}/${locale}/news/${item.slug}` : `/${locale}/news/${item.slug}`)}&text=${encodeURIComponent(item.title)}`}
+                  onClick={(e) => e.stopPropagation()}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-1.5 rounded-full hover:bg-slate-100 text-slate-600 hover:text-slate-800 transition-colors"
+                  aria-label="Share on Twitter"
+                >
+                  <Twitter className="h-3.5 w-3.5" />
+                </a>
+                <a
+                  href={`https://www.instagram.com/kodang.official?igsh=MWN3dThraTZ4YmFldw==`}
+                  onClick={(e) => e.stopPropagation()}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-1.5 rounded-full hover:bg-pink-50 text-slate-600 hover:text-pink-600 transition-colors"
+                  aria-label="Follow on Instagram"
+                >
+                  <Instagram className="h-3.5 w-3.5" />
+                </a>
+              </div>
+              <span className="text-xs text-slate-500 ml-auto">kodang.official</span>
+            </div>
+          )}
+
           {/* Content Section */}
           <div className="relative space-y-4 p-6 bg-white/95 backdrop-blur-sm">
             {/* Decorative Line Above Content */}
