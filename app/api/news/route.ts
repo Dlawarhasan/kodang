@@ -73,13 +73,21 @@ export async function POST(request: NextRequest) {
     // Generate slug from any available title (prefer Farsi, then Kurdish, then English)
     const titleForSlug = body.titleFa || body.titleKu || body.titleEn || 'post'
     
-    // Create slug and limit length to 50 characters for shorter URLs
-    let baseSlug = body.slug || titleForSlug
+    // Create short slug: take first 3-4 words and limit to 25 characters
+    const words = titleForSlug.split(/\s+/).slice(0, 4) // Take first 4 words max
+    const shortTitle = words.join(' ')
+    
+    let baseSlug = body.slug || shortTitle
       .toLowerCase()
       .replace(/[^a-z0-9\u0600-\u06FF\u0621-\u064A]+/g, '-') // Support Persian, Kurdish, and English characters
       .replace(/(^-|-$)/g, '')
-      .substring(0, 50) // Limit to 50 characters
+      .substring(0, 25) // Limit to 25 characters for very short URLs
       .replace(/-+$/, '') // Remove trailing dashes
+    
+    // If slug is empty after processing, use a default with timestamp
+    if (!baseSlug || baseSlug.trim() === '') {
+      baseSlug = `post-${Date.now().toString().slice(-6)}` // Use last 6 digits of timestamp
+    }
     
     // Check if slug exists and make it unique
     let slug = baseSlug

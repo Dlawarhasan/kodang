@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase'
 
+// Increase timeout for large video uploads
+export const maxDuration = 300 // 5 minutes
+
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData()
@@ -21,6 +24,35 @@ export async function POST(request: NextRequest) {
         }
       )
     }
+
+    // Check file size (100MB limit for videos, 50MB for others)
+    const maxSize = fileType === 'video' ? 100 * 1024 * 1024 : 50 * 1024 * 1024
+    if (file.size > maxSize) {
+      const sizeMB = (file.size / 1024 / 1024).toFixed(2)
+      const maxSizeMB = (maxSize / 1024 / 1024).toFixed(0)
+      return NextResponse.json(
+        { 
+          success: false,
+          error: fileType === 'video' 
+            ? `قەبارەی ڤیدیۆ (${sizeMB}MB) زۆر گەورەیە. تکایە فایلی بچووکتر هەڵبژێرە (کەمتر لە ${maxSizeMB}MB)`
+            : `قەبارەی فایل (${sizeMB}MB) زۆر گەورەیە. تکایە فایلی بچووکتر هەڵبژێرە (کەمتر لە ${maxSizeMB}MB)`
+        }, 
+        { 
+          status: 400,
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        }
+      )
+    }
+
+    console.log('File upload request:', { 
+      name: file.name, 
+      type: file.type, 
+      size: file.size, 
+      sizeMB: (file.size / 1024 / 1024).toFixed(2),
+      uploadType: fileType 
+    })
 
     const supabase = createServerClient()
     const fileExt = file.name.split('.').pop()

@@ -22,6 +22,13 @@ const nextConfig = {
       },
     ],
   },
+  // Increase body size limit for video uploads (100MB)
+  api: {
+    bodyParser: {
+      sizeLimit: '100mb',
+    },
+    responseLimit: '100mb',
+  },
 }
 
 module.exports = withNextIntl(nextConfig)
