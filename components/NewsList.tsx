@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { useTranslations, useLocale } from 'next-intl'
-import { Calendar, User, ArrowLeft } from 'lucide-react'
+import { Calendar, User, ArrowLeft, Play } from 'lucide-react'
 import type { NewsItem } from '@/lib/news'
 import { getCategoryName } from '@/lib/category-mapping'
 import { formatDateShort } from '@/lib/date-format'
@@ -55,8 +55,51 @@ export default function NewsList({ news }: NewsListProps) {
           {/* Top Gradient Bar */}
           <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-red-500 via-red-400 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10" />
 
-          {/* Image Section */}
-          {item.image && (
+          {/* Video Section */}
+          {item.video && (
+            <div className="relative w-full aspect-[4/5] overflow-hidden bg-slate-900">
+              {item.image ? (
+                <Image
+                  src={item.image}
+                  alt={item.title}
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-110"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
+              ) : (
+                <div className="absolute inset-0 bg-gradient-to-br from-slate-800 to-slate-900" />
+              )}
+              {/* Video Play Button Overlay */}
+              <div className="absolute inset-0 flex items-center justify-center bg-black/40 group-hover:bg-black/50 transition-all duration-500">
+                <div className="relative">
+                  <div className="absolute inset-0 bg-red-500/20 rounded-full blur-xl group-hover:bg-red-500/30 transition-all duration-500" />
+                  <div className="relative bg-red-600/90 group-hover:bg-red-500 rounded-full p-6 shadow-2xl group-hover:scale-110 transition-all duration-300">
+                    <Play className="h-8 w-8 text-white fill-white ml-1" />
+                  </div>
+                </div>
+              </div>
+              {/* Video Badge */}
+              <div className="absolute top-4 right-4 z-20">
+                <span className="inline-flex items-center gap-2 rounded-full bg-red-600/90 backdrop-blur-sm border-2 border-white/30 px-3 py-1.5 text-[11px] font-bold text-white shadow-lg">
+                  <Play className="h-3 w-3 fill-white" />
+                  {locale === 'fa' ? 'ویدیو' : locale === 'ku' ? 'ڤیدیۆ' : 'Video'}
+                </span>
+              </div>
+              {/* Gradient Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
+              {/* Category Badge on Video */}
+              {item.category && (
+                <div className="absolute top-4 left-4 z-20">
+                  <span className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-red-500/90 to-red-600/90 backdrop-blur-sm border-2 border-white/30 px-3 py-1.5 text-[11px] font-bold text-white shadow-lg">
+                    {getCategoryName(item.category, locale)}
+                  </span>
+                </div>
+              )}
+            </div>
+          )}
+          
+          {/* Image Section (only if no video) */}
+          {item.image && !item.video && (
             <div className="relative w-full aspect-[4/5] overflow-hidden">
               <Image
                 src={item.image}
