@@ -170,9 +170,40 @@ export default function Home() {
             <div className="absolute bottom-4 right-4 w-12 h-12 border-b-2 border-r-2 border-red-500/50 rounded-br-lg group-hover:border-red-400 transition-colors duration-500" />
           </div>
 
-          {/* Background Image with Parallax Effect */}
+          {/* Background Image/Video with Parallax Effect */}
           <div className="absolute inset-0 -z-10">
-            {heroArticle.image && (
+            {heroArticle.video ? (
+              <>
+                {heroArticle.image ? (
+                  <Image
+                    src={heroArticle.image}
+                    alt={heroArticle.title}
+                    fill
+                    priority
+                    className="object-cover opacity-50 transition-transform duration-700 group-hover:scale-110"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1280px) 70vw, 1200px"
+                  />
+                ) : (
+                  <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-red-900" />
+                )}
+                {/* Video Play Button Overlay */}
+                <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/40 transition-all duration-500">
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-red-500/20 rounded-full blur-2xl group-hover:bg-red-500/30 transition-all duration-500" />
+                    <div className="relative bg-red-600/90 group-hover:bg-red-500 rounded-full p-8 shadow-2xl group-hover:scale-110 transition-all duration-300">
+                      <Play className="h-12 w-12 text-white fill-white ml-2" />
+                    </div>
+                  </div>
+                </div>
+                {/* Video Badge */}
+                <div className="absolute top-6 right-6 z-20">
+                  <span className="inline-flex items-center gap-2 rounded-full bg-red-600/90 backdrop-blur-sm border-2 border-white/30 px-4 py-2 text-sm font-bold text-white shadow-lg">
+                    <Play className="h-4 w-4 fill-white" />
+                    {locale === 'fa' ? 'ویدیو' : locale === 'ku' ? 'ڤیدیۆ' : 'Video'}
+                  </span>
+                </div>
+              </>
+            ) : heroArticle.image ? (
               <Image
                 src={heroArticle.image}
                 alt={heroArticle.title}
@@ -181,7 +212,7 @@ export default function Home() {
                 className="object-cover opacity-50 transition-transform duration-700 group-hover:scale-110"
                 sizes="(max-width: 768px) 100vw, (max-width: 1280px) 70vw, 1200px"
               />
-            )}
+            ) : null}
             {/* Enhanced Gradient Overlay */}
             <div className="absolute inset-0 bg-gradient-to-br from-slate-950/95 via-slate-900/85 to-red-900/70" />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
