@@ -364,11 +364,40 @@ export default function AdminPage() {
     if (!file) return null
 
     try {
+      // Check file size (100MB limit for videos, 50MB for others)
+      const maxSize = type === 'video' ? 100 * 1024 * 1024 : 50 * 1024 * 1024
+      if (file.size > maxSize) {
+        const sizeMB = (file.size / 1024 / 1024).toFixed(2)
+        const maxSizeMB = (maxSize / 1024 / 1024).toFixed(0)
+        const errorMsg = type === 'video' 
+          ? `قەبارەی ڤیدیۆ (${sizeMB}MB) زۆر گەورەیە. تکایە فایلی بچووکتر هەڵبژێرە (کەمتر لە ${maxSizeMB}MB)`
+          : `قەبارەی فایل (${sizeMB}MB) زۆر گەورەیە. تکایە فایلی بچووکتر هەڵبژێرە (کەمتر لە ${maxSizeMB}MB)`
+        setMessage({ type: 'error', text: errorMsg })
+        return null
+      }
+
+      console.log('Uploading file:', { name: file.name, type: file.type, size: file.size, uploadType: type })
+
+      // For large files (especially videos), upload directly to Supabase
+      // This bypasses Vercel's 4.5MB serverless function limit
+      if (file.size > 4 * 1024 * 1024) { // If file is larger than 4MB, use direct upload
+        const { uploadFileDirect } = await import('@/lib/upload-direct')
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+        const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+        
+        if (!supabaseUrl || !supabaseAnonKey) {
+          throw new Error('Supabase configuration missing')
+        }
+
+        const result = await uploadFileDirect(file, type, supabaseUrl, supabaseAnonKey)
+        console.log('Direct upload successful:', result.url)
+        return result.url
+      }
+
+      // For smaller files, use API route
       const formData = new FormData()
       formData.append('file', file)
       formData.append('type', type)
-
-      console.log('Uploading file:', { name: file.name, type: file.type, size: file.size, uploadType: type })
 
       const response = await fetch('/api/upload', {
         method: 'POST',
