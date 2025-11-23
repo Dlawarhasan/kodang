@@ -44,7 +44,7 @@ export function formatDate(date: string | Date, locale: string): string {
   if (locale === 'ku') {
     // Kurdish format: 22ê مێژووی 2025an
     const monthName = kurdishMonths[month]
-    // Add "ê" suffix to day and "ی" to month, and "an" to year
+    // Add "ê" suffix to day, "ی" to month, and "an" to year
     return `${day}ی ${monthName}ی ${year}`
   } else if (locale === 'fa') {
     // Farsi format: 22 می 2025
