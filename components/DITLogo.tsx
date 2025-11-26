@@ -21,44 +21,42 @@ export default function DITLogo({ size = 'medium', showTagline = false }: DITLog
   return (
     <div className="inline-flex flex-col items-center gap-1">
       {/* Main Logo: D.IT */}
-      <div className={`flex items-center gap-1 ${sizeClasses[size]}`}>
+      <div className={`flex items-center gap-1.5 ${sizeClasses[size]}`}>
         {/* Stylized D with circuit traces */}
         <svg
-          viewBox="0 0 60 80"
+          viewBox="0 0 50 70"
           className={`${sizeClasses[size]} text-white`}
-          fill="currentColor"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="3.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         >
           {/* Left vertical bar of D */}
-          <line x1="10" y1="10" x2="10" y2="70" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
+          <line x1="8" y1="8" x2="8" y2="62" />
           
           {/* Curved right side of D */}
-          <path
-            d="M 10 10 Q 40 10, 40 40 Q 40 70, 10 70"
-            stroke="currentColor"
-            strokeWidth="4"
-            fill="none"
-            strokeLinecap="round"
-          />
+          <path d="M 8 8 Q 32 8, 32 35 Q 32 62, 8 62" />
           
           {/* Three horizontal circuit traces from left bar */}
-          <line x1="10" y1="25" x2="25" y2="25" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-          <circle cx="25" cy="25" r="3" fill="currentColor" />
+          <line x1="8" y1="22" x2="20" y2="22" />
+          <circle cx="20" cy="22" r="2.5" fill="currentColor" />
           
-          <line x1="10" y1="40" x2="25" y2="40" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-          <circle cx="25" cy="40" r="3" fill="currentColor" />
+          <line x1="8" y1="35" x2="20" y2="35" />
+          <circle cx="20" cy="35" r="2.5" fill="currentColor" />
           
-          <line x1="10" y1="55" x2="25" y2="55" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-          <circle cx="25" cy="55" r="3" fill="currentColor" />
+          <line x1="8" y1="48" x2="20" y2="48" />
+          <circle cx="20" cy="48" r="2.5" fill="currentColor" />
           
           {/* Two circles on curved side */}
-          <circle cx="35" cy="25" r="3" fill="currentColor" />
-          <circle cx="35" cy="55" r="3" fill="currentColor" />
+          <circle cx="28" cy="22" r="2.5" fill="currentColor" />
+          <circle cx="28" cy="48" r="2.5" fill="currentColor" />
         </svg>
         
         {/* .IT Text */}
-        <div className={`flex items-baseline gap-0.5 font-bold ${textSizes[size]} text-white`}>
-          <span className="w-1.5 h-1.5 rounded-full bg-white" />
-          <span className="font-bold">IT</span>
+        <div className={`flex items-baseline gap-1 font-bold ${textSizes[size]} text-white leading-none`}>
+          <span className="w-1.5 h-1.5 rounded-full bg-white mt-0.5" />
+          <span className="font-bold tracking-tight">IT</span>
         </div>
       </div>
       
