@@ -118,7 +118,10 @@
 <body>
     <div class="container">
         <h1>بررسی پست‌ها - Check Posts</h1>
-        <button onclick="checkPosts()">بررسی پست‌ها - Check Posts</button>
+        <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 20px;">
+            <button onclick="checkPosts()">بررسی پست‌ها - Check Posts</button>
+            <button onclick="organizePosts('auto')" style="background: #10b981;">سازماندهی خودکار - Auto Organize</button>
+        </div>
         <div id="loading" class="loading" style="display: none;">در حال بررسی...</div>
         <div id="results"></div>
     </div>
@@ -218,6 +221,58 @@
                     results.innerHTML += postsHTML;
                 }
 
+            } catch (error) {
+                results.innerHTML = `<div style="color: red; padding: 20px;">خطا: ${error.message}</div>`;
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+
+        async function organizePosts(targetLanguage) {
+            const loading = document.getElementById('loading');
+            const results = document.getElementById('results');
+            
+            if (!confirm('آیا مطمئن هستید که می‌خواهید پست‌ها را سازماندهی کنید؟ این کار محتوای زبان‌های دیگر را حذف می‌کند.')) {
+                return;
+            }
+            
+            loading.style.display = 'block';
+            results.innerHTML = '';
+
+            try {
+                const baseUrl = window.location.origin;
+                console.log('Organizing posts with language:', targetLanguage);
+                const response = await fetch(`${baseUrl}/api/news/organize-posts`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'organize',
+                        targetLanguage: targetLanguage || 'auto'
+                    })
+                });
+                
+                console.log('Response status:', response.status);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+                }
+                
+                const data = await response.json();
+                console.log('Organize result:', data);
+                
+                results.innerHTML = `
+                    <div style="background: #d1fae5; border: 2px solid #10b981; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                        <h2 style="color: #065f46; margin: 0 0 10px 0;">✅ سازماندهی انجام شد!</h2>
+                        <p style="color: #065f46; margin: 0;">
+                            <strong>${data.updated}</strong> پست به‌روزرسانی شد از <strong>${data.total}</strong> پست کل
+                        </p>
+                    </div>
+                    <button onclick="checkPosts()" style="margin: 20px auto; display: block;">بررسی مجدد پست‌ها</button>
+                `;
+                
             } catch (error) {
                 results.innerHTML = `<div style="color: red; padding: 20px;">خطا: ${error.message}</div>`;
             } finally {
