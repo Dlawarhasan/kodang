@@ -76,9 +76,9 @@ export async function POST(request: NextRequest) {
       // If post has Kurdish content (and no Farsi), keep only Kurdish and remove English
       // If post has English content (and no Farsi/Kurdish), keep only English
       const needsUpdate = 
-        (hasFarsi && (hasKurdish || hasEnglish)) || // Farsi post with other languages
-        (hasKurdish && !hasFarsi && hasEnglish) || // Kurdish post with English
-        (hasEnglish && !hasFarsi && !hasKurdish && false) // English-only (no need to update)
+        (hasFarsi && (hasKurdish || hasEnglish)) || // Farsi post with other languages - remove Kurdish and English
+        (hasKurdish && !hasFarsi && hasEnglish) || // Kurdish post with English - remove English
+        false // English-only posts don't need update
 
       if (primaryLanguage && needsUpdate) {
         const newTranslations: any = {
