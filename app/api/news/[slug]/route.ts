@@ -43,9 +43,9 @@ export async function GET(
       return ''
     }
 
-    // Check if post has content in the requested language
-    // Post must have title AND (excerpt OR content) in the requested language
-    // This ensures only posts that are actually "in" that language are accessible
+    // Check if post is fully in the requested language
+    // Post must have title AND excerpt AND content in the requested language
+    // This ensures only posts that are actually "posted in" that language are accessible
     const translation = data.translations?.[locale]
     if (!translation) {
       return NextResponse.json(
@@ -58,8 +58,9 @@ export async function GET(
     const hasExcerpt = translation.excerpt && translation.excerpt.trim() !== ''
     const hasContent = translation.content && translation.content.trim() !== ''
     
-    // Post must have title AND at least excerpt or content in the requested language
-    if (!hasTitle || (!hasExcerpt && !hasContent)) {
+    // Post must have ALL THREE: title, excerpt, AND content in the requested language
+    // This ensures the post is fully written in that language
+    if (!hasTitle || !hasExcerpt || !hasContent) {
       return NextResponse.json(
         { error: 'Post not found in this language' },
         { status: 404 }

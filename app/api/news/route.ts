@@ -28,9 +28,9 @@ export async function GET(request: NextRequest) {
       throw error
     }
 
-    // Filter posts: Only show posts that have content in the requested language
-    // Post must have title AND (excerpt OR content) in the requested language
-    // This ensures only posts that are actually "in" that language are shown
+    // Filter posts: Only show posts that are fully in the requested language
+    // Post must have title AND excerpt AND content in the requested language
+    // This ensures only posts that are actually "posted in" that language are shown
     const filteredData = data?.filter(item => {
       const translation = item.translations?.[locale]
       if (!translation) return false
@@ -39,9 +39,9 @@ export async function GET(request: NextRequest) {
       const hasExcerpt = translation.excerpt && translation.excerpt.trim() !== ''
       const hasContent = translation.content && translation.content.trim() !== ''
       
-      // Post must have title AND at least excerpt or content in the requested language
-      // This ensures the post is actually written in that language, not just translated
-      return hasTitle && (hasExcerpt || hasContent)
+      // Post must have ALL THREE: title, excerpt, AND content in the requested language
+      // This ensures the post is fully written in that language, not just partially translated
+      return hasTitle && hasExcerpt && hasContent
     }) || []
 
     // Map data to include translations based on locale
