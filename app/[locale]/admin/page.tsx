@@ -874,6 +874,11 @@ export default function AdminPage() {
             <div>
               <h1 className="text-3xl font-bold text-slate-900">{t('postManagement')}</h1>
               <p className="text-slate-600 mt-2">{t('postList')}</p>
+              <p className="text-sm text-slate-500 mt-1 font-semibold">
+                {locale === 'fa' && '📝 فقط پست‌های فارسی نمایش داده می‌شوند'}
+                {locale === 'ku' && '📝 تەنها پۆستە کوردییەکان پیشان دەدرێن'}
+                {locale === 'en' && '📝 Only English posts are displayed'}
+              </p>
             </div>
             <div className="flex items-center gap-4">
               <button
