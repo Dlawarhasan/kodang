@@ -34,6 +34,7 @@ export async function POST(request: NextRequest) {
       // Check if post contains sample text patterns
       const samplePatterns = [
         'Sample Instagram-style Post',
+        'نمونە پۆستێکی شێوازێکی ئینستاگرام',
         'دەستگیرکردن و گواستنەوەی جەعفەر صادقی',
         'کۆبوونەوەی ناڕەزایی کادرەکانی تەندروستی کرمانشاه',
         'پاڵەوانیەتی تۆپی پێ لە هەولێر',
@@ -41,7 +42,20 @@ export async function POST(request: NextRequest) {
         'فێستیڤاڵی کلتوری سلێمانی',
         'کرانەوەی نەخۆشخانەی نوێ لە هەولێر',
         'ئەنجامدانی هەڵبژاردنی نوێ',
-        'چاکسازی لە سیستەمی پەروەردە'
+        'چاکسازی لە سیستەمی پەروەردە',
+        'خودکشی مازیار احمدی',
+        'جعفر صادقی',
+        'کوهنورد و مربی سنگ‌نوردی',
+        'اشنویه',
+        'سردشت',
+        'سلێمانی',
+        'هەولێر',
+        'کرمانشاه',
+        'نمونە',
+        'sample',
+        '#sample',
+        '#instagram',
+        '#aspect-4-5'
       ]
       
       // Check if post contains any sample pattern in any language
