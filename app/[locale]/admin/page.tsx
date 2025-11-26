@@ -595,15 +595,19 @@ export default function AdminPage() {
       return
     }
 
-    // Validate: At least one language must be provided
-    if (!formData.titleFa && !formData.titleKu && !formData.titleEn) {
+    // Validate: Current language fields must be provided
+    const currentTitle = locale === 'fa' ? formData.titleFa : locale === 'ku' ? formData.titleKu : formData.titleEn
+    const currentExcerpt = locale === 'fa' ? formData.excerptFa : locale === 'ku' ? formData.excerptKu : formData.excerptEn
+    const currentContent = locale === 'fa' ? formData.contentFa : locale === 'ku' ? formData.contentKu : formData.contentEn
+    
+    if (!currentTitle || !currentExcerpt || !currentContent) {
       setMessage({ 
         type: 'error', 
         text: locale === 'fa' 
-          ? 'لطفاً حداقل ناونیشان را به یکی از زبان‌ها وارد کنید' 
+          ? 'لطفاً همه فیلدهای فارسی را پر کنید (عنوان، خلاصه، محتوا)' 
           : locale === 'ku'
-          ? 'تکایە لانیکەم ناونیشانێک بە یەکێک لە زمانەکان بنووسە'
-          : 'Please enter at least a title in one language'
+          ? 'تکایە هەموو فیلدە کوردییەکان پڕ بکەوە (ناونیشان، پوختە، ناوەرۆک)'
+          : 'Please fill all English fields (title, excerpt, content)'
       })
       return
     }
@@ -655,7 +659,27 @@ export default function AdminPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          ...formData,
+          // Only send data for the current language
+          titleFa: locale === 'fa' ? formData.titleFa : '',
+          titleKu: locale === 'ku' ? formData.titleKu : '',
+          titleEn: locale === 'en' ? formData.titleEn : '',
+          excerptFa: locale === 'fa' ? formData.excerptFa : '',
+          excerptKu: locale === 'ku' ? formData.excerptKu : '',
+          excerptEn: locale === 'en' ? formData.excerptEn : '',
+          contentFa: locale === 'fa' ? formData.contentFa : '',
+          contentKu: locale === 'ku' ? formData.contentKu : '',
+          contentEn: locale === 'en' ? formData.contentEn : '',
+          // Common fields
+          category: formData.category,
+          section: formData.section,
+          author: formData.author,
+          authorInstagram: formData.authorInstagram,
+          authorFacebook: formData.authorFacebook,
+          authorTwitter: formData.authorTwitter,
+          authorTelegram: formData.authorTelegram,
+          authorYoutube: formData.authorYoutube,
+          tags: formData.tags,
+          date: formData.date,
           slug: editingSlug || undefined,
           image: imageUrl || formData.image,
           video: videoUrl || formData.video,
@@ -1498,10 +1522,11 @@ export default function AdminPage() {
           />
         </div>
 
-        {/* Persian - Optional */}
+        {/* Persian - Only show if locale is 'fa' */}
+        {locale === 'fa' && (
         <div className="border-t border-slate-200 pt-6">
           <h2 className="text-xl font-bold text-slate-900 mb-4">
-            {t('farsi')} <span className="text-slate-500 text-sm">({t('optional')})</span>
+            {t('farsi')} <span className="text-red-500 text-sm">({locale === 'fa' ? 'الزامی' : locale === 'ku' ? 'پێویست' : 'Required'})</span>
           </h2>
           <div className="space-y-4">
             <div>
@@ -1542,11 +1567,13 @@ export default function AdminPage() {
             </div>
           </div>
         </div>
+        )}
 
-        {/* Kurdish - Optional */}
+        {/* Kurdish - Only show if locale is 'ku' */}
+        {locale === 'ku' && (
         <div className="border-t border-slate-200 pt-6">
           <h2 className="text-xl font-bold text-slate-900 mb-4">
-            {t('kurdish')} <span className="text-slate-500 text-sm">({t('optional')})</span>
+            {t('kurdish')} <span className="text-red-500 text-sm">({locale === 'fa' ? 'الزامی' : locale === 'ku' ? 'پێویست' : 'Required'})</span>
           </h2>
           <div className="space-y-4">
             <div>
@@ -1587,11 +1614,13 @@ export default function AdminPage() {
             </div>
           </div>
         </div>
+        )}
 
-        {/* English */}
+        {/* English - Only show if locale is 'en' */}
+        {locale === 'en' && (
         <div className="border-t border-slate-200 pt-6">
           <h2 className="text-xl font-bold text-slate-900 mb-4">
-            {t('english')} <span className="text-slate-500 text-sm">({t('optional')})</span>
+            {t('english')} <span className="text-red-500 text-sm">({locale === 'fa' ? 'الزامی' : locale === 'ku' ? 'پێویست' : 'Required'})</span>
           </h2>
           <div className="space-y-4">
             <div>
@@ -1632,6 +1661,7 @@ export default function AdminPage() {
             </div>
           </div>
         </div>
+        )}
 
         {/* Message */}
         {message && (
