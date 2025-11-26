@@ -109,22 +109,28 @@ export async function PUT(
     // Prepare translations (all languages are optional)
     // IMPORTANT: Do NOT use fallbacks! Each language should only have its own content.
     // This ensures posts only appear in their respective language sections.
-    // If a language field is empty, it should remain empty (not filled with another language's content).
+    // Convert empty strings to null to ensure proper filtering
+    const cleanString = (str: string | undefined | null): string | null => {
+      if (!str || typeof str !== 'string') return null
+      const trimmed = str.trim()
+      return trimmed === '' ? null : trimmed
+    }
+
     const translations = {
       fa: {
-        title: body.titleFa || '',
-        excerpt: body.excerptFa || '',
-        content: body.contentFa || '',
+        title: cleanString(body.titleFa),
+        excerpt: cleanString(body.excerptFa),
+        content: cleanString(body.contentFa),
       },
       ku: {
-        title: body.titleKu || '',
-        excerpt: body.excerptKu || '',
-        content: body.contentKu || '',
+        title: cleanString(body.titleKu),
+        excerpt: cleanString(body.excerptKu),
+        content: cleanString(body.contentKu),
       },
       en: {
-        title: body.titleEn || '',
-        excerpt: body.excerptEn || '',
-        content: body.contentEn || '',
+        title: cleanString(body.titleEn),
+        excerpt: cleanString(body.excerptEn),
+        content: cleanString(body.contentEn),
       },
     }
 

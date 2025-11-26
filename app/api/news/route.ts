@@ -33,15 +33,30 @@ export async function GET(request: NextRequest) {
     // This ensures only posts that are actually "posted in" that language are shown
     const filteredData = data?.filter(item => {
       const translation = item.translations?.[locale]
-      if (!translation) return false
+      if (!translation) {
+        console.log(`Post ${item.slug}: No translation for locale ${locale}`)
+        return false
+      }
       
-      const hasTitle = translation.title && translation.title.trim() !== ''
-      const hasExcerpt = translation.excerpt && translation.excerpt.trim() !== ''
-      const hasContent = translation.content && translation.content.trim() !== ''
+      // Check if fields exist and are not empty (handle both string and null)
+      const hasTitle = translation.title && typeof translation.title === 'string' && translation.title.trim() !== ''
+      const hasExcerpt = translation.excerpt && typeof translation.excerpt === 'string' && translation.excerpt.trim() !== ''
+      const hasContent = translation.content && typeof translation.content === 'string' && translation.content.trim() !== ''
       
       // Post must have ALL THREE: title, excerpt, AND content in the requested language
       // This ensures the post is fully written in that language, not just partially translated
-      return hasTitle && hasExcerpt && hasContent
+      const isValid = hasTitle && hasExcerpt && hasContent
+      
+      if (!isValid) {
+        console.log(`Post ${item.slug}: Missing fields for locale ${locale}`, {
+          hasTitle,
+          hasExcerpt,
+          hasContent,
+          title: translation.title?.substring(0, 30),
+        })
+      }
+      
+      return isValid
     }) || []
 
     // Map data to include translations based on locale
@@ -130,22 +145,28 @@ export async function POST(request: NextRequest) {
     // Prepare translations (all languages are optional)
     // IMPORTANT: Do NOT use fallbacks! Each language should only have its own content.
     // This ensures posts only appear in their respective language sections.
-    // If a language field is empty, it should remain empty (not filled with another language's content).
+    // Convert empty strings to null to ensure proper filtering
+    const cleanString = (str: string | undefined | null): string | null => {
+      if (!str || typeof str !== 'string') return null
+      const trimmed = str.trim()
+      return trimmed === '' ? null : trimmed
+    }
+
     const translations = {
       fa: {
-        title: body.titleFa || '',
-        excerpt: body.excerptFa || '',
-        content: body.contentFa || '',
+        title: cleanString(body.titleFa),
+        excerpt: cleanString(body.excerptFa),
+        content: cleanString(body.contentFa),
       },
       ku: {
-        title: body.titleKu || '',
-        excerpt: body.excerptKu || '',
-        content: body.contentKu || '',
+        title: cleanString(body.titleKu),
+        excerpt: cleanString(body.excerptKu),
+        content: cleanString(body.contentKu),
       },
       en: {
-        title: body.titleEn || '',
-        excerpt: body.excerptEn || '',
-        content: body.contentEn || '',
+        title: cleanString(body.titleEn),
+        excerpt: cleanString(body.excerptEn),
+        content: cleanString(body.contentEn),
       },
     }
 
