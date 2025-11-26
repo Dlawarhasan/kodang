@@ -1526,7 +1526,7 @@ export default function AdminPage() {
         {locale === 'fa' && (
         <div className="border-t border-slate-200 pt-6">
           <h2 className="text-xl font-bold text-slate-900 mb-4">
-            {t('farsi')} <span className="text-red-500 text-sm">({locale === 'fa' ? 'الزامی' : locale === 'ku' ? 'پێویست' : 'Required'})</span>
+            {t('farsi')} <span className="text-red-500 text-sm">(الزامی)</span>
           </h2>
           <div className="space-y-4">
             <div>
@@ -1573,7 +1573,7 @@ export default function AdminPage() {
         {locale === 'ku' && (
         <div className="border-t border-slate-200 pt-6">
           <h2 className="text-xl font-bold text-slate-900 mb-4">
-            {t('kurdish')} <span className="text-red-500 text-sm">({locale === 'fa' ? 'الزامی' : locale === 'ku' ? 'پێویست' : 'Required'})</span>
+            {t('kurdish')} <span className="text-red-500 text-sm">(پێویست)</span>
           </h2>
           <div className="space-y-4">
             <div>
@@ -1620,7 +1620,7 @@ export default function AdminPage() {
         {locale === 'en' && (
         <div className="border-t border-slate-200 pt-6">
           <h2 className="text-xl font-bold text-slate-900 mb-4">
-            {t('english')} <span className="text-red-500 text-sm">({locale === 'fa' ? 'الزامی' : locale === 'ku' ? 'پێویست' : 'Required'})</span>
+            {t('english')} <span className="text-red-500 text-sm">(Required)</span>
           </h2>
           <div className="space-y-4">
             <div>
