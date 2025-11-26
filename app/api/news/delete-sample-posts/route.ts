@@ -1,6 +1,86 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase'
 
+export async function GET(request: NextRequest) {
+  try {
+    const supabase = createServerClient()
+    
+    // Get all posts for debugging
+    const { data: allPosts, error: fetchError } = await supabase
+      .from('news')
+      .select('*')
+      .order('date', { ascending: false })
+
+    if (fetchError) {
+      return NextResponse.json({ error: fetchError.message }, { status: 500 })
+    }
+
+    const samplePatterns = [
+      'Sample Instagram-style Post',
+      'نمونە پۆستێکی شێوازێکی ئینستاگرام',
+      'نمونە',
+      'دەستگیرکردن و گواستنەوەی جەعفەر صادقی',
+      'جەعفەر صادقی',
+      'جعفر صادقی',
+      'کۆبوونەوەی ناڕەزایی کادرەکانی تەندروستی',
+      'کادرەکانی تەندروستی کرمانشاه',
+      'پاڵەوانیەتی تۆپی پێ لە هەولێر',
+      'پێشکەوتنی نوێ لە بواری دەستکردی زیرەک',
+      'فێستیڤاڵی کلتوری سلێمانی',
+      'کرانەوەی نەخۆشخانەی نوێ لە هەولێر',
+      'ئەنجامدانی هەڵبژاردنی نوێ',
+      'چاکسازی لە سیستەمی پەروەردە',
+      'خودکشی مازیار احمدی',
+      'مازیار احمدی',
+      'sample',
+      '#sample',
+      '#instagram',
+      '#aspect-4-5'
+    ]
+
+    const containsPattern = (text: string | undefined | null): boolean => {
+      if (!text) return false
+      const lowerText = text.toLowerCase()
+      return samplePatterns.some(pattern => {
+        const lowerPattern = pattern.toLowerCase()
+        return lowerText.includes(lowerPattern)
+      })
+    }
+
+    const analyzedPosts = (allPosts || []).map(post => {
+      const translations = post.translations || {}
+      const hasSampleText = 
+        containsPattern(translations.fa?.title) ||
+        containsPattern(translations.fa?.excerpt) ||
+        containsPattern(translations.fa?.content) ||
+        containsPattern(translations.ku?.title) ||
+        containsPattern(translations.ku?.excerpt) ||
+        containsPattern(translations.ku?.content) ||
+        containsPattern(translations.en?.title) ||
+        containsPattern(translations.en?.excerpt) ||
+        containsPattern(translations.en?.content) ||
+        (post.tags && Array.isArray(post.tags) && post.tags.some((tag: string) => containsPattern(tag)))
+
+      return {
+        slug: post.slug,
+        titleKu: translations.ku?.title || '',
+        titleFa: translations.fa?.title || '',
+        titleEn: translations.en?.title || '',
+        tags: post.tags || [],
+        isSample: hasSampleText
+      }
+    })
+
+    return NextResponse.json({
+      total: allPosts?.length || 0,
+      sampleCount: analyzedPosts.filter(p => p.isSample).length,
+      posts: analyzedPosts
+    })
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 })
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const supabase = createServerClient()
