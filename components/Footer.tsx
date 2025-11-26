@@ -129,9 +129,8 @@ export default function Footer() {
 
         <div className="border-t border-gray-200 mt-8 pt-8 text-center text-gray-500">
           <p>© {currentYear} کۆدەنگ. {t('copyright')}.</p>
-          <p className="mt-2 text-xs text-gray-400 flex items-center justify-center gap-2">
-            <span>Created by</span>
-            <span className="font-bold text-gray-600">DLO.IT</span>
+          <p className="mt-2 text-xs text-gray-400 text-center">
+            Created by <span className="font-bold text-gray-600">DLO.IT</span>
           </p>
         </div>
       </div>
