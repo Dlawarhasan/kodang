@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useTranslations, useLocale } from 'next-intl'
 import { Facebook, Instagram, Send, Youtube } from 'lucide-react'
+import DITLogo from './DITLogo'
 
 export default function Footer() {
   const t = useTranslations('footer')
@@ -129,15 +130,17 @@ export default function Footer() {
 
         <div className="border-t border-gray-200 mt-8 pt-8 text-center text-gray-500">
           <p>© {currentYear} کۆدەنگ. {t('copyright')}.</p>
-          <p className="mt-2 text-xs text-gray-400">
-            Created by{' '}
+          <p className="mt-2 text-xs text-gray-400 flex items-center justify-center gap-2">
+            <span>Created by</span>
             <a
               href="https://www.instagram.com/dlawar.hasan?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-500 hover:text-red-600 transition-colors underline"
+              className="inline-flex items-center hover:opacity-80 transition-opacity"
             >
-              dlawarhasan
+              <div className="bg-slate-900 px-3 py-1.5 rounded">
+                <DITLogo size="small" showTagline={false} />
+              </div>
             </a>
           </p>
         </div>
