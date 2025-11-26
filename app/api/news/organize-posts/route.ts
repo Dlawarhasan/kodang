@@ -51,10 +51,12 @@ export async function POST(request: NextRequest) {
 
       // Determine primary language
       // Priority: Farsi > Kurdish > English
+      // If post has Farsi content, keep only Farsi and remove Kurdish and English
       let primaryLanguage: 'fa' | 'ku' | 'en' | null = null
       
       if (targetLanguage === 'auto') {
         // Auto-detect: Use the first available complete language
+        // Priority: Farsi first (as it's the main language)
         if (hasFarsi) {
           primaryLanguage = 'fa'
         } else if (hasKurdish) {
@@ -70,8 +72,15 @@ export async function POST(request: NextRequest) {
         primaryLanguage = 'en'
       }
 
-      // If we found a primary language and post has multiple languages, organize it
-      if (primaryLanguage && (hasFarsi && hasKurdish) || (hasFarsi && hasEnglish) || (hasKurdish && hasEnglish)) {
+      // If post has Farsi content, keep only Farsi and remove Kurdish and English
+      // If post has Kurdish content (and no Farsi), keep only Kurdish and remove English
+      // If post has English content (and no Farsi/Kurdish), keep only English
+      const needsUpdate = 
+        (hasFarsi && (hasKurdish || hasEnglish)) || // Farsi post with other languages
+        (hasKurdish && !hasFarsi && hasEnglish) || // Kurdish post with English
+        (hasEnglish && !hasFarsi && !hasKurdish && false) // English-only (no need to update)
+
+      if (primaryLanguage && needsUpdate) {
         const newTranslations: any = {
           fa: primaryLanguage === 'fa' ? translations.fa : { title: '', excerpt: '', content: '' },
           ku: primaryLanguage === 'ku' ? translations.ku : { title: '', excerpt: '', content: '' },
