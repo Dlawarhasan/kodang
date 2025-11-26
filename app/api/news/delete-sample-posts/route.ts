@@ -31,17 +31,31 @@ export async function POST(request: NextRequest) {
     for (const post of allPosts) {
       const translations = post.translations || {}
       
-      // Check if post contains "Sample Instagram-style Post" in any language
-      const hasSampleText = 
-        (translations.fa?.title?.includes('Sample Instagram-style Post') ||
-         translations.fa?.excerpt?.includes('Sample Instagram-style Post') ||
-         translations.fa?.content?.includes('Sample Instagram-style Post')) ||
-        (translations.ku?.title?.includes('Sample Instagram-style Post') ||
-         translations.ku?.excerpt?.includes('Sample Instagram-style Post') ||
-         translations.ku?.content?.includes('Sample Instagram-style Post')) ||
-        (translations.en?.title?.includes('Sample Instagram-style Post') ||
-         translations.en?.excerpt?.includes('Sample Instagram-style Post') ||
-         translations.en?.content?.includes('Sample Instagram-style Post'))
+      // Check if post contains sample text patterns
+      const samplePatterns = [
+        'Sample Instagram-style Post',
+        'دەستگیرکردن و گواستنەوەی جەعفەر صادقی',
+        'کۆبوونەوەی ناڕەزایی کادرەکانی تەندروستی کرمانشاه',
+        'پاڵەوانیەتی تۆپی پێ لە هەولێر',
+        'پێشکەوتنی نوێ لە بواری دەستکردی زیرەک',
+        'فێستیڤاڵی کلتوری سلێمانی',
+        'کرانەوەی نەخۆشخانەی نوێ لە هەولێر',
+        'ئەنجامدانی هەڵبژاردنی نوێ',
+        'چاکسازی لە سیستەمی پەروەردە'
+      ]
+      
+      // Check if post contains any sample pattern in any language
+      const hasSampleText = samplePatterns.some(pattern => 
+        (translations.fa?.title?.includes(pattern) ||
+         translations.fa?.excerpt?.includes(pattern) ||
+         translations.fa?.content?.includes(pattern)) ||
+        (translations.ku?.title?.includes(pattern) ||
+         translations.ku?.excerpt?.includes(pattern) ||
+         translations.ku?.content?.includes(pattern)) ||
+        (translations.en?.title?.includes(pattern) ||
+         translations.en?.excerpt?.includes(pattern) ||
+         translations.en?.content?.includes(pattern))
+      )
 
       if (hasSampleText) {
         // Delete the post
