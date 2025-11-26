@@ -28,12 +28,24 @@ export async function GET(request: NextRequest) {
       throw error
     }
 
+    // Filter posts: Only show posts that have content in the requested language
+    // Check if post has title, excerpt, or content in the requested locale
+    const filteredData = data?.filter(item => {
+      const translation = item.translations?.[locale]
+      // Post must have at least title, excerpt, or content in the requested language
+      return translation && (
+        (translation.title && translation.title.trim() !== '') ||
+        (translation.excerpt && translation.excerpt.trim() !== '') ||
+        (translation.content && translation.content.trim() !== '')
+      )
+    }) || []
+
     // Map data to include translations based on locale
-    const news = data?.map(item => ({
+    const news = filteredData.map(item => ({
       ...item,
-      title: item.translations?.[locale]?.title || item.translations?.fa?.title || '',
-      excerpt: item.translations?.[locale]?.excerpt || item.translations?.fa?.excerpt || '',
-      content: item.translations?.[locale]?.content || item.translations?.fa?.content || '',
+      title: item.translations?.[locale]?.title || '',
+      excerpt: item.translations?.[locale]?.excerpt || '',
+      content: item.translations?.[locale]?.content || '',
       // Map database column names (snake_case) to camelCase for frontend
       authorInstagram: item.author_instagram || null,
       authorFacebook: item.author_facebook || null,
@@ -41,7 +53,9 @@ export async function GET(request: NextRequest) {
       authorTelegram: item.author_telegram || null,
       authorYoutube: item.author_youtube || null,
       views: item.views || 0,
-    })) || []
+    })).filter(item => item.title || item.excerpt || item.content) // Remove empty posts
+
+    console.log(`Filtered news for locale ${locale}: ${news.length} posts (from ${data?.length || 0} total)`)
 
     return NextResponse.json({ news })
   } catch (error: any) {
