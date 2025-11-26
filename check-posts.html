@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بررسی پست‌ها - Check Posts</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #dc2626;
+            text-align: center;
+        }
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 30px 0;
+        }
+        .summary-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid #e5e7eb;
+        }
+        .summary-card.farsi { border-color: #3b82f6; }
+        .summary-card.kurdish { border-color: #10b981; }
+        .summary-card.english { border-color: #f59e0b; }
+        .summary-card.mixed { border-color: #8b5cf6; }
+        .summary-card.empty { border-color: #ef4444; }
+        .summary-card h3 {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            color: #6b7280;
+        }
+        .summary-card .number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #111827;
+        }
+        .posts-list {
+            margin-top: 30px;
+        }
+        .post-item {
+            background: #f9fafb;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-right: 4px solid #e5e7eb;
+        }
+        .post-item.farsi { border-right-color: #3b82f6; }
+        .post-item.kurdish { border-right-color: #10b981; }
+        .post-item.english { border-right-color: #f59e0b; }
+        .post-item.mixed { border-right-color: #8b5cf6; }
+        .post-item.empty { border-right-color: #ef4444; }
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .post-slug {
+            font-weight: bold;
+            color: #111827;
+        }
+        .post-language {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .language-farsi { background: #dbeafe; color: #1e40af; }
+        .language-kurdish { background: #d1fae5; color: #065f46; }
+        .language-english { background: #fef3c7; color: #92400e; }
+        .language-mixed { background: #e9d5ff; color: #6b21a8; }
+        .language-empty { background: #fee2e2; color: #991b1b; }
+        .post-titles {
+            font-size: 14px;
+            color: #6b7280;
+            margin-top: 10px;
+        }
+        .post-titles div {
+            margin: 5px 0;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6b7280;
+        }
+        button {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 20px auto;
+            display: block;
+        }
+        button:hover {
+            background: #b91c1c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>بررسی پست‌ها - Check Posts</h1>
+        <button onclick="checkPosts()">بررسی پست‌ها - Check Posts</button>
+        <div id="loading" class="loading" style="display: none;">در حال بررسی...</div>
+        <div id="results"></div>
+    </div>
+
+    <script>
+        async function checkPosts() {
+            const loading = document.getElementById('loading');
+            const results = document.getElementById('results');
+            
+            loading.style.display = 'block';
+            results.innerHTML = '';
+
+            try {
+                const baseUrl = window.location.origin;
+                const response = await fetch(`${baseUrl}/api/news/check-posts`);
+                const data = await response.json();
+
+                if (data.error) {
+                    results.innerHTML = `<div style="color: red; padding: 20px;">خطا: ${data.error}</div>`;
+                    return;
+                }
+
+                // Summary
+                let summaryHTML = '<div class="summary">';
+                summaryHTML += `
+                    <div class="summary-card farsi">
+                        <h3>فارسی</h3>
+                        <div class="number">${data.summary.farsi}</div>
+                    </div>
+                    <div class="summary-card kurdish">
+                        <h3>کوردی</h3>
+                        <div class="number">${data.summary.kurdish}</div>
+                    </div>
+                    <div class="summary-card english">
+                        <h3>English</h3>
+                        <div class="number">${data.summary.english}</div>
+                    </div>
+                    <div class="summary-card mixed">
+                        <h3>Mixed</h3>
+                        <div class="number">${data.summary.mixed}</div>
+                    </div>
+                    <div class="summary-card empty">
+                        <h3>Empty</h3>
+                        <div class="number">${data.summary.empty}</div>
+                    </div>
+                    <div class="summary-card">
+                        <h3>Total</h3>
+                        <div class="number">${data.summary.total}</div>
+                    </div>
+                `;
+                summaryHTML += '</div>';
+                results.innerHTML = summaryHTML;
+
+                // Posts list
+                if (data.posts && data.posts.length > 0) {
+                    let postsHTML = '<div class="posts-list"><h2>لیست پست‌ها:</h2>';
+                    data.posts.forEach(post => {
+                        const langClass = post.language;
+                        const langLabel = {
+                            'farsi': 'فارسی',
+                            'kurdish': 'کوردی',
+                            'english': 'English',
+                            'mixed': 'Mixed',
+                            'empty': 'Empty'
+                        }[post.language] || post.language;
+
+                        postsHTML += `
+                            <div class="post-item ${langClass}">
+                                <div class="post-header">
+                                    <span class="post-slug">${post.slug}</span>
+                                    <span class="post-language language-${post.language}">${langLabel}</span>
+                                </div>
+                                <div class="post-titles">
+                                    ${post.titleFa ? `<div><strong>فارسی:</strong> ${post.titleFa}</div>` : ''}
+                                    ${post.titleKu ? `<div><strong>کوردی:</strong> ${post.titleKu}</div>` : ''}
+                                    ${post.titleEn ? `<div><strong>English:</strong> ${post.titleEn}</div>` : ''}
+                                </div>
+                            </div>
+                        `;
+                    });
+                    postsHTML += '</div>';
+                    results.innerHTML += postsHTML;
+                }
+
+            } catch (error) {
+                results.innerHTML = `<div style="color: red; padding: 20px;">خطا: ${error.message}</div>`;
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+
+        // Auto-check on load
+        window.onload = () => {
+            // checkPosts();
+        };
+    </script>
+</body>
+</html>
+
