@@ -107,26 +107,24 @@ export async function PUT(
     }
 
     // Prepare translations (all languages are optional)
-    // Use fallback: if a language is missing, use another available language
-    const getFallback = (field: 'title' | 'excerpt' | 'content') => {
-      return body[`${field}Fa`] || body[`${field}Ku`] || body[`${field}En`] || ''
-    }
-
+    // IMPORTANT: Do NOT use fallbacks! Each language should only have its own content.
+    // This ensures posts only appear in their respective language sections.
+    // If a language field is empty, it should remain empty (not filled with another language's content).
     const translations = {
       fa: {
-        title: body.titleFa || getFallback('title'),
-        excerpt: body.excerptFa || getFallback('excerpt'),
-        content: body.contentFa || getFallback('content'),
+        title: body.titleFa || '',
+        excerpt: body.excerptFa || '',
+        content: body.contentFa || '',
       },
       ku: {
-        title: body.titleKu || body.titleFa || body.titleEn || '',
-        excerpt: body.excerptKu || body.excerptFa || body.excerptEn || '',
-        content: body.contentKu || body.contentFa || body.contentEn || '',
+        title: body.titleKu || '',
+        excerpt: body.excerptKu || '',
+        content: body.contentKu || '',
       },
       en: {
-        title: body.titleEn || body.titleFa || body.titleKu || '',
-        excerpt: body.excerptEn || body.excerptFa || body.excerptKu || '',
-        content: body.contentEn || body.contentFa || body.contentKu || '',
+        title: body.titleEn || '',
+        excerpt: body.excerptEn || '',
+        content: body.contentEn || '',
       },
     }
 
