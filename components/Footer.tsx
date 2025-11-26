@@ -3,7 +3,6 @@
 import Link from 'next/link'
 import { useTranslations, useLocale } from 'next-intl'
 import { Facebook, Instagram, Send, Youtube } from 'lucide-react'
-import DITLogo from './DITLogo'
 
 export default function Footer() {
   const t = useTranslations('footer')
@@ -131,17 +130,8 @@ export default function Footer() {
         <div className="border-t border-gray-200 mt-8 pt-8 text-center text-gray-500">
           <p>© {currentYear} کۆدەنگ. {t('copyright')}.</p>
           <p className="mt-2 text-xs text-gray-400 flex items-center justify-center gap-2">
-            <a
-              href="https://www.tiktok.com/@dlo.it"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center hover:opacity-80 transition-opacity"
-            >
-              <div className="bg-slate-900 px-3 py-1.5 rounded">
-                <DITLogo size="small" showTagline={true} />
-              </div>
-            </a>
             <span>Created by</span>
+            <span className="font-bold text-gray-600">DLO.IT</span>
           </p>
         </div>
       </div>
