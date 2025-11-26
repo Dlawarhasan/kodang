@@ -44,15 +44,22 @@ export async function GET(
     }
 
     // Check if post has content in the requested language
-    // Post must have a title in the requested language (title is required)
+    // Post must have title AND (excerpt OR content) in the requested language
+    // This ensures only posts that are actually "in" that language are accessible
     const translation = data.translations?.[locale]
-    const hasTitleInLocale = translation && 
-                             translation.title && 
-                             translation.title.trim() !== ''
-
-    // If post doesn't have a title in requested locale, return 404
-    // This ensures only posts "posted in" that language are accessible
-    if (!hasTitleInLocale) {
+    if (!translation) {
+      return NextResponse.json(
+        { error: 'Post not found in this language' },
+        { status: 404 }
+      )
+    }
+    
+    const hasTitle = translation.title && translation.title.trim() !== ''
+    const hasExcerpt = translation.excerpt && translation.excerpt.trim() !== ''
+    const hasContent = translation.content && translation.content.trim() !== ''
+    
+    // Post must have title AND at least excerpt or content in the requested language
+    if (!hasTitle || (!hasExcerpt && !hasContent)) {
       return NextResponse.json(
         { error: 'Post not found in this language' },
         { status: 404 }
