@@ -3,7 +3,9 @@ import { createServerClient } from '@/lib/supabase'
 
 export async function GET(request: NextRequest) {
   try {
+    console.log('GET /api/news/check-posts called')
     const supabase = createServerClient()
+    console.log('Supabase client created')
     
     // Get all posts
     const { data: allPosts, error } = await supabase
