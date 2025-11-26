@@ -7,21 +7,21 @@ interface DITLogoProps {
 
 export default function DITLogo({ size = 'medium', showTagline = false }: DITLogoProps) {
   const sizeClasses = {
-    small: 'h-6',
-    medium: 'h-8',
-    large: 'h-12'
+    small: 'h-5',
+    medium: 'h-7',
+    large: 'h-10'
   }
 
   const textSizes = {
-    small: 'text-sm',
-    medium: 'text-base',
-    large: 'text-xl'
+    small: 'text-xs',
+    medium: 'text-sm',
+    large: 'text-lg'
   }
 
   return (
     <div className="inline-flex flex-col items-center gap-1">
-      {/* Main Logo: D.IT */}
-      <div className={`flex items-center gap-1.5 ${sizeClasses[size]}`}>
+      {/* Main Logo: DLO.IT */}
+      <div className={`flex items-center gap-1 ${sizeClasses[size]}`}>
         {/* Stylized D with circuit traces */}
         <svg
           viewBox="0 0 50 70"
@@ -53,10 +53,11 @@ export default function DITLogo({ size = 'medium', showTagline = false }: DITLog
           <circle cx="28" cy="48" r="2.5" fill="currentColor" />
         </svg>
         
-        {/* .IT Text */}
-        <div className={`flex items-baseline gap-1 font-bold ${textSizes[size]} text-white leading-none`}>
-          <span className="w-1.5 h-1.5 rounded-full bg-white mt-0.5" />
-          <span className="font-bold tracking-tight">IT</span>
+        {/* LO.IT Text */}
+        <div className={`flex items-baseline gap-0.5 font-bold ${textSizes[size]} text-white leading-none`}>
+          <span className="font-bold">LO</span>
+          <span className="w-1 h-1 rounded-full bg-white mt-0.5" />
+          <span className="font-bold">IT</span>
         </div>
       </div>
       

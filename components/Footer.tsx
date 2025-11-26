@@ -133,7 +133,7 @@ export default function Footer() {
           <p className="mt-2 text-xs text-gray-400 flex items-center justify-center gap-2">
             <span>Created by</span>
             <a
-              href="https://www.instagram.com/dlawar.hasan?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+              href="https://www.tiktok.com/@dlo.it"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center hover:opacity-80 transition-opacity"
