@@ -426,6 +426,79 @@
             }
         }
 
+        async function testSampleDetection() {
+            const loading = document.getElementById('loading');
+            const results = document.getElementById('results');
+            
+            loading.style.display = 'block';
+            results.innerHTML = '';
+
+            try {
+                const baseUrl = window.location.origin;
+                console.log('Testing sample post detection');
+                const response = await fetch(`${baseUrl}/api/news/delete-sample-posts`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+                }
+                
+                const data = await response.json();
+                console.log('Detection test result:', data);
+                
+                let resultsHTML = `
+                    <div style="background: #dbeafe; border: 2px solid #3b82f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                        <h2 style="color: #1e40af; margin: 0 0 10px 0;">🔍 نتایج تست تشخیص</h2>
+                        <p style="color: #1e40af; margin: 5px 0;">
+                            از <strong>${data.total}</strong> پست کل، <strong style="color: #dc2626;">${data.sampleCount}</strong> پست نمونه پیدا شد
+                        </p>
+                    </div>
+                `;
+                
+                if (data.posts && data.posts.length > 0) {
+                    resultsHTML += '<div style="margin-top: 20px;"><h3>لیست پست‌ها:</h3><div style="max-height: 500px; overflow-y: auto;">';
+                    data.posts.forEach(post => {
+                        const bgColor = post.isSample ? '#fee2e2' : '#f0fdf4';
+                        const borderColor = post.isSample ? '#ef4444' : '#10b981';
+                        const textColor = post.isSample ? '#991b1b' : '#065f46';
+                        const icon = post.isSample ? '⚠️' : '✅';
+                        
+                        resultsHTML += `
+                            <div style="background: ${bgColor}; border: 2px solid ${borderColor}; padding: 15px; margin: 10px 0; border-radius: 8px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <strong style="color: ${textColor};">
+                                            ${icon} ${post.isSample ? 'پست نمونه' : 'پست عادی'}
+                                        </strong>
+                                        <div style="margin-top: 5px; font-size: 14px; color: #6b7280;">
+                                            <strong>Slug:</strong> ${post.slug}
+                                        </div>
+                                        ${post.titleKu ? `<div style="margin-top: 5px; font-size: 14px;"><strong>کوردی:</strong> ${post.titleKu.substring(0, 100)}</div>` : ''}
+                                        ${post.titleFa ? `<div style="margin-top: 5px; font-size: 14px;"><strong>فارسی:</strong> ${post.titleFa.substring(0, 100)}</div>` : ''}
+                                        ${post.titleEn ? `<div style="margin-top: 5px; font-size: 14px;"><strong>English:</strong> ${post.titleEn.substring(0, 100)}</div>` : ''}
+                                        ${post.tags && post.tags.length > 0 ? `<div style="margin-top: 5px; font-size: 14px;"><strong>Tags:</strong> ${post.tags.join(', ')}</div>` : ''}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    resultsHTML += '</div></div>';
+                }
+                
+                results.innerHTML = resultsHTML;
+                
+            } catch (error) {
+                results.innerHTML = `<div style="color: red; padding: 20px;">خطا: ${error.message}</div>`;
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+
         // Auto-check on load
         window.onload = () => {
             // checkPosts();
