@@ -50,9 +50,9 @@ export default function Header() {
   }
 
   const languages = [
-    { code: 'ku', name: tCommon('kurdish') },
+    { code: 'ku', name: tCommon('kurdish'), flag: '🇹🇯' },
     { code: 'fa', name: tCommon('persian') },
-    { code: 'en', name: tCommon('english') },
+    { code: 'en', name: tCommon('english'), flag: '🇬🇧' },
   ]
 
   const navItems = [
@@ -330,6 +330,7 @@ export default function Header() {
                           lang.code === locale ? 'bg-slate-100 text-slate-900' : 'text-slate-600'
                         }`}
                       >
+                        {lang.flag && <span className="text-lg">{lang.flag}</span>}
                         <span>{lang.name}</span>
                         {lang.code === locale && <span className="ml-auto text-xs">✓</span>}
                       </button>
