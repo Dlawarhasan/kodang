@@ -131,7 +131,6 @@ export default function Footer() {
         <div className="border-t border-gray-200 mt-8 pt-8 text-center text-gray-500">
           <p>© {currentYear} کۆدەنگ. {t('copyright')}.</p>
           <p className="mt-2 text-xs text-gray-400 flex items-center justify-center gap-2">
-            <span>Created by</span>
             <a
               href="https://www.tiktok.com/@dlo.it"
               target="_blank"
@@ -142,6 +141,7 @@ export default function Footer() {
                 <DITLogo size="small" showTagline={false} />
               </div>
             </a>
+            <span>Created by</span>
           </p>
         </div>
       </div>
