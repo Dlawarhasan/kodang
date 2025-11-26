@@ -1,7 +1,7 @@
 import { getRequestConfig } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 
-export const locales = ['ku', 'fa', 'en'] as const
+export const locales = ['fa', 'ku', 'en'] as const // Farsi first (default/main language)
 export type Locale = (typeof locales)[number]
 
 export const defaultLocale: Locale = 'fa' // فارسی زمانە سەرەکییەکەیە

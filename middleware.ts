@@ -3,8 +3,9 @@ import { locales, defaultLocale } from './i18n'
 
 export default createMiddleware({
   locales,
-  defaultLocale,
-  localePrefix: 'always' // Always show locale prefix for consistent language switching
+  defaultLocale: 'fa', // Farsi is the main/default language
+  localePrefix: 'always', // Always show locale prefix for consistent language switching
+  localeDetection: true // Enable automatic locale detection, but default to Farsi
 })
 
 export const config = {
