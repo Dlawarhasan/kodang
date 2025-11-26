@@ -20,9 +20,16 @@ export default function DITLogo({ size = 'medium', showTagline = false }: DITLog
 
   return (
     <div className="inline-flex flex-col items-center gap-1">
-      {/* Main Logo: DLO.IT */}
-      <div className={`flex items-center gap-1 ${sizeClasses[size]}`}>
-        {/* Stylized D with circuit traces */}
+      {/* Main Logo: IT•LO with D icon */}
+      <div className={`flex items-center gap-1.5 ${sizeClasses[size]}`}>
+        {/* IT•LO Text */}
+        <div className={`flex items-center gap-1 font-bold ${textSizes[size]} text-white leading-none`}>
+          <span className="font-bold">IT</span>
+          <span className="w-1 h-1 rounded-full bg-white" />
+          <span className="font-bold">LO</span>
+        </div>
+        
+        {/* Stylized D icon with circuit traces */}
         <svg
           viewBox="0 0 50 70"
           className={`${sizeClasses[size]} text-white`}
@@ -52,13 +59,6 @@ export default function DITLogo({ size = 'medium', showTagline = false }: DITLog
           <circle cx="28" cy="22" r="2.5" fill="currentColor" />
           <circle cx="28" cy="48" r="2.5" fill="currentColor" />
         </svg>
-        
-        {/* LO.IT Text */}
-        <div className={`flex items-baseline gap-0.5 font-bold ${textSizes[size]} text-white leading-none`}>
-          <span className="font-bold">LO</span>
-          <span className="w-1 h-1 rounded-full bg-white mt-0.5" />
-          <span className="font-bold">IT</span>
-        </div>
       </div>
       
       {/* Tagline */}
