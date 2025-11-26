@@ -31,12 +31,16 @@ export async function POST(request: NextRequest) {
     for (const post of allPosts) {
       const translations = post.translations || {}
       
-      // Check if post contains sample text patterns
+      // Check if post contains sample text patterns (case-insensitive, partial matches)
       const samplePatterns = [
         'Sample Instagram-style Post',
         'نمونە پۆستێکی شێوازێکی ئینستاگرام',
+        'نمونە',
         'دەستگیرکردن و گواستنەوەی جەعفەر صادقی',
-        'کۆبوونەوەی ناڕەزایی کادرەکانی تەندروستی کرمانشاه',
+        'جەعفەر صادقی',
+        'جعفر صادقی',
+        'کۆبوونەوەی ناڕەزایی کادرەکانی تەندروستی',
+        'کادرەکانی تەندروستی کرمانشاه',
         'پاڵەوانیەتی تۆپی پێ لە هەولێر',
         'پێشکەوتنی نوێ لە بواری دەستکردی زیرەک',
         'فێستیڤاڵی کلتوری سلێمانی',
@@ -44,32 +48,43 @@ export async function POST(request: NextRequest) {
         'ئەنجامدانی هەڵبژاردنی نوێ',
         'چاکسازی لە سیستەمی پەروەردە',
         'خودکشی مازیار احمدی',
-        'جعفر صادقی',
+        'مازیار احمدی',
         'کوهنورد و مربی سنگ‌نوردی',
         'اشنویه',
         'سردشت',
         'سلێمانی',
         'هەولێر',
         'کرمانشاه',
-        'نمونە',
         'sample',
         '#sample',
         '#instagram',
-        '#aspect-4-5'
+        '#aspect-4-5',
+        'aspect-4-5'
       ]
       
+      // Helper function to check if text contains any pattern (case-insensitive)
+      const containsPattern = (text: string | undefined | null): boolean => {
+        if (!text) return false
+        const lowerText = text.toLowerCase()
+        return samplePatterns.some(pattern => {
+          const lowerPattern = pattern.toLowerCase()
+          return lowerText.includes(lowerPattern)
+        })
+      }
+      
       // Check if post contains any sample pattern in any language
-      const hasSampleText = samplePatterns.some(pattern => 
-        (translations.fa?.title?.includes(pattern) ||
-         translations.fa?.excerpt?.includes(pattern) ||
-         translations.fa?.content?.includes(pattern)) ||
-        (translations.ku?.title?.includes(pattern) ||
-         translations.ku?.excerpt?.includes(pattern) ||
-         translations.ku?.content?.includes(pattern)) ||
-        (translations.en?.title?.includes(pattern) ||
-         translations.en?.excerpt?.includes(pattern) ||
-         translations.en?.content?.includes(pattern))
-      )
+      const hasSampleText = 
+        containsPattern(translations.fa?.title) ||
+        containsPattern(translations.fa?.excerpt) ||
+        containsPattern(translations.fa?.content) ||
+        containsPattern(translations.ku?.title) ||
+        containsPattern(translations.ku?.excerpt) ||
+        containsPattern(translations.ku?.content) ||
+        containsPattern(translations.en?.title) ||
+        containsPattern(translations.en?.excerpt) ||
+        containsPattern(translations.en?.content) ||
+        // Also check tags
+        (post.tags && Array.isArray(post.tags) && post.tags.some((tag: string) => containsPattern(tag)))
 
       if (hasSampleText) {
         // Delete the post
