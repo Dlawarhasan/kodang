@@ -44,15 +44,15 @@ export async function GET(
     }
 
     // Check if post has content in the requested language
+    // Post must have a title in the requested language (title is required)
     const translation = data.translations?.[locale]
-    const hasContentInLocale = translation && (
-      (translation.title && translation.title.trim() !== '') ||
-      (translation.excerpt && translation.excerpt.trim() !== '') ||
-      (translation.content && translation.content.trim() !== '')
-    )
+    const hasTitleInLocale = translation && 
+                             translation.title && 
+                             translation.title.trim() !== ''
 
-    // If post doesn't have content in requested locale, return 404
-    if (!hasContentInLocale) {
+    // If post doesn't have a title in requested locale, return 404
+    // This ensures only posts "posted in" that language are accessible
+    if (!hasTitleInLocale) {
       return NextResponse.json(
         { error: 'Post not found in this language' },
         { status: 404 }
