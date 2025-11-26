@@ -133,8 +133,23 @@
 
             try {
                 const baseUrl = window.location.origin;
-                const response = await fetch(`${baseUrl}/api/news/check-posts`);
+                console.log('Fetching from:', `${baseUrl}/api/news/check-posts`);
+                const response = await fetch(`${baseUrl}/api/news/check-posts`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                
+                console.log('Response status:', response.status);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+                }
+                
                 const data = await response.json();
+                console.log('Data received:', data);
 
                 if (data.error) {
                     results.innerHTML = `<div style="color: red; padding: 20px;">خطا: ${data.error}</div>`;
