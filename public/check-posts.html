@@ -122,6 +122,7 @@
             <button onclick="checkPosts()">بررسی پست‌ها - Check Posts</button>
             <button onclick="organizePosts('auto')" style="background: #10b981;">سازماندهی خودکار - Auto Organize</button>
             <button onclick="cleanupPosts('fa')" style="background: #ef4444;">حذف پست‌های کوردی و انگلیسی - Delete Kurdish/English Posts</button>
+            <button onclick="deleteSamplePosts()" style="background: #f59e0b;">حذف پست‌های نمونه - Delete Sample Posts</button>
         </div>
         <div id="loading" class="loading" style="display: none;">در حال بررسی...</div>
         <div id="results"></div>
@@ -328,6 +329,57 @@
                         </p>
                         <p style="color: #065f46; margin: 5px 0;">
                             <strong>${data.kept}</strong> پست فارسی باقی ماند
+                        </p>
+                        <p style="color: #6b7280; margin: 5px 0; font-size: 14px;">
+                            از <strong>${data.total}</strong> پست کل
+                        </p>
+                    </div>
+                    <button onclick="checkPosts()" style="margin: 20px auto; display: block;">بررسی مجدد پست‌ها</button>
+                `;
+                
+            } catch (error) {
+                results.innerHTML = `<div style="color: red; padding: 20px;">خطا: ${error.message}</div>`;
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+
+        async function deleteSamplePosts() {
+            const loading = document.getElementById('loading');
+            const results = document.getElementById('results');
+            
+            if (!confirm('آیا مطمئن هستید که می‌خواهید تمام پست‌های نمونه (Sample Instagram-style Post) را حذف کنید؟')) {
+                return;
+            }
+            
+            loading.style.display = 'block';
+            results.innerHTML = '';
+
+            try {
+                const baseUrl = window.location.origin;
+                console.log('Deleting sample posts');
+                const response = await fetch(`${baseUrl}/api/news/delete-sample-posts`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                console.log('Response status:', response.status);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+                }
+                
+                const data = await response.json();
+                console.log('Delete sample posts result:', data);
+                
+                results.innerHTML = `
+                    <div style="background: #fef3c7; border: 2px solid #f59e0b; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                        <h2 style="color: #92400e; margin: 0 0 10px 0;">✅ پست‌های نمونه حذف شدند!</h2>
+                        <p style="color: #92400e; margin: 5px 0;">
+                            <strong>${data.deleted}</strong> پست نمونه حذف شد
                         </p>
                         <p style="color: #6b7280; margin: 5px 0; font-size: 14px;">
                             از <strong>${data.total}</strong> پست کل
