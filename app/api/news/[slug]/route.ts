@@ -43,15 +43,28 @@ export async function GET(
       return ''
     }
 
-    // Map translations based on locale
+    // Check if post has content in the requested language
+    const translation = data.translations?.[locale]
+    const hasContentInLocale = translation && (
+      (translation.title && translation.title.trim() !== '') ||
+      (translation.excerpt && translation.excerpt.trim() !== '') ||
+      (translation.content && translation.content.trim() !== '')
+    )
+
+    // If post doesn't have content in requested locale, return 404
+    if (!hasContentInLocale) {
+      return NextResponse.json(
+        { error: 'Post not found in this language' },
+        { status: 404 }
+      )
+    }
+
+    // Map translations based on locale (only use requested locale, no fallback)
     const newsItem = {
       ...data,
-      title: getTranslation('title'),
-      excerpt: getTranslation('excerpt'),
-      content: getTranslation('content'),
-      // Indicate if translation is needed (not in requested locale)
-      needsTranslation: !data.translations?.[locale],
-      originalLocale: data.translations?.fa ? 'fa' : data.translations?.ku ? 'ku' : 'en',
+      title: translation?.title || '',
+      excerpt: translation?.excerpt || '',
+      content: translation?.content || '',
       // Map database column names to camelCase for frontend
       authorInstagram: data.author_instagram || null,
       authorFacebook: data.author_facebook || null,
