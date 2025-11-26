@@ -20,7 +20,7 @@ export default function DITLogo({ size = 'medium', showTagline = false }: DITLog
 
   return (
     <div className="inline-flex flex-col items-center gap-1">
-      {/* Main Logo: DLO.IT - Order: D icon + LO + dot + IT */}
+      {/* Main Logo: D.IT - Order: D icon + dot + IT */}
       <div className={`flex items-center gap-1 ${sizeClasses[size]} direction-ltr`}>
         {/* Stylized D icon with circuit traces */}
         <svg
@@ -38,7 +38,7 @@ export default function DITLogo({ size = 'medium', showTagline = false }: DITLog
           {/* Curved right side of D */}
           <path d="M 8 8 Q 32 8, 32 35 Q 32 62, 8 62" />
           
-          {/* Three horizontal circuit traces from left bar */}
+          {/* Three main horizontal circuit traces from left bar */}
           <line x1="8" y1="22" x2="20" y2="22" />
           <circle cx="20" cy="22" r="2.5" fill="currentColor" />
           
@@ -48,14 +48,16 @@ export default function DITLogo({ size = 'medium', showTagline = false }: DITLog
           <line x1="8" y1="48" x2="20" y2="48" />
           <circle cx="20" cy="48" r="2.5" fill="currentColor" />
           
-          {/* Two circles on curved side */}
-          <circle cx="28" cy="22" r="2.5" fill="currentColor" />
-          <circle cx="28" cy="48" r="2.5" fill="currentColor" />
+          {/* Additional shorter lines branching off */}
+          <line x1="8" y1="15" x2="15" y2="15" />
+          <circle cx="15" cy="15" r="2" fill="currentColor" />
+          
+          <line x1="8" y1="55" x2="15" y2="55" />
+          <circle cx="15" cy="55" r="2" fill="currentColor" />
         </svg>
         
-        {/* LO.IT Text - D + LO + . + IT = DLO.IT */}
+        {/* .IT Text - D + dot + IT = D.IT */}
         <div className={`flex items-baseline gap-0.5 font-bold ${textSizes[size]} text-white leading-none direction-ltr`}>
-          <span className="font-bold">LO</span>
           <span className="w-1 h-1 rounded-full bg-white mt-0.5 flex-shrink-0" />
           <span className="font-bold">IT</span>
         </div>

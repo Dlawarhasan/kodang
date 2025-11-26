@@ -138,7 +138,7 @@ export default function Footer() {
               className="inline-flex items-center hover:opacity-80 transition-opacity"
             >
               <div className="bg-slate-900 px-3 py-1.5 rounded">
-                <DITLogo size="small" showTagline={false} />
+                <DITLogo size="small" showTagline={true} />
               </div>
             </a>
             <span>Created by</span>
