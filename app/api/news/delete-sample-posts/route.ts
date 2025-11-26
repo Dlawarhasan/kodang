@@ -27,9 +27,22 @@ export async function POST(request: NextRequest) {
 
     let deletedCount = 0
     const results = []
+    const checkedPosts = []
+
+    console.log(`Found ${allPosts.length} total posts to check`)
 
     for (const post of allPosts) {
       const translations = post.translations || {}
+      
+      // Log post info for debugging
+      const postInfo = {
+        slug: post.slug,
+        titleFa: translations.fa?.title?.substring(0, 50) || '',
+        titleKu: translations.ku?.title?.substring(0, 50) || '',
+        titleEn: translations.en?.title?.substring(0, 50) || '',
+        tags: post.tags || []
+      }
+      checkedPosts.push(postInfo)
       
       // Check if post contains sample text patterns (case-insensitive, partial matches)
       const samplePatterns = [
@@ -87,6 +100,8 @@ export async function POST(request: NextRequest) {
         (post.tags && Array.isArray(post.tags) && post.tags.some((tag: string) => containsPattern(tag)))
 
       if (hasSampleText) {
+        console.log(`Found sample post: ${post.slug} - ${translations.ku?.title || translations.fa?.title || translations.en?.title || 'No title'}`)
+        
         // Delete the post
         const { error: deleteError } = await supabase
           .from('news')
@@ -98,23 +113,29 @@ export async function POST(request: NextRequest) {
           results.push({
             slug: post.slug,
             status: 'error',
-            error: deleteError.message
+            error: deleteError.message,
+            title: translations.ku?.title || translations.fa?.title || translations.en?.title || 'No title'
           })
         } else {
           deletedCount++
+          console.log(`Successfully deleted post: ${post.slug}`)
           results.push({
             slug: post.slug,
             status: 'deleted',
-            reason: 'Contains "Sample Instagram-style Post"'
+            title: translations.ku?.title || translations.fa?.title || translations.en?.title || 'No title',
+            reason: 'Contains sample pattern'
           })
         }
       }
     }
 
+    console.log(`Deletion complete: ${deletedCount} posts deleted out of ${allPosts.length} total`)
+
     return NextResponse.json({
       message: 'Sample posts deleted successfully',
       deleted: deletedCount,
       total: allPosts.length,
+      checked: checkedPosts.length,
       results
     })
   } catch (error: any) {

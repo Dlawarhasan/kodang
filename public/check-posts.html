@@ -375,18 +375,48 @@
                 const data = await response.json();
                 console.log('Delete sample posts result:', data);
                 
-                results.innerHTML = `
-                    <div style="background: #fef3c7; border: 2px solid #f59e0b; padding: 20px; border-radius: 8px; margin: 20px 0;">
-                        <h2 style="color: #92400e; margin: 0 0 10px 0;">✅ پست‌های نمونه حذف شدند!</h2>
-                        <p style="color: #92400e; margin: 5px 0;">
-                            <strong>${data.deleted}</strong> پست نمونه حذف شد
-                        </p>
-                        <p style="color: #6b7280; margin: 5px 0; font-size: 14px;">
-                            از <strong>${data.total}</strong> پست کل
-                        </p>
-                    </div>
-                    <button onclick="checkPosts()" style="margin: 20px auto; display: block;">بررسی مجدد پست‌ها</button>
-                `;
+                let resultsHTML = '';
+                
+                if (data.deleted > 0) {
+                    resultsHTML = `
+                        <div style="background: #fef3c7; border: 2px solid #f59e0b; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                            <h2 style="color: #92400e; margin: 0 0 10px 0;">✅ پست‌های نمونه حذف شدند!</h2>
+                            <p style="color: #92400e; margin: 5px 0;">
+                                <strong>${data.deleted}</strong> پست نمونه حذف شد
+                            </p>
+                            <p style="color: #6b7280; margin: 5px 0; font-size: 14px;">
+                                از <strong>${data.total}</strong> پست کل
+                            </p>
+                        </div>
+                    `;
+                    
+                    if (data.results && data.results.length > 0) {
+                        resultsHTML += '<div style="margin-top: 20px;"><h3>پست‌های حذف شده:</h3><ul>';
+                        data.results.forEach(result => {
+                            if (result.status === 'deleted') {
+                                resultsHTML += `<li style="margin: 5px 0; color: #065f46;">✅ ${result.title || result.slug}</li>`;
+                            } else if (result.status === 'error') {
+                                resultsHTML += `<li style="margin: 5px 0; color: #dc2626;">❌ ${result.slug}: ${result.error}</li>`;
+                            }
+                        });
+                        resultsHTML += '</ul></div>';
+                    }
+                } else {
+                    resultsHTML = `
+                        <div style="background: #fee2e2; border: 2px solid #ef4444; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                            <h2 style="color: #991b1b; margin: 0 0 10px 0;">⚠️ هیچ پست نمونه‌ای پیدا نشد</h2>
+                            <p style="color: #991b1b; margin: 5px 0;">
+                                از <strong>${data.total}</strong> پست کل، هیچ پست نمونه‌ای پیدا نشد.
+                            </p>
+                            <p style="color: #6b7280; margin: 10px 0; font-size: 14px;">
+                                ممکن است پست‌های نمونه قبلاً حذف شده باشند یا الگوهای جستجو نیاز به به‌روزرسانی دارند.
+                            </p>
+                        </div>
+                    `;
+                }
+                
+                resultsHTML += '<button onclick="checkPosts()" style="margin: 20px auto; display: block;">بررسی مجدد پست‌ها</button>';
+                results.innerHTML = resultsHTML;
                 
             } catch (error) {
                 results.innerHTML = `<div style="color: red; padding: 20px;">خطا: ${error.message}</div>`;
