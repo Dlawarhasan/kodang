@@ -98,10 +98,10 @@ export default function Header() {
   return (
     <>
       {/* Top Line - Iran International Style - Full Width */}
-      <div className="fixed top-0 left-0 right-0 w-full h-px bg-gradient-to-r from-blue-600 via-blue-500 to-blue-600 z-50"></div>
+      <div className="fixed top-[0.35px] left-0 right-0 w-full h-px bg-gradient-to-r from-blue-600 via-blue-500 to-blue-600 z-50"></div>
       
       {/* Top Bar - Language, Icons */}
-      <div className="fixed top-px left-0 right-0 bg-gray-900 dark:bg-gray-950 text-white text-sm z-40" style={{ borderBottom: '0.5px solid #1f2937' }}>
+      <div className="fixed top-[1.35px] left-0 right-0 bg-gray-900 dark:bg-gray-950 text-white text-sm z-40" style={{ borderBottom: '0.35px solid #1f2937' }}>
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="flex items-center justify-end py-2">
             <div className="flex items-center gap-4">
