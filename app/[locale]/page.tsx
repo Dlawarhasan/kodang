@@ -5,7 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useTranslations, useLocale } from 'next-intl'
 import { useSearchParams } from 'next/navigation'
-import { Calendar, Flame, ArrowRight, Play } from 'lucide-react'
+import { Calendar, Flame, ArrowRight, Play, Radio, Send } from 'lucide-react'
 import NewsList from '@/components/NewsList'
 import { getNews, type NewsItem } from '@/lib/news'
 import { getCategoryName } from '@/lib/category-mapping'
@@ -136,104 +136,190 @@ export default function Home() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-6 max-w-7xl bg-white dark:bg-gray-900 min-h-screen">
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Main Content Column */}
-        <div className="lg:col-span-2 space-y-6">
-
-          {/* Featured Article */}
-          {heroArticle && (
-            <article className="border-b border-gray-200 dark:border-gray-700 pb-6">
-              <Link href={`/${locale}/news/${heroArticle.slug}${heroArticle.video ? '#video' : ''}`} className="block group">
-                {(heroArticle.image || heroArticle.video) && (
-                  <div className="relative w-full h-64 md:h-80 mb-4 bg-gray-100 overflow-hidden">
-                    {heroArticle.video ? (
-                      <>
-                        {heroArticle.image ? (
-                          <Image
-                            src={heroArticle.image}
-                            alt={heroArticle.title}
-                            fill
-                            priority
-                            className="object-cover"
-                            sizes="(max-width: 768px) 100vw, 800px"
-                          />
-                        ) : (
-                          <div className="absolute inset-0 bg-gray-200" />
-                        )}
-                        <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-                          <div className="bg-red-600 rounded-full p-4">
-                            <Play className="h-8 w-8 text-white fill-white ml-1" />
-                          </div>
-                        </div>
-                        <div className="absolute top-3 right-3">
-                          <span className="inline-flex items-center gap-1 rounded bg-red-600 px-2 py-1 text-xs font-semibold text-white">
-                            <Play className="h-3 w-3 fill-white" />
-                            {locale === 'fa' ? 'ویدیو' : locale === 'ku' ? 'ڤیدیۆ' : 'Video'}
-                          </span>
-                        </div>
-                      </>
-                    ) : heroArticle.image ? (
-                      <Image
-                        src={heroArticle.image}
-                        alt={heroArticle.title}
-                        fill
-                        priority
-                        className="object-cover"
-                        sizes="(max-width: 768px) 100vw, 800px"
-                      />
-                    ) : null}
-                  </div>
-                )}
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400">
-                    {heroArticle.category && (
-                      <span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded">
-                        {getCategoryName(heroArticle.category, locale)}
-                      </span>
-                    )}
-                    <span className="flex items-center gap-1">
-                      <Calendar className="h-3 w-3" />
-                      {formatDate(heroArticle.date, locale)}
-                    </span>
-                  </div>
-                  <h2 className="text-2xl md:text-3xl font-bold leading-tight text-gray-900 dark:text-gray-100 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">
-                    {heroArticle.title}
-                  </h2>
-                  <p className="text-gray-600 dark:text-gray-300 leading-relaxed line-clamp-2">
-                    {heroArticle.excerpt}
-                  </p>
-                </div>
-              </Link>
-            </article>
-          )}
-
-          {/* Breaking News Section */}
-          {breakingItems.length > 0 && (
-            <section className="border-b border-gray-200 dark:border-gray-700 pb-6">
-              <div className="flex items-center gap-2 mb-4">
-                <Flame className="h-5 w-5 text-red-600 dark:text-red-400" />
-                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">{t('breaking')}</h2>
+    <div className="bg-gray-50 dark:bg-gray-900 min-h-screen">
+      <div className="container mx-auto px-4 py-6 max-w-7xl">
+        {/* Main Content Grid - Iran International Style */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          {/* Left Sidebar */}
+          <aside className="lg:col-span-1 space-y-6">
+            {/* Live Broadcast Section */}
+            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+              <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-4 py-3">
+                <h3 className="text-white font-bold text-sm flex items-center gap-2">
+                  <Radio className="h-4 w-4" />
+                  {locale === 'fa' ? 'پخش زنده' : locale === 'ku' ? 'پەخشی ڕاستەوخۆ' : 'Live Broadcast'}
+                </h3>
               </div>
-              <div className="space-y-3">
-                {breakingItems.slice(0, 5).map((item) => (
+              {heroArticle && heroArticle.video && (
+                <div className="relative w-full h-48 bg-gray-900">
+                  {heroArticle.image ? (
+                    <Image
+                      src={heroArticle.image}
+                      alt={heroArticle.title}
+                      fill
+                      className="object-cover"
+                      sizes="300px"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 bg-gray-800" />
+                  )}
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+                    <div className="bg-red-600 rounded-full p-4">
+                      <Play className="h-8 w-8 text-white fill-white ml-1" />
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Newsletter Section */}
+            <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg p-6 text-white">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                  <Send className="h-5 w-5" />
+                </div>
+                <h3 className="font-bold text-lg">
+                  {locale === 'fa' ? 'خبرنامه' : locale === 'ku' ? 'هەواڵنامە' : 'Newsletter'}
+                </h3>
+              </div>
+              <p className="text-blue-100 text-sm mb-4">
+                {locale === 'fa' ? 'مهم ترین اخبار ایران و جهان، در ایمیل شما' : locale === 'ku' ? 'گرنگترین هەواڵەکانی ئێران و جیهان، لە ئیمەیڵەکەتدا' : 'Most important news from Iran and the world, in your email'}
+              </p>
+              <button className="w-full bg-white text-blue-600 font-semibold py-2 px-4 rounded hover:bg-blue-50 transition-colors">
+                {locale === 'fa' ? 'ثبت نام کنید' : locale === 'ku' ? 'خۆتۆمار بکە' : 'Sign Up'}
+              </button>
+            </div>
+
+            {/* Most Viewed Section */}
+            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+              <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4 pb-2 border-b border-gray-200 dark:border-gray-700">
+                {locale === 'fa' ? 'پربازدیدترین ها' : locale === 'ku' ? 'زۆرترین بینراو' : 'Most Viewed'}
+              </h3>
+              <div className="space-y-4">
+                {sortedNews.slice(0, 5).map((item) => (
                   <Link
                     key={item.id}
                     href={`/${locale}/news/${item.slug}`}
-                    className="block group border-b border-gray-100 dark:border-gray-700 pb-3 last:border-b-0 last:pb-0"
+                    className="block group"
                   >
-                    <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors line-clamp-2">
+                    {item.image && (
+                      <div className="relative w-full h-24 mb-2 bg-gray-100 dark:bg-gray-700 rounded overflow-hidden">
+                        <Image
+                          src={item.image}
+                          alt={item.title}
+                          fill
+                          className="object-cover"
+                          sizes="300px"
+                        />
+                      </div>
+                    )}
+                    <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors line-clamp-2">
                       {item.title}
-                    </h3>
-                    <span className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    </h4>
+                    <span className="text-xs text-gray-500 dark:text-gray-400 mt-1 block">
                       {formatDate(item.date, locale)}
                     </span>
                   </Link>
                 ))}
               </div>
-            </section>
-          )}
+            </div>
+          </aside>
+
+          {/* Main Content Column */}
+          <div className="lg:col-span-3 space-y-6">
+
+            {/* Featured Article - Large */}
+            {heroArticle && (
+              <article className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+                <Link href={`/${locale}/news/${heroArticle.slug}${heroArticle.video ? '#video' : ''}`} className="block group">
+                  {(heroArticle.image || heroArticle.video) && (
+                    <div className="relative w-full h-96 mb-4 bg-gray-100 dark:bg-gray-700 overflow-hidden">
+                      {heroArticle.video ? (
+                        <>
+                          {heroArticle.image ? (
+                            <Image
+                              src={heroArticle.image}
+                              alt={heroArticle.title}
+                              fill
+                              priority
+                              className="object-cover"
+                              sizes="(max-width: 768px) 100vw, 900px"
+                            />
+                          ) : (
+                            <div className="absolute inset-0 bg-gray-200 dark:bg-gray-800" />
+                          )}
+                          <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                            <div className="bg-red-600 rounded-full p-6">
+                              <Play className="h-10 w-10 text-white fill-white ml-1" />
+                            </div>
+                          </div>
+                          <div className="absolute top-4 right-4">
+                            <span className="inline-flex items-center gap-1 rounded bg-red-600 px-3 py-1.5 text-sm font-semibold text-white">
+                              <Play className="h-4 w-4 fill-white" />
+                              {locale === 'fa' ? 'ویدیو' : locale === 'ku' ? 'ڤیدیۆ' : 'Video'}
+                            </span>
+                          </div>
+                        </>
+                      ) : heroArticle.image ? (
+                        <Image
+                          src={heroArticle.image}
+                          alt={heroArticle.title}
+                          fill
+                          priority
+                          className="object-cover"
+                          sizes="(max-width: 768px) 100vw, 900px"
+                        />
+                      ) : null}
+                    </div>
+                  )}
+                  <div className="p-6 space-y-3">
+                    <div className="flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400">
+                      {heroArticle.category && (
+                        <span className="px-2 py-1 bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded font-semibold">
+                          {getCategoryName(heroArticle.category, locale)}
+                        </span>
+                      )}
+                      <span className="flex items-center gap-1">
+                        <Calendar className="h-3 w-3" />
+                        {formatDate(heroArticle.date, locale)}
+                      </span>
+                    </div>
+                    <h2 className="text-3xl md:text-4xl font-bold leading-tight text-gray-900 dark:text-gray-100 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">
+                      {heroArticle.title}
+                    </h2>
+                    <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-lg">
+                      {heroArticle.excerpt}
+                    </p>
+                  </div>
+                </Link>
+              </article>
+            )}
+
+            {/* Breaking News Section */}
+            {breakingItems.length > 0 && (
+              <section className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+                <div className="flex items-center gap-2 mb-4 pb-2 border-b border-gray-200 dark:border-gray-700">
+                  <Flame className="h-5 w-5 text-red-600 dark:text-red-400" />
+                  <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">{t('breaking')}</h2>
+                </div>
+                <div className="space-y-3">
+                  {breakingItems.slice(0, 5).map((item) => (
+                    <Link
+                      key={item.id}
+                      href={`/${locale}/news/${item.slug}`}
+                      className="block group border-b border-gray-100 dark:border-gray-700 pb-3 last:border-b-0 last:pb-0"
+                    >
+                      <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors line-clamp-2">
+                        {item.title}
+                      </h3>
+                      <span className="text-xs text-gray-500 dark:text-gray-400 mt-1 block">
+                        {formatDate(item.date, locale)}
+                      </span>
+                    </Link>
+                  ))}
+                </div>
+              </section>
+            )}
 
           {/* News Grid */}
           <section>
