@@ -232,24 +232,42 @@ export default function Home() {
 
             {/* Breaking News Section */}
             {breakingItems.length > 0 && (
-              <section className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-                <div className="flex items-center gap-2 mb-4 pb-2 border-b border-gray-200 dark:border-gray-700">
-                  <Flame className="h-5 w-5 text-red-600 dark:text-red-400" />
-                  <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">{t('breaking')}</h2>
+              <section className="bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 border-2 border-red-200 dark:border-red-800 rounded-lg overflow-hidden shadow-lg">
+                <div className="bg-gradient-to-r from-red-600 to-red-700 dark:from-red-800 dark:to-red-900 px-6 py-4">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-white/20 rounded-full p-2">
+                      <Flame className="h-6 w-6 text-white animate-pulse" />
+                    </div>
+                    <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                      {t('breaking')}
+                      <span className="inline-flex items-center justify-center w-6 h-6 bg-white/30 rounded-full text-xs font-bold">
+                        {breakingItems.length}
+                      </span>
+                    </h2>
+                  </div>
                 </div>
-                <div className="space-y-3">
-                  {breakingItems.slice(0, 5).map((item) => (
+                <div className="p-6 space-y-4">
+                  {breakingItems.slice(0, 5).map((item, index) => (
                     <Link
                       key={item.id}
                       href={`/${locale}/news/${item.slug}`}
-                      className="block group border-b border-gray-100 dark:border-gray-700 pb-3 last:border-b-0 last:pb-0"
+                      className="block group bg-white dark:bg-gray-800 rounded-lg p-4 border border-red-100 dark:border-red-900/50 hover:border-red-300 dark:hover:border-red-700 hover:shadow-md transition-all duration-200"
                     >
-                      <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors line-clamp-2">
-                        {item.title}
-                      </h3>
-                      <span className="text-xs text-gray-500 dark:text-gray-400 mt-1 block">
-                        {formatDate(item.date, locale)}
-                      </span>
+                      <div className="flex items-start gap-3">
+                        <div className="flex-shrink-0 w-8 h-8 bg-red-100 dark:bg-red-900/50 rounded-full flex items-center justify-center">
+                          <span className="text-red-600 dark:text-red-400 font-bold text-sm">{index + 1}</span>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-base font-bold text-gray-900 dark:text-gray-100 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors line-clamp-2 mb-2">
+                            {item.title}
+                          </h3>
+                          <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                            <Calendar className="h-3 w-3" />
+                            <span>{formatDate(item.date, locale)}</span>
+                          </div>
+                        </div>
+                        <ArrowRight className="h-5 w-5 text-gray-400 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors flex-shrink-0 mt-1" />
+                      </div>
                     </Link>
                   ))}
                 </div>
