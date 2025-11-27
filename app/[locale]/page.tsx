@@ -126,54 +126,6 @@ export default function Home() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Left Sidebar */}
           <aside className="lg:col-span-1 space-y-6">
-            {/* Live Broadcast Section */}
-            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
-              <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-4 py-3">
-                <h3 className="text-white font-bold text-sm flex items-center gap-2">
-                  <Radio className="h-4 w-4" />
-                  {locale === 'fa' ? 'پخش زنده' : locale === 'ku' ? 'پەخشی ڕاستەوخۆ' : 'Live Broadcast'}
-                </h3>
-              </div>
-              {heroArticle && heroArticle.video && (
-                <div className="relative w-full h-48 bg-gray-900">
-                  {heroArticle.image ? (
-                    <Image
-                      src={heroArticle.image}
-                      alt={heroArticle.title}
-                      fill
-                      className="object-cover"
-                      sizes="300px"
-                    />
-                  ) : (
-                    <div className="absolute inset-0 bg-gray-800" />
-                  )}
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-                    <div className="bg-red-600 rounded-full p-4">
-                      <Play className="h-8 w-8 text-white fill-white ml-1" />
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Newsletter Section */}
-            <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg p-6 text-white">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-                  <Send className="h-5 w-5" />
-                </div>
-                <h3 className="font-bold text-lg">
-                  {locale === 'fa' ? 'خبرنامه' : locale === 'ku' ? 'هەواڵنامە' : 'Newsletter'}
-                </h3>
-              </div>
-              <p className="text-blue-100 text-sm mb-4">
-                {locale === 'fa' ? 'مهم ترین اخبار ایران و جهان، در ایمیل شما' : locale === 'ku' ? 'گرنگترین هەواڵەکانی ئێران و جیهان، لە ئیمەیڵەکەتدا' : 'Most important news from Iran and the world, in your email'}
-              </p>
-              <button className="w-full bg-white text-blue-600 font-semibold py-2 px-4 rounded hover:bg-blue-50 transition-colors">
-                {locale === 'fa' ? 'ثبت نام کنید' : locale === 'ku' ? 'خۆتۆمار بکە' : 'Sign Up'}
-              </button>
-            </div>
-
             {/* Most Viewed Section */}
             <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
               <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4 pb-2 border-b border-gray-200 dark:border-gray-700">
