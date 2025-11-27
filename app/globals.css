@@ -124,6 +124,7 @@ body {
 /* RTL Support */
 [dir="rtl"] {
   direction: rtl;
+  font-family: 'Vazirmatn', Tahoma, Arial, system-ui, sans-serif;
 }
 
 [dir="ltr"] {
