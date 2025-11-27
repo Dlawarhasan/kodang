@@ -232,35 +232,33 @@ export default function Home() {
 
             {/* Breaking News Section */}
             {breakingItems.length > 0 && (
-              <section className="bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 border-2 border-red-200 dark:border-red-800 rounded-lg overflow-hidden shadow-lg">
-                <div className="bg-gradient-to-r from-red-600 to-red-700 dark:from-red-800 dark:to-red-900 px-6 py-4">
-                  <div className="flex items-center gap-3">
-                    <div className="bg-white/20 rounded-full p-2">
-                      <Flame className="h-6 w-6 text-white animate-pulse" />
-                    </div>
-                    <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                      {t('breaking')}
-                      <span className="inline-flex items-center justify-center w-6 h-6 bg-white/30 rounded-full text-xs font-bold">
-                        {breakingItems.length}
-                      </span>
-                    </h2>
+              <section className="bg-blue-900 dark:bg-blue-950 border border-blue-800 rounded-lg overflow-hidden shadow-lg">
+                <div className="flex items-center gap-3 px-4 py-2 bg-blue-900 dark:bg-blue-950 border-b border-blue-800">
+                  <div className="bg-white/20 rounded-full p-1.5">
+                    <Flame className="h-4 w-4 text-white animate-pulse" />
                   </div>
+                  <h2 className="text-sm font-bold text-white flex items-center gap-2">
+                    {t('breaking')}
+                    <span className="inline-flex items-center justify-center w-5 h-5 bg-white/30 rounded-full text-xs font-bold">
+                      {breakingItems.length}
+                    </span>
+                  </h2>
                 </div>
-                <div className="bg-white dark:bg-gray-800 py-3 overflow-hidden">
+                <div className="bg-blue-900 dark:bg-blue-950 py-2 overflow-hidden">
                   <div className="flex animate-marquee whitespace-nowrap">
                     {[...breakingItems.slice(0, 5), ...breakingItems.slice(0, 5)].map((item, index) => (
                       <Link
                         key={`${item.id}-${index}`}
                         href={`/${locale}/news/${item.slug}`}
-                        className="inline-flex items-center gap-3 mx-6 group hover:text-red-600 dark:hover:text-red-400 transition-colors"
+                        className="inline-flex items-center gap-3 mx-4 group hover:text-blue-300 transition-colors"
                       >
                         <div className="flex items-center gap-2">
-                          <Flame className="h-4 w-4 text-red-600 dark:text-red-400 flex-shrink-0" />
-                          <span className="text-sm font-semibold text-gray-900 dark:text-gray-100 group-hover:text-red-600 dark:group-hover:text-red-400">
+                          <Flame className="h-3.5 w-3.5 text-red-400 flex-shrink-0" />
+                          <span className="text-sm font-medium text-white group-hover:text-blue-300">
                             {item.title}
                           </span>
                         </div>
-                        <span className="text-gray-400 dark:text-gray-500">•</span>
+                        <span className="text-blue-600 dark:text-blue-500">•</span>
                       </Link>
                     ))}
                   </div>
