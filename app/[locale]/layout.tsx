@@ -13,6 +13,9 @@ const inter = Inter({ subsets: ['latin', 'latin-ext'] })
 export const metadata: Metadata = {
   title: 'کۆدەنگ | KODANG',
   description: 'وێبسایتی هەواڵی مۆدێرن کۆدەنگ | KODANG Modern News Website',
+  other: {
+    'font-vazir': 'https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;200;300;400;500;600;700;800;900&display=swap',
+  },
 }
 
 export default async function RootLayout({
@@ -30,7 +33,7 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} dir={locale === 'en' ? 'ltr' : 'rtl'}>
-      <body className={inter.className}>
+      <body className={locale === 'en' ? inter.className : 'font-vazir'}>
         <NextIntlClientProvider messages={messages}>
           <Header />
           <main className="min-h-screen bg-gray-50">
