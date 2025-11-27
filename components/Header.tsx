@@ -77,7 +77,7 @@ export default function Header() {
   }
 
   const languages = [
-    { code: 'ku', name: tCommon('kurdish'), flag: '🏴' }, // Kurdistan flag
+    { code: 'ku', name: tCommon('kurdish'), flag: 'kurdistan' }, // Kurdistan flag - custom CSS
     { code: 'fa', name: tCommon('persian') },
     { code: 'en', name: tCommon('english'), flag: '🇬🇧' },
   ]
@@ -111,7 +111,19 @@ export default function Header() {
                   onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
                   className="flex items-center gap-1 text-sm hover:text-blue-400 transition-colors"
                 >
-                  {currentLanguage.flag && <span>{currentLanguage.flag}</span>}
+                  {currentLanguage.flag && (
+                    currentLanguage.flag === 'kurdistan' ? (
+                      <span className="inline-block w-4 h-3 relative" style={{
+                        background: 'linear-gradient(to bottom, #E21E1E 0%, #E21E1E 33%, #FFFFFF 33%, #FFFFFF 66%, #00A651 66%, #00A651 100%)',
+                        borderRadius: '2px',
+                        border: '0.5px solid rgba(0,0,0,0.1)'
+                      }}>
+                        <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-yellow-400 rounded-full"></span>
+                      </span>
+                    ) : (
+                      <span>{currentLanguage.flag}</span>
+                    )
+                  )}
                   {currentLanguage.name}
                 </button>
                 {isLangMenuOpen && (
@@ -169,7 +181,19 @@ export default function Header() {
                             lang.code === locale ? 'bg-gray-700 text-white' : 'text-gray-300'
                           }`}
                         >
-                          {lang.flag && <span className="text-base">{lang.flag}</span>}
+                          {lang.flag && (
+                            lang.flag === 'kurdistan' ? (
+                              <span className="inline-block w-5 h-4 relative flex-shrink-0" style={{
+                                background: 'linear-gradient(to bottom, #E21E1E 0%, #E21E1E 33%, #FFFFFF 33%, #FFFFFF 66%, #00A651 66%, #00A651 100%)',
+                                borderRadius: '2px',
+                                border: '0.5px solid rgba(0,0,0,0.1)'
+                              }}>
+                                <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-yellow-400 rounded-full"></span>
+                              </span>
+                            ) : (
+                              <span className="text-base">{lang.flag}</span>
+                            )
+                          )}
                           <span>{lang.name}</span>
                         </button>
                       )
