@@ -144,7 +144,7 @@ export default function Home() {
 
           {/* Featured Article */}
           {heroArticle && (
-            <article className="border-b border-gray-200 pb-6">
+            <article className="border-b border-gray-200 dark:border-gray-700 pb-6">
               <Link href={`/${locale}/news/${heroArticle.slug}${heroArticle.video ? '#video' : ''}`} className="block group">
                 {(heroArticle.image || heroArticle.video) && (
                   <div className="relative w-full h-64 md:h-80 mb-4 bg-gray-100 overflow-hidden">
@@ -187,9 +187,9 @@ export default function Home() {
                   </div>
                 )}
                 <div className="space-y-3">
-                  <div className="flex items-center gap-3 text-xs text-gray-500">
+                  <div className="flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400">
                     {heroArticle.category && (
-                      <span className="px-2 py-0.5 bg-gray-100 text-gray-700 rounded">
+                      <span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded">
                         {getCategoryName(heroArticle.category, locale)}
                       </span>
                     )}
@@ -198,10 +198,10 @@ export default function Home() {
                       {formatDate(heroArticle.date, locale)}
                     </span>
                   </div>
-                  <h2 className="text-2xl md:text-3xl font-bold leading-tight text-gray-900 group-hover:text-red-600 transition-colors">
+                  <h2 className="text-2xl md:text-3xl font-bold leading-tight text-gray-900 dark:text-gray-100 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">
                     {heroArticle.title}
                   </h2>
-                  <p className="text-gray-600 leading-relaxed line-clamp-2">
+                  <p className="text-gray-600 dark:text-gray-300 leading-relaxed line-clamp-2">
                     {heroArticle.excerpt}
                   </p>
                 </div>
@@ -211,22 +211,22 @@ export default function Home() {
 
           {/* Breaking News Section */}
           {breakingItems.length > 0 && (
-            <section className="border-b border-gray-200 pb-6">
+            <section className="border-b border-gray-200 dark:border-gray-700 pb-6">
               <div className="flex items-center gap-2 mb-4">
-                <Flame className="h-5 w-5 text-red-600" />
-                <h2 className="text-lg font-bold text-gray-900">{t('breaking')}</h2>
+                <Flame className="h-5 w-5 text-red-600 dark:text-red-400" />
+                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">{t('breaking')}</h2>
               </div>
               <div className="space-y-3">
                 {breakingItems.slice(0, 5).map((item) => (
                   <Link
                     key={item.id}
                     href={`/${locale}/news/${item.slug}`}
-                    className="block group border-b border-gray-100 pb-3 last:border-b-0 last:pb-0"
+                    className="block group border-b border-gray-100 dark:border-gray-700 pb-3 last:border-b-0 last:pb-0"
                   >
-                    <h3 className="text-sm font-semibold text-gray-900 group-hover:text-red-600 transition-colors line-clamp-2">
+                    <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors line-clamp-2">
                       {item.title}
                     </h3>
-                    <span className="text-xs text-gray-500 mt-1">
+                    <span className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                       {formatDate(item.date, locale)}
                     </span>
                   </Link>
@@ -260,8 +260,8 @@ export default function Home() {
         {/* Sidebar */}
         <aside className="lg:col-span-1 space-y-6">
           {/* Latest News */}
-          <div className="bg-white border border-gray-200 rounded-lg p-4">
-            <h3 className="text-lg font-bold text-gray-900 mb-4 pb-2 border-b border-gray-200">
+          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4 pb-2 border-b border-gray-200 dark:border-gray-700">
               {locale === 'fa' ? 'آخرین اخبار' : locale === 'ku' ? 'دوایین هەواڵەکان' : 'Latest News'}
             </h3>
             <div className="space-y-4">
@@ -282,10 +282,10 @@ export default function Home() {
                       />
                     </div>
                   )}
-                  <h4 className="text-sm font-semibold text-gray-900 group-hover:text-red-600 transition-colors line-clamp-2">
+                  <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors line-clamp-2">
                     {item.title}
                   </h4>
-                  <span className="text-xs text-gray-500 mt-1 block">
+                  <span className="text-xs text-gray-500 dark:text-gray-400 mt-1 block">
                     {formatDate(item.date, locale)}
                   </span>
                 </Link>
@@ -294,8 +294,8 @@ export default function Home() {
           </div>
 
           {/* Categories */}
-          <div className="bg-white border border-gray-200 rounded-lg p-4">
-            <h3 className="text-lg font-bold text-gray-900 mb-4 pb-2 border-b border-gray-200">
+          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4 pb-2 border-b border-gray-200 dark:border-gray-700">
               {locale === 'fa' ? 'دسته‌بندی‌ها' : locale === 'ku' ? 'پۆلەکان' : 'Categories'}
             </h3>
             <div className="space-y-2">
@@ -303,7 +303,7 @@ export default function Home() {
                 <Link
                   key={cat}
                   href={`/${locale}?category=${cat}`}
-                  className="block text-sm text-gray-700 hover:text-red-600 transition-colors py-1"
+                  className="block text-sm text-gray-700 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 transition-colors py-1"
                 >
                   {getCategoryName(cat, locale)}
                 </Link>

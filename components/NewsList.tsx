@@ -30,7 +30,7 @@ export default function NewsList({ news }: NewsListProps) {
       {news.map((item, index) => (
         <article
           key={item.id}
-          className="group border-b border-gray-200 pb-8 last:border-b-0 hover:border-gray-300 transition-colors duration-300"
+          className="group border-b border-gray-200 dark:border-gray-700 pb-8 last:border-b-0 hover:border-gray-300 dark:hover:border-gray-600 transition-colors duration-300"
         >
           <Link
             href={`/${locale}/news/${item.slug}${item.video ? '#video' : ''}`}
@@ -142,7 +142,7 @@ export default function NewsList({ news }: NewsListProps) {
                       <Instagram className="h-4 w-4" />
                     </a>
                   </div>
-                  <span className="text-sm text-gray-500 font-medium group-hover:text-red-600 transition-colors">
+                  <span className="text-sm text-gray-500 dark:text-gray-400 font-medium group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">
                     {tCommon('readMore')} →
                   </span>
                 </div>
