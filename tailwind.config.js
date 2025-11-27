@@ -23,8 +23,9 @@ module.exports = {
         },
       },
       fontFamily: {
-        vazir: ['Vazirmatn', 'Tahoma', 'Arial', 'system-ui', 'sans-serif'],
-        persian: ['Vazirmatn', 'Tahoma', 'Arial', 'system-ui', 'sans-serif'],
+        vazir: ['IRANSans', 'Tahoma', 'Arial', 'system-ui', 'sans-serif'],
+        persian: ['IRANSans', 'Tahoma', 'Arial', 'system-ui', 'sans-serif'],
+        iran: ['IRANSans', 'Tahoma', 'Arial', 'system-ui', 'sans-serif'],
       },
     },
   },
