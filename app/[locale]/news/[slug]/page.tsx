@@ -199,7 +199,7 @@ export default function NewsDetail({
   }
 
   return (
-    <article className="container mx-auto px-4 py-8 max-w-4xl">
+    <div className="container mx-auto px-4 py-8 max-w-4xl">
       <Link 
         href={`/${locale}/news`}
         className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-8 text-sm font-medium"
@@ -471,7 +471,8 @@ export default function NewsDetail({
             </div>
           </div>
         )}
-    </article>
+      </article>
+    </div>
   )
 }
 
