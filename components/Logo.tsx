@@ -8,9 +8,9 @@ interface LogoProps {
 
 export default function Logo({ size = 'default', variant = 'stacked' }: LogoProps) {
   const sizeClasses: Record<LogoSize, { kd: string; kodang: string; kurdish: string }> = {
-    small: { kd: 'text-3xl', kodang: 'text-sm', kurdish: 'text-xs' },
-    default: { kd: 'text-5xl', kodang: 'text-lg', kurdish: 'text-sm' },
-    large: { kd: 'text-7xl', kodang: 'text-2xl', kurdish: 'text-lg' },
+    small: { kd: 'text-4xl', kodang: 'text-base', kurdish: 'text-sm' },
+    default: { kd: 'text-6xl', kodang: 'text-xl', kurdish: 'text-base' },
+    large: { kd: 'text-8xl', kodang: 'text-3xl', kurdish: 'text-xl' },
   }
   
   const sizes = sizeClasses[size]
