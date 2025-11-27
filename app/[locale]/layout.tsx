@@ -33,7 +33,7 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} dir={locale === 'en' ? 'ltr' : 'rtl'}>
-      <body className={locale === 'en' ? inter.className : 'font-vazir'}>
+      <body className={locale === 'en' ? inter.className : 'font-persian'}>
         <NextIntlClientProvider messages={messages}>
           <Header />
           <main className="min-h-screen bg-gray-50 dark:bg-gray-900">
