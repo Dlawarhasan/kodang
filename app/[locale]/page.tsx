@@ -246,30 +246,24 @@ export default function Home() {
                     </h2>
                   </div>
                 </div>
-                <div className="p-6 space-y-4">
-                  {breakingItems.slice(0, 5).map((item, index) => (
-                    <Link
-                      key={item.id}
-                      href={`/${locale}/news/${item.slug}`}
-                      className="block group bg-white dark:bg-gray-800 rounded-lg p-4 border border-red-100 dark:border-red-900/50 hover:border-red-300 dark:hover:border-red-700 hover:shadow-md transition-all duration-200"
-                    >
-                      <div className="flex items-start gap-3">
-                        <div className="flex-shrink-0 w-8 h-8 bg-red-100 dark:bg-red-900/50 rounded-full flex items-center justify-center">
-                          <span className="text-red-600 dark:text-red-400 font-bold text-sm">{index + 1}</span>
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="text-base font-bold text-gray-900 dark:text-gray-100 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors line-clamp-2 mb-2">
+                <div className="bg-white dark:bg-gray-800 py-3 overflow-hidden">
+                  <div className="flex animate-marquee whitespace-nowrap">
+                    {[...breakingItems.slice(0, 5), ...breakingItems.slice(0, 5)].map((item, index) => (
+                      <Link
+                        key={`${item.id}-${index}`}
+                        href={`/${locale}/news/${item.slug}`}
+                        className="inline-flex items-center gap-3 mx-6 group hover:text-red-600 dark:hover:text-red-400 transition-colors"
+                      >
+                        <div className="flex items-center gap-2">
+                          <Flame className="h-4 w-4 text-red-600 dark:text-red-400 flex-shrink-0" />
+                          <span className="text-sm font-semibold text-gray-900 dark:text-gray-100 group-hover:text-red-600 dark:group-hover:text-red-400">
                             {item.title}
-                          </h3>
-                          <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
-                            <Calendar className="h-3 w-3" />
-                            <span>{formatDate(item.date, locale)}</span>
-                          </div>
+                          </span>
                         </div>
-                        <ArrowRight className="h-5 w-5 text-gray-400 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors flex-shrink-0 mt-1" />
-                      </div>
-                    </Link>
-                  ))}
+                        <span className="text-gray-400 dark:text-gray-500">•</span>
+                      </Link>
+                    ))}
+                  </div>
                 </div>
               </section>
             )}

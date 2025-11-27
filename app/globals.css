@@ -73,6 +73,24 @@ body {
   }
 }
 
+/* Breaking News Marquee Animation */
+@keyframes breakingMarquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: breakingMarquee 30s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
 @keyframes slideDown {
   from {
     opacity: 0;
