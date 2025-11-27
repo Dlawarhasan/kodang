@@ -101,7 +101,7 @@ export default function Header() {
       <div className="fixed top-0 left-0 right-0 w-full h-px bg-gradient-to-r from-blue-600 via-blue-500 to-blue-600 z-50"></div>
       
       {/* Top Bar - Language, Icons */}
-      <div className="fixed top-1 left-0 right-0 bg-gray-900 dark:bg-gray-950 text-white text-sm z-40">
+      <div className="fixed top-px left-0 right-0 bg-gray-900 dark:bg-gray-950 text-white text-sm z-40 border-b border-gray-800 dark:border-gray-800" style={{ borderWidth: '0.5px' }}>
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="flex items-center justify-end py-2">
             <div className="flex items-center gap-4">
@@ -225,7 +225,7 @@ export default function Header() {
       </div>
 
       {/* Main Navigation Bar */}
-      <header className="bg-blue-900 dark:bg-blue-950 text-white sticky top-[33px] z-30 border-b border-blue-800">
+      <header className="bg-blue-900 dark:bg-blue-950 text-white sticky top-[25px] z-30 border-b border-blue-800" style={{ borderWidth: '0.5px' }}>
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="flex items-center justify-between gap-4 py-3">
             {/* Logo */}
