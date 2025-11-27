@@ -221,9 +221,6 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Top Blue Line - Iran International Style - Full Width */}
-      <div className="fixed top-[25px] left-0 right-0 w-full z-50" style={{ height: '1px', background: 'linear-gradient(to right, #2563eb, #3b82f6, #2563eb)' }}></div>
-
       {/* Main Navigation Bar */}
       <header className="bg-blue-900 dark:bg-blue-950 text-white sticky top-[26px] z-30 border-b border-blue-800" style={{ borderWidth: '0.5px' }}>
         <div className="container mx-auto px-4 max-w-7xl">
