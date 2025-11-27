@@ -97,9 +97,9 @@ export default function Header() {
 
   return (
     <>
-      {/* Top Line - Iran International Style */}
-      <div className="w-full h-1 bg-gradient-to-r from-blue-600 via-blue-500 to-blue-600"></div>
-      <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
+      {/* Top Line - Iran International Style - Full Width */}
+      <div className="fixed top-0 left-0 right-0 w-full h-1 bg-gradient-to-r from-blue-600 via-blue-500 to-blue-600 z-50"></div>
+      <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50 mt-1">
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="flex items-center justify-between gap-4 py-4">
           {/* Logo */}
