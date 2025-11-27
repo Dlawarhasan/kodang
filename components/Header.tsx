@@ -98,7 +98,7 @@ export default function Header() {
   return (
     <>
       {/* Top Line - Iran International Style - Full Width */}
-      <div className="fixed top-0 left-0 right-0 w-full h-0.5 bg-gradient-to-r from-blue-600 via-blue-500 to-blue-600 z-50"></div>
+      <div className="fixed top-0 left-0 right-0 w-full h-px bg-gradient-to-r from-blue-600 via-blue-500 to-blue-600 z-50"></div>
       
       {/* Top Bar - Language, Icons */}
       <div className="fixed top-1 left-0 right-0 bg-gray-900 dark:bg-gray-950 text-white text-sm z-40">
