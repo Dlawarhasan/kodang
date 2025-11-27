@@ -112,7 +112,7 @@ export default function Header() {
             </div>
             <div className="flex items-center gap-4">
               {/* Language Selector - Compact */}
-              <div className="relative">
+              <div className="relative z-50">
                 <button
                   onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
                   className="flex items-center gap-1 text-sm hover:text-blue-400 transition-colors"
@@ -120,7 +120,7 @@ export default function Header() {
                   {currentLanguage.name}
                 </button>
                 {isLangMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-32 overflow-hidden border border-gray-700 bg-gray-800 shadow-lg z-20">
+                  <div className="absolute right-0 mt-2 w-32 overflow-hidden border border-gray-700 bg-gray-800 shadow-lg z-50">
                     {languages.map((lang) => {
                       const currentPath = typeof window !== 'undefined' 
                         ? window.location.pathname 
@@ -190,11 +190,6 @@ export default function Header() {
               >
                 {isDarkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
               </button>
-              
-              {/* Video Icon */}
-              <Link href={`/${locale}/videos`} className="p-1 hover:text-blue-400 transition-colors">
-                <Play className="h-4 w-4" />
-              </Link>
               
               {/* Search */}
               <button
