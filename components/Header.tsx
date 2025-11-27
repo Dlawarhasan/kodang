@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useTranslations, useLocale } from 'next-intl'
-import { Menu, X, Globe, Search, Flame, Facebook, Send, Instagram, Youtube } from 'lucide-react'
+import { Menu, X, Globe, Search, Flame, Facebook, Send, Instagram, Youtube, Moon, Sun } from 'lucide-react'
 import { locales, defaultLocale } from '@/i18n'
 import Logo from './Logo'
 import CategoryFilter from './CategoryFilter'
@@ -23,6 +23,33 @@ export default function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState<string>(searchParams.get('search') || '')
   const [selectedCategory, setSelectedCategory] = useState<string>(searchParams.get('category') || 'all')
+  const [isDarkMode, setIsDarkMode] = useState(false)
+
+  useEffect(() => {
+    // Check for saved theme preference or default to light mode
+    const savedTheme = localStorage.getItem('theme')
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const shouldBeDark = savedTheme === 'dark' || (!savedTheme && prefersDark)
+    
+    setIsDarkMode(shouldBeDark)
+    if (shouldBeDark) {
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
+  }, [])
+
+  const toggleDarkMode = () => {
+    const newDarkMode = !isDarkMode
+    setIsDarkMode(newDarkMode)
+    if (newDarkMode) {
+      document.documentElement.classList.add('dark')
+      localStorage.setItem('theme', 'dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+      localStorage.setItem('theme', 'light')
+    }
+  }
 
   useEffect(() => {
     const category = searchParams.get('category') || 'all'
@@ -69,9 +96,12 @@ export default function Header() {
   const currentLanguage = languages.find(lang => lang.code === locale) || languages[0]
 
   return (
-    <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
-      <div className="container mx-auto px-4 max-w-7xl">
-        <div className="flex items-center justify-between gap-4 py-4">
+    <>
+      {/* Top Line - Iran International Style */}
+      <div className="w-full h-1 bg-gradient-to-r from-blue-600 via-blue-500 to-blue-600"></div>
+      <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
+        <div className="container mx-auto px-4 max-w-7xl">
+          <div className="flex items-center justify-between gap-4 py-4">
           {/* Logo */}
           <Link href="/" className="flex items-center">
             <Logo size="small" variant="inline" />
@@ -92,8 +122,8 @@ export default function Header() {
                   }}
                   className={`px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap ${
                     isActive
-                      ? 'text-red-600 border-b-2 border-red-600'
-                      : 'text-gray-700 hover:text-red-600'
+                      ? 'text-red-600 dark:text-red-400 border-b-2 border-red-600 dark:border-red-400'
+                      : 'text-gray-700 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400'
                   }`}
                 >
                   {item.label}
@@ -137,7 +167,7 @@ export default function Header() {
                 href="https://youtube.com/@kodangnews?si=KNdtPuv8XCvCwp93"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2 text-gray-600 hover:text-red-600 transition-colors"
+                    className="p-2 text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 transition-colors"
                 aria-label="YouTube"
               >
                 <Youtube className="h-5 w-5" />
@@ -185,7 +215,7 @@ export default function Header() {
               ) : (
                 <button
                   onClick={() => setIsSearchOpen(true)}
-                  className="p-2 text-gray-600 hover:text-red-600 transition-colors"
+                    className="p-2 text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 transition-colors"
                   aria-label={tCommon('search')}
                 >
                   <Search className="h-5 w-5" />
@@ -193,18 +223,27 @@ export default function Header() {
               )}
             </div>
 
+            {/* Dark Mode Toggle */}
+            <button
+              onClick={toggleDarkMode}
+              className="p-2 text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+              aria-label="Toggle dark mode"
+            >
+              {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            </button>
+
             {/* Language Selector */}
             <div className="relative">
               <button
                 onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
-                className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-gray-700 hover:text-red-600 transition-colors"
+                className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 transition-colors"
               >
                 <Globe className="h-5 w-5" />
                 <span className="hidden sm:inline">{currentLanguage.name}</span>
               </button>
 
               {isLangMenuOpen && (
-                <div className="absolute right-0 mt-2 w-48 overflow-hidden border border-gray-200 bg-white shadow-lg z-20">
+                <div className="absolute right-0 mt-2 w-48 overflow-hidden border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-lg z-20">
                   {languages.map((lang) => {
                       // Get current path from window.location to ensure we have the actual pathname with locale
                       const currentPath = typeof window !== 'undefined' 
@@ -303,8 +342,8 @@ export default function Header() {
                             window.location.href = cacheBustUrl
                           }
                         }}
-                        className={`flex w-full items-center gap-3 px-4 py-3 text-sm font-medium transition hover:bg-slate-50 text-left ${
-                          lang.code === locale ? 'bg-slate-100 text-slate-900' : 'text-slate-600'
+                        className={`flex w-full items-center gap-3 px-4 py-3 text-sm font-medium transition hover:bg-gray-50 dark:hover:bg-gray-700 text-left ${
+                          lang.code === locale ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100' : 'text-gray-600 dark:text-gray-300'
                         }`}
                       >
                         {lang.flag && <span className="text-lg">{lang.flag}</span>}
@@ -369,6 +408,7 @@ export default function Header() {
         )}
       </div>
     </header>
+    </>
   )
 }
 

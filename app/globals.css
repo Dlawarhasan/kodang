@@ -12,9 +12,17 @@
   --accent-secondary: #1e3a8a;
 }
 
+.dark {
+  --foreground-rgb: 229, 231, 235;
+  --background-color: #111827;
+  --accent-primary: #ef4444;
+  --accent-secondary: #3b82f6;
+}
+
 body {
   color: rgb(var(--foreground-rgb));
   background-color: var(--background-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 @layer utilities {
