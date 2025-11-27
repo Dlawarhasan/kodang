@@ -245,7 +245,7 @@ export default function NewsDetail({
 
         {/* Media Section */}
         {article.video && (
-          <div id="video" className="relative w-full mb-8 bg-gray-900 rounded-lg overflow-hidden">
+          <div className="mb-8">
             <VideoPlayer 
               videoUrl={article.video} 
               title={article.title}

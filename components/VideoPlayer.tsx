@@ -54,13 +54,13 @@ export default function VideoPlayer({ videoUrl, title, autoplay = false }: Video
   const isDirectVideo = !videoUrl.includes('youtube.com') && !videoUrl.includes('youtu.be')
 
   return (
-    <div ref={videoRef} id="video" className="w-full aspect-[4/5] bg-gray-900 rounded-lg overflow-hidden mb-6">
+    <div ref={videoRef} id="video" className="w-full aspect-video bg-gray-100 rounded-lg overflow-hidden shadow-sm">
       {isDirectVideo ? (
         <video
           src={videoUrl}
           controls
           autoPlay={shouldAutoplay}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-contain bg-black"
           playsInline
         >
           Your browser does not support the video tag.
