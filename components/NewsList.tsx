@@ -99,12 +99,12 @@ export default function NewsList({ news }: NewsListProps) {
                 </div>
 
                 {/* Title */}
-                <h2 className="text-2xl md:text-3xl font-bold leading-tight text-gray-900 dark:text-gray-100 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors duration-200">
+                <h2 className="text-base md:text-lg font-bold leading-snug text-gray-900 dark:text-gray-100 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors duration-200">
                   {item.title}
                 </h2>
 
                 {/* Excerpt */}
-                <p className="text-gray-600 dark:text-gray-300 leading-relaxed line-clamp-2">
+                <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm line-clamp-2 mt-1">
                   {item.excerpt}
                 </p>
 

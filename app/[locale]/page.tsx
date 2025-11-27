@@ -182,10 +182,10 @@ export default function Home() {
                         {formatDate(heroArticle.date, locale)}
                       </span>
                     </div>
-                    <h2 className="text-3xl md:text-4xl font-bold leading-tight text-gray-900 dark:text-gray-100 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">
+                    <h2 className="text-xl md:text-2xl font-bold leading-snug text-gray-900 dark:text-gray-100 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">
                       {heroArticle.title}
                     </h2>
-                    <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-lg">
+                    <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm">
                       {heroArticle.excerpt}
                     </p>
                   </div>

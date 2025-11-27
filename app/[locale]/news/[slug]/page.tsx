@@ -233,12 +233,12 @@ export default function NewsDetail({
           </div>
 
           {/* Title */}
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-4">
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 leading-snug mb-4">
             {translatedContent.title || article.title}
           </h1>
 
           {/* Excerpt */}
-          <p className="text-xl text-gray-600 leading-relaxed">
+          <p className="text-base text-gray-600 leading-relaxed">
             {translatedContent.excerpt || article.excerpt}
           </p>
         </header>
@@ -298,7 +298,7 @@ export default function NewsDetail({
             
           <div className="text-gray-700 leading-relaxed space-y-4">
             {(translatedContent.content || article.content).split('\n\n').map((paragraph, index) => (
-              <p key={index} className="text-lg leading-8">
+              <p key={index} className="text-base leading-7">
                 {paragraph}
               </p>
             ))}
@@ -306,7 +306,7 @@ export default function NewsDetail({
 
             {article.images && article.images.length > 0 && (
               <div className="mt-12 space-y-4">
-                <h3 className="text-2xl font-semibold text-gray-900 mb-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
                   {locale === 'fa' ? 'تصاویر بیشتر' : locale === 'ku' ? 'وێنە زیاتر' : 'More Images'}
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
