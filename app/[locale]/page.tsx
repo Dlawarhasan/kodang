@@ -182,7 +182,7 @@ export default function Home() {
                       </span>
                     </div>
                   </>
-                ) : (
+                ) : heroArticle.image ? (
                   <Image
                     src={heroArticle.image}
                     alt={heroArticle.title}
@@ -191,7 +191,7 @@ export default function Home() {
                     className="object-cover"
                     sizes="(max-width: 768px) 100vw, 1200px"
                   />
-                )}
+                ) : null}
               </div>
             )}
 
