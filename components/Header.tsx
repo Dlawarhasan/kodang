@@ -69,70 +69,48 @@ export default function Header() {
   const currentLanguage = languages.find(lang => lang.code === locale) || languages[0]
 
   return (
-    <header className="bg-white shadow-md sticky top-0 z-50 backdrop-blur-sm bg-white/95">
-      <div className="container mx-auto px-4">
-        <div className="relative mt-3 overflow-visible rounded-3xl border border-slate-200/80 bg-gradient-to-br from-white via-white to-slate-100/50 shadow-sm backdrop-blur z-50">
-          <span className="pointer-events-none absolute inset-x-16 top-0 h-[3px] rounded-full bg-gradient-to-r from-red-500 via-amber-500 to-blue-600 opacity-90" />
-
-          <div className="flex items-center justify-between gap-4 px-4 py-3 md:px-6">
+    <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
+      <div className="container mx-auto px-4 max-w-7xl">
+        <div className="flex items-center justify-between gap-4 py-4">
           {/* Logo */}
-            <Link href="/" className="flex items-center gap-3 rounded-2xl bg-white/60 px-3 py-2 text-slate-900 transition hover:bg-white">
-              <Logo size="small" variant="inline" />
+          <Link href="/" className="flex items-center">
+            <Logo size="small" variant="inline" />
           </Link>
 
           {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center gap-2 flex-1 overflow-x-auto overflow-y-visible relative">
-              {navItems.map((item) => {
-                const isActive = selectedCategory === item.category
-                return (
-                  <button
-                    key={item.category}
-                    onClick={() => {
-                      setSelectedCategory(item.category)
-                      const params = new URLSearchParams()
-                      params.set('category', item.category)
-                      router.push(`/${locale}?${params.toString()}`)
-                    }}
-                    className={`group relative overflow-hidden rounded-full border px-4 py-2 text-sm font-semibold transition-all whitespace-nowrap ${
-                      isActive
-                        ? 'border-transparent bg-gradient-to-r from-red-500 via-red-400 to-blue-600 text-white shadow-md shadow-red-500/20'
-                        : 'border-slate-200 bg-white/70 text-slate-600 hover:border-slate-300 hover:text-slate-900'
-                    }`}
-                  >
-                    <span className="relative z-10 flex items-center gap-2">
-                      {isActive && <Flame className="h-4 w-4" />}
-                {item.label}
-                    </span>
-                    {!isActive && (
-                      <span className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-40 bg-gradient-to-r from-red-500/40 to-blue-600/40" />
-                    )}
-                  </button>
-                )
-              })}
-              
-              {/* Category Filter Button */}
-              <div className="ml-auto">
-                <CategoryFilter
-                  selectedCategory={selectedCategory}
-                  onCategoryChange={(category) => {
-                    setSelectedCategory(category)
+          <nav className="hidden md:flex items-center gap-1 flex-1 justify-center">
+            {navItems.map((item) => {
+              const isActive = selectedCategory === item.category
+              return (
+                <button
+                  key={item.category}
+                  onClick={() => {
+                    setSelectedCategory(item.category)
                     const params = new URLSearchParams()
-                    params.set('category', category)
+                    params.set('category', item.category)
                     router.push(`/${locale}?${params.toString()}`)
                   }}
-                />
-              </div>
+                  className={`px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap ${
+                    isActive
+                      ? 'text-red-600 border-b-2 border-red-600'
+                      : 'text-gray-700 hover:text-red-600'
+                  }`}
+                >
+                  {item.label}
+                </button>
+              )
+            })}
           </nav>
 
           {/* Right Side Actions */}
-            <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             {/* Social Media Links */}
             <div className="hidden md:flex items-center gap-2">
               <a
                 href="https://www.facebook.com/share/1GqxCa4MuK/?mibextid=wwXIfr"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white/70 p-2 text-slate-600 transition hover:border-blue-500 hover:text-blue-600 hover:bg-blue-50"
+                className="p-2 text-gray-600 hover:text-blue-600 transition-colors"
                 aria-label="Facebook"
               >
                 <Facebook className="h-5 w-5" />
@@ -141,7 +119,7 @@ export default function Header() {
                 href="https://www.instagram.com/kodang.official?igsh=MWN3dThraTZ4YmFldw=="
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white/70 p-2 text-slate-600 transition hover:border-pink-500 hover:text-pink-600 hover:bg-pink-50"
+                className="p-2 text-gray-600 hover:text-pink-600 transition-colors"
                 aria-label="Instagram"
               >
                 <Instagram className="h-5 w-5" />
@@ -150,7 +128,7 @@ export default function Header() {
                 href="https://t.me/kodangofficial"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white/70 p-2 text-slate-600 transition hover:border-blue-400 hover:text-blue-500 hover:bg-blue-50"
+                className="p-2 text-gray-600 hover:text-blue-500 transition-colors"
                 aria-label="Telegram"
               >
                 <Send className="h-5 w-5" />
@@ -159,7 +137,7 @@ export default function Header() {
                 href="https://youtube.com/@kodangnews?si=KNdtPuv8XCvCwp93"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white/70 p-2 text-slate-600 transition hover:border-red-500 hover:text-red-600 hover:bg-red-50"
+                className="p-2 text-gray-600 hover:text-red-600 transition-colors"
                 aria-label="YouTube"
               >
                 <Youtube className="h-5 w-5" />
@@ -175,16 +153,15 @@ export default function Header() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder={tCommon('search')}
-                    className="w-48 rounded-full border border-slate-200 bg-white/70 px-4 py-2 text-sm text-slate-900 placeholder-slate-500 focus:border-red-400 focus:outline-none focus:ring-2 focus:ring-red-400/20"
+                    className="w-48 border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-900 placeholder-gray-500 focus:border-red-500 focus:outline-none"
                     autoFocus
                     onBlur={() => {
-                      // Close search after a delay to allow form submission
                       setTimeout(() => setIsSearchOpen(false), 200)
                     }}
                   />
                   <button
                     type="submit"
-                    className="inline-flex items-center justify-center rounded-full border border-red-400 bg-red-50 p-2 text-red-600 transition hover:bg-red-100"
+                    className="p-1.5 text-gray-600 hover:text-red-600 transition-colors"
                     aria-label={tCommon('search')}
                   >
                     <Search className="h-5 w-5" />
@@ -200,7 +177,7 @@ export default function Header() {
                       }
                       router.push(`/${locale}?${params.toString()}`)
                     }}
-                    className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white/70 p-2 text-slate-600 transition hover:border-slate-300"
+                    className="p-1.5 text-gray-600 hover:text-gray-900 transition-colors"
                   >
                     <X className="h-5 w-5" />
                   </button>
@@ -208,7 +185,7 @@ export default function Header() {
               ) : (
                 <button
                   onClick={() => setIsSearchOpen(true)}
-                  className="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white/70 p-2 text-slate-600 transition hover:border-red-400 hover:text-red-500"
+                  className="p-2 text-gray-600 hover:text-red-600 transition-colors"
                   aria-label={tCommon('search')}
                 >
                   <Search className="h-5 w-5" />
@@ -220,14 +197,14 @@ export default function Header() {
             <div className="relative">
               <button
                 onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
-                  className="flex items-center gap-2 rounded-full border border-slate-200 bg-white/70 px-4 py-2 text-sm font-semibold text-slate-600 transition hover:border-blue-400 hover:text-blue-600"
+                className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-gray-700 hover:text-red-600 transition-colors"
               >
                 <Globe className="h-5 w-5" />
                 <span className="hidden sm:inline">{currentLanguage.name}</span>
               </button>
 
               {isLangMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-48 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl z-20">
+                <div className="absolute right-0 mt-2 w-48 overflow-hidden border border-gray-200 bg-white shadow-lg z-20">
                   {languages.map((lang) => {
                       // Get current path from window.location to ensure we have the actual pathname with locale
                       const currentPath = typeof window !== 'undefined' 
@@ -343,12 +320,11 @@ export default function Header() {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="inline-flex rounded-full border border-slate-200 bg-white/70 p-2 text-slate-600 transition hover:border-slate-300 md:hidden"
+              className="p-2 text-gray-600 hover:text-gray-900 transition-colors md:hidden"
             >
               {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
           </div>
-        </div>
         </div>
 
 

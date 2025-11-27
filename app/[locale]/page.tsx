@@ -136,202 +136,182 @@ export default function Home() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-10 space-y-10">
-      <header className="space-y-3 animate-fade-in">
-        <span className="inline-flex items-center gap-2 rounded-full bg-red-100 px-4 py-1 text-sm font-semibold text-red-700">
-          <Flame className="h-4 w-4" />
-          {t('politicsFocus')}
-        </span>
-        <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 leading-tight">
-          {t('title')}
-        </h1>
-        <p className="text-lg md:text-xl text-slate-600">
-          {t('subtitle')}
-        </p>
-      </header>
+    <div className="container mx-auto px-4 py-6 max-w-7xl">
+      {/* Main Content Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Main Content Column */}
+        <div className="lg:col-span-2 space-y-6">
 
-      {heroArticle && (
-        <article className="mb-12 pb-8 border-b border-gray-200">
-          <Link href={`/${locale}/news/${heroArticle.slug}${heroArticle.video ? '#video' : ''}`} className="block group">
-            {/* Media Section */}
-            {(heroArticle.image || heroArticle.video) && (
-              <div className="relative w-full h-96 md:h-[500px] mb-6 bg-gray-100 rounded-lg overflow-hidden">
-                {heroArticle.video ? (
-                  <>
-                    {heroArticle.image ? (
+          {/* Featured Article */}
+          {heroArticle && (
+            <article className="border-b border-gray-200 pb-6">
+              <Link href={`/${locale}/news/${heroArticle.slug}${heroArticle.video ? '#video' : ''}`} className="block group">
+                {(heroArticle.image || heroArticle.video) && (
+                  <div className="relative w-full h-64 md:h-80 mb-4 bg-gray-100 overflow-hidden">
+                    {heroArticle.video ? (
+                      <>
+                        {heroArticle.image ? (
+                          <Image
+                            src={heroArticle.image}
+                            alt={heroArticle.title}
+                            fill
+                            priority
+                            className="object-cover"
+                            sizes="(max-width: 768px) 100vw, 800px"
+                          />
+                        ) : (
+                          <div className="absolute inset-0 bg-gray-200" />
+                        )}
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                          <div className="bg-red-600 rounded-full p-4">
+                            <Play className="h-8 w-8 text-white fill-white ml-1" />
+                          </div>
+                        </div>
+                        <div className="absolute top-3 right-3">
+                          <span className="inline-flex items-center gap-1 rounded bg-red-600 px-2 py-1 text-xs font-semibold text-white">
+                            <Play className="h-3 w-3 fill-white" />
+                            {locale === 'fa' ? 'ویدیو' : locale === 'ku' ? 'ڤیدیۆ' : 'Video'}
+                          </span>
+                        </div>
+                      </>
+                    ) : heroArticle.image ? (
                       <Image
                         src={heroArticle.image}
                         alt={heroArticle.title}
                         fill
                         priority
                         className="object-cover"
-                        sizes="(max-width: 768px) 100vw, 1200px"
+                        sizes="(max-width: 768px) 100vw, 800px"
                       />
-                    ) : (
-                      <div className="absolute inset-0 bg-gray-200" />
-                    )}
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-                      <div className="bg-red-600 rounded-full p-6 shadow-lg">
-                        <Play className="h-10 w-10 text-white fill-white ml-1" />
-                      </div>
-                    </div>
-                    <div className="absolute top-4 right-4">
-                      <span className="inline-flex items-center gap-2 rounded bg-red-600 px-3 py-1.5 text-sm font-semibold text-white">
-                        <Play className="h-4 w-4 fill-white" />
-                        {locale === 'fa' ? 'ویدیو' : locale === 'ku' ? 'ڤیدیۆ' : 'Video'}
+                    ) : null}
+                  </div>
+                )}
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3 text-xs text-gray-500">
+                    {heroArticle.category && (
+                      <span className="px-2 py-0.5 bg-gray-100 text-gray-700 rounded">
+                        {getCategoryName(heroArticle.category, locale)}
                       </span>
-                    </div>
-                  </>
-                ) : heroArticle.image ? (
-                  <Image
-                    src={heroArticle.image}
-                    alt={heroArticle.title}
-                    fill
-                    priority
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 1200px"
-                  />
-                ) : null}
+                    )}
+                    <span className="flex items-center gap-1">
+                      <Calendar className="h-3 w-3" />
+                      {formatDate(heroArticle.date, locale)}
+                    </span>
+                  </div>
+                  <h2 className="text-2xl md:text-3xl font-bold leading-tight text-gray-900 group-hover:text-red-600 transition-colors">
+                    {heroArticle.title}
+                  </h2>
+                  <p className="text-gray-600 leading-relaxed line-clamp-2">
+                    {heroArticle.excerpt}
+                  </p>
+                </div>
+              </Link>
+            </article>
+          )}
+
+          {/* Breaking News Section */}
+          {breakingItems.length > 0 && (
+            <section className="border-b border-gray-200 pb-6">
+              <div className="flex items-center gap-2 mb-4">
+                <Flame className="h-5 w-5 text-red-600" />
+                <h2 className="text-lg font-bold text-gray-900">{t('breaking')}</h2>
+              </div>
+              <div className="space-y-3">
+                {breakingItems.slice(0, 5).map((item) => (
+                  <Link
+                    key={item.id}
+                    href={`/${locale}/news/${item.slug}`}
+                    className="block group border-b border-gray-100 pb-3 last:border-b-0 last:pb-0"
+                  >
+                    <h3 className="text-sm font-semibold text-gray-900 group-hover:text-red-600 transition-colors line-clamp-2">
+                      {item.title}
+                    </h3>
+                    <span className="text-xs text-gray-500 mt-1">
+                      {formatDate(item.date, locale)}
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* News Grid */}
+          <section>
+            {searchQuery && (
+              <div className="mb-4">
+                <h2 className="text-xl font-bold text-gray-900 mb-2">
+                  {t('searchResults')}: &quot;{searchQuery}&quot;
+                </h2>
+                {remainingNews.length === 0 && (
+                  <p className="text-gray-600">{t('noResults')}</p>
+                )}
               </div>
             )}
+            {remainingNews.length > 0 ? (
+              <NewsList news={remainingNews} />
+            ) : searchQuery ? (
+              <div className="text-center py-12">
+                <p className="text-gray-600">{t('noResults')}</p>
+              </div>
+            ) : null}
+          </section>
+        </div>
 
-            {/* Content Section */}
+        {/* Sidebar */}
+        <aside className="lg:col-span-1 space-y-6">
+          {/* Latest News */}
+          <div className="bg-white border border-gray-200 rounded-lg p-4">
+            <h3 className="text-lg font-bold text-gray-900 mb-4 pb-2 border-b border-gray-200">
+              {locale === 'fa' ? 'آخرین اخبار' : locale === 'ku' ? 'دوایین هەواڵەکان' : 'Latest News'}
+            </h3>
             <div className="space-y-4">
-              {/* Meta Information */}
-              <div className="flex items-center gap-4 text-sm text-gray-600">
-                <span className="inline-flex items-center gap-2 px-3 py-1 bg-red-50 text-red-700 text-xs font-semibold rounded">
-                  <Flame className="h-3 w-3" />
-                  {t('topStory')}
-                </span>
-                {heroArticle.category && (
-                  <span className="inline-block px-2 py-1 bg-gray-100 text-gray-700 text-xs font-semibold rounded">
-                    {getCategoryName(heroArticle.category, locale)}
-                  </span>
-                )}
-                <span className="flex items-center gap-1.5">
-                  <Calendar className="h-4 w-4" />
-                  {formatDate(heroArticle.date, locale)}
-                </span>
-              </div>
-
-              {/* Title */}
-              <h2 className="text-4xl md:text-5xl font-bold leading-tight text-gray-900 group-hover:text-red-600 transition-colors">
-                {heroArticle.title}
-              </h2>
-
-              {/* Excerpt */}
-              <p className="text-xl text-gray-600 leading-relaxed">
-                {heroArticle.excerpt}
-              </p>
-
-              {/* Read More Link */}
-              <div className="pt-2">
-                <span className="text-red-600 font-semibold group-hover:underline">
-                  {t('heroButton')} →
-                </span>
-              </div>
-            </div>
-          </Link>
-        </article>
-      )}
-
-      {breakingItems.length > 0 && (
-        <section className="group relative overflow-hidden rounded-3xl border-2 border-red-500/30 bg-gradient-to-br from-white via-red-50/30 to-white shadow-xl shadow-red-500/10 hover:shadow-red-500/20 transition-all duration-500 hover:border-red-500/50">
-          {/* Decorative Border Lines */}
-          <div className="absolute inset-0 z-10 pointer-events-none">
-            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-red-500/60 to-transparent group-hover:via-red-500 transition-opacity duration-500" />
-            <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-red-500/60 to-transparent group-hover:via-red-500 transition-opacity duration-500" />
-          </div>
-
-          {/* Header with Enhanced Design */}
-          <div className="relative flex items-center gap-4 bg-gradient-to-r from-red-600 via-red-500 to-red-600 px-6 py-4 text-white shadow-lg">
-            {/* Animated Background Pattern */}
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 animate-shimmer" />
-            
-            {/* Decorative Elements */}
-            <div className="absolute top-0 left-0 w-32 h-full bg-gradient-to-r from-red-700/50 to-transparent" />
-            <div className="absolute bottom-0 right-0 w-32 h-full bg-gradient-to-l from-red-700/50 to-transparent" />
-            
-            <div className="relative z-10 flex items-center gap-3">
-              <div className="relative">
-                <Flame className="h-6 w-6 animate-pulse drop-shadow-lg" />
-                <div className="absolute inset-0 bg-red-400 blur-xl opacity-50 animate-pulse" />
-              </div>
-              <span className="text-sm font-black uppercase tracking-widest drop-shadow-lg relative">
-                {t('breaking')}
-                <span className="absolute -bottom-1 left-0 w-full h-[2px] bg-white/60 rounded-full" />
-              </span>
-            </div>
-            
-            {/* Animated Indicator */}
-            <div className="relative z-10 ml-auto flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
-              <span className="h-2 w-2 rounded-full bg-white/60 animate-pulse delay-75" />
-              <span className="h-2 w-2 rounded-full bg-white/40 animate-pulse delay-150" />
-            </div>
-          </div>
-
-          {/* News Ticker */}
-          <div className="relative bg-white/50 backdrop-blur-sm">
-            <div className="flex items-center gap-8 whitespace-nowrap py-5 pl-8 pr-8 text-slate-800 animate-marquee">
-              {[...breakingItems, ...breakingItems].map((item, index) => (
+              {sortedNews.slice(0, 5).map((item) => (
                 <Link
-                  key={`${item.id}-${index}`}
+                  key={item.id}
                   href={`/${locale}/news/${item.slug}`}
-                  className="group/item flex items-center gap-3 text-sm font-semibold transition-all duration-300 hover:text-red-600 hover:scale-105"
+                  className="block group"
                 >
-                  {/* Animated Dot */}
-                  <span className="relative inline-flex h-3 w-3 rounded-full bg-gradient-to-r from-red-500 to-red-600 shadow-lg shadow-red-500/40 group-hover/item:scale-125 transition-transform duration-300">
-                    <span className="absolute inset-0 rounded-full bg-red-400 animate-ping opacity-75" />
-                  </span>
-                  
-                  {/* Title with Gradient Effect */}
-                  <span className="relative">
+                  {item.image && (
+                    <div className="relative w-full h-24 mb-2 bg-gray-100 rounded overflow-hidden">
+                      <Image
+                        src={item.image}
+                        alt={item.title}
+                        fill
+                        className="object-cover"
+                        sizes="300px"
+                      />
+                    </div>
+                  )}
+                  <h4 className="text-sm font-semibold text-gray-900 group-hover:text-red-600 transition-colors line-clamp-2">
                     {item.title}
-                    <span className="absolute -bottom-0.5 left-0 w-0 h-[2px] bg-gradient-to-r from-red-500 to-red-600 group-hover/item:w-full transition-all duration-300" />
+                  </h4>
+                  <span className="text-xs text-gray-500 mt-1 block">
+                    {formatDate(item.date, locale)}
                   </span>
-                  
-                  {/* Separator */}
-                  <span className="text-red-300 font-bold">•</span>
                 </Link>
               ))}
             </div>
-            
-            {/* Gradient Fade Effects */}
-            <div className="pointer-events-none absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-white via-white/80 to-transparent z-10" />
-            <div className="pointer-events-none absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-white via-white/80 to-transparent z-10" />
-            
-            {/* Bottom Border Line */}
-            <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-red-200 to-transparent" />
           </div>
 
-          {/* Corner Accents */}
-          <div className="absolute top-4 left-4 w-8 h-8 border-t-2 border-l-2 border-red-500/40 rounded-tl-lg opacity-60 group-hover:opacity-100 group-hover:border-red-500 transition-all duration-500" />
-          <div className="absolute top-4 right-4 w-8 h-8 border-t-2 border-r-2 border-red-500/40 rounded-tr-lg opacity-60 group-hover:opacity-100 group-hover:border-red-500 transition-all duration-500" />
-          <div className="absolute bottom-4 left-4 w-8 h-8 border-b-2 border-l-2 border-red-500/40 rounded-bl-lg opacity-60 group-hover:opacity-100 group-hover:border-red-500 transition-all duration-500" />
-          <div className="absolute bottom-4 right-4 w-8 h-8 border-b-2 border-r-2 border-red-500/40 rounded-br-lg opacity-60 group-hover:opacity-100 group-hover:border-red-500 transition-all duration-500" />
-        </section>
-      )}
-
-      <section className="space-y-8">
-        {searchQuery && (
-          <div className="mb-4 px-4">
-            <h2 className="text-xl font-bold text-slate-900">
-              {t('searchResults')}: &quot;{searchQuery}&quot;
-            </h2>
-            {remainingNews.length === 0 && (
-              <p className="mt-2 text-slate-600">{t('noResults')}</p>
-            )}
+          {/* Categories */}
+          <div className="bg-white border border-gray-200 rounded-lg p-4">
+            <h3 className="text-lg font-bold text-gray-900 mb-4 pb-2 border-b border-gray-200">
+              {locale === 'fa' ? 'دسته‌بندی‌ها' : locale === 'ku' ? 'پۆلەکان' : 'Categories'}
+            </h3>
+            <div className="space-y-2">
+              {['politics', 'social', 'culture', 'health'].map((cat) => (
+                <Link
+                  key={cat}
+                  href={`/${locale}?category=${cat}`}
+                  className="block text-sm text-gray-700 hover:text-red-600 transition-colors py-1"
+                >
+                  {getCategoryName(cat, locale)}
+                </Link>
+              ))}
+            </div>
           </div>
-        )}
-        {remainingNews.length > 0 ? (
-          <NewsList news={remainingNews} />
-        ) : searchQuery ? (
-          <div className="text-center py-12 px-4">
-            <p className="text-slate-600 text-lg">{t('noResults')}</p>
-          </div>
-        ) : null}
-      </section>
+        </aside>
+      </div>
     </div>
   )
 }
