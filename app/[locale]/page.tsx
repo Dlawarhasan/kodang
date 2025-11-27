@@ -151,174 +151,88 @@ export default function Home() {
       </header>
 
       {heroArticle && (
-        <section className="group relative overflow-hidden rounded-3xl bg-slate-950 text-white shadow-2xl ring-2 ring-white/20 animate-fade-in transition-all duration-500 hover:shadow-red-500/30 hover:ring-red-500/40">
-          {/* Decorative Border Lines */}
-          <div className="absolute inset-0 z-10 pointer-events-none">
-            {/* Top Border Line */}
-            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-red-500/60 to-transparent group-hover:via-red-400 group-hover:opacity-100 transition-opacity duration-500" />
-            {/* Bottom Border Line */}
-            <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-red-500/60 to-transparent group-hover:via-red-400 group-hover:opacity-100 transition-opacity duration-500" />
-            {/* Left Border Line */}
-            <div className="absolute top-0 bottom-0 left-0 w-[2px] bg-gradient-to-b from-transparent via-red-500/60 to-transparent group-hover:via-red-400 group-hover:opacity-100 transition-opacity duration-500" />
-            {/* Right Border Line */}
-            <div className="absolute top-0 bottom-0 right-0 w-[2px] bg-gradient-to-b from-transparent via-red-500/60 to-transparent group-hover:via-red-400 group-hover:opacity-100 transition-opacity duration-500" />
-            
-            {/* Corner Accents */}
-            <div className="absolute top-4 left-4 w-12 h-12 border-t-2 border-l-2 border-red-500/50 rounded-tl-lg group-hover:border-red-400 transition-colors duration-500" />
-            <div className="absolute top-4 right-4 w-12 h-12 border-t-2 border-r-2 border-red-500/50 rounded-tr-lg group-hover:border-red-400 transition-colors duration-500" />
-            <div className="absolute bottom-4 left-4 w-12 h-12 border-b-2 border-l-2 border-red-500/50 rounded-bl-lg group-hover:border-red-400 transition-colors duration-500" />
-            <div className="absolute bottom-4 right-4 w-12 h-12 border-b-2 border-r-2 border-red-500/50 rounded-br-lg group-hover:border-red-400 transition-colors duration-500" />
-          </div>
-
-          {/* Background Image/Video with Parallax Effect */}
-          <div className="absolute inset-0 -z-10">
-            {heroArticle.video ? (
-              <>
-                {heroArticle.image ? (
+        <article className="mb-12 pb-8 border-b border-gray-200">
+          <Link href={`/${locale}/news/${heroArticle.slug}${heroArticle.video ? '#video' : ''}`} className="block group">
+            {/* Media Section */}
+            {(heroArticle.image || heroArticle.video) && (
+              <div className="relative w-full h-96 md:h-[500px] mb-6 bg-gray-100 rounded-lg overflow-hidden">
+                {heroArticle.video ? (
+                  <>
+                    {heroArticle.image ? (
+                      <Image
+                        src={heroArticle.image}
+                        alt={heroArticle.title}
+                        fill
+                        priority
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, 1200px"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 bg-gray-200" />
+                    )}
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+                      <div className="bg-red-600 rounded-full p-6 shadow-lg">
+                        <Play className="h-10 w-10 text-white fill-white ml-1" />
+                      </div>
+                    </div>
+                    <div className="absolute top-4 right-4">
+                      <span className="inline-flex items-center gap-2 rounded bg-red-600 px-3 py-1.5 text-sm font-semibold text-white">
+                        <Play className="h-4 w-4 fill-white" />
+                        {locale === 'fa' ? 'ویدیو' : locale === 'ku' ? 'ڤیدیۆ' : 'Video'}
+                      </span>
+                    </div>
+                  </>
+                ) : (
                   <Image
                     src={heroArticle.image}
                     alt={heroArticle.title}
                     fill
                     priority
-                    className="object-cover opacity-50 transition-transform duration-700 group-hover:scale-110"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1280px) 70vw, 1200px"
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 1200px"
                   />
-                ) : (
-                  <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-red-900" />
                 )}
-                {/* Video Play Button Overlay */}
-                <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/40 transition-all duration-500">
-                  <div className="relative">
-                    <div className="absolute inset-0 bg-red-500/20 rounded-full blur-2xl group-hover:bg-red-500/30 transition-all duration-500" />
-                    <div className="relative bg-red-600/90 group-hover:bg-red-500 rounded-full p-8 shadow-2xl group-hover:scale-110 transition-all duration-300">
-                      <Play className="h-12 w-12 text-white fill-white ml-2" />
-                    </div>
-                  </div>
-                </div>
-                {/* Video Badge */}
-                <div className="absolute top-6 right-6 z-20">
-                  <span className="inline-flex items-center gap-2 rounded-full bg-red-600/90 backdrop-blur-sm border-2 border-white/30 px-4 py-2 text-sm font-bold text-white shadow-lg">
-                    <Play className="h-4 w-4 fill-white" />
-                    {locale === 'fa' ? 'ویدیو' : locale === 'ku' ? 'ڤیدیۆ' : 'Video'}
-                  </span>
-                </div>
-              </>
-            ) : heroArticle.image ? (
-              <Image
-                src={heroArticle.image}
-                alt={heroArticle.title}
-                fill
-                priority
-                className="object-cover opacity-50 transition-transform duration-700 group-hover:scale-110"
-                sizes="(max-width: 768px) 100vw, (max-width: 1280px) 70vw, 1200px"
-              />
-            ) : null}
-            {/* Enhanced Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-br from-slate-950/95 via-slate-900/85 to-red-900/70" />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
-            {/* Animated Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-r from-red-600/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-          </div>
+              </div>
+            )}
 
-          {/* Content Grid */}
-          <div className="relative grid gap-8 p-8 md:grid-cols-[2fr,1fr] md:p-12 lg:p-16">
-            {/* Main Content */}
-            <div className="space-y-6 max-w-2xl relative">
-              {/* Decorative Line Before Content */}
-              <div className="absolute -left-4 top-0 bottom-0 w-[3px] bg-gradient-to-b from-red-500 via-red-400 to-transparent rounded-full opacity-60 group-hover:opacity-100 transition-opacity duration-500 hidden md:block" />
-              
-              {/* Badges */}
-              <div className="flex flex-wrap items-center gap-3 text-sm relative">
-                {/* Decorative Line Under Badges */}
-                <div className="absolute -bottom-2 left-0 w-24 h-[1px] bg-gradient-to-r from-red-500/60 to-transparent group-hover:w-32 group-hover:from-red-400 transition-all duration-500" />
-                
-                <span className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-red-500/30 to-red-600/30 backdrop-blur-sm border-2 border-red-400/40 px-4 py-1.5 font-semibold text-red-100 shadow-lg shadow-red-500/20 group-hover:border-red-400/60 transition-all duration-300">
-                  <Flame className="h-4 w-4 animate-pulse" />
+            {/* Content Section */}
+            <div className="space-y-4">
+              {/* Meta Information */}
+              <div className="flex items-center gap-4 text-sm text-gray-600">
+                <span className="inline-flex items-center gap-2 px-3 py-1 bg-red-50 text-red-700 text-xs font-semibold rounded">
+                  <Flame className="h-3 w-3" />
                   {t('topStory')}
                 </span>
                 {heroArticle.category && (
-                  <span className="inline-flex items-center gap-2 rounded-full bg-white/15 backdrop-blur-sm border-2 border-white/30 px-4 py-1.5 font-semibold text-white shadow-lg group-hover:border-white/50 transition-all duration-300">
+                  <span className="inline-block px-2 py-1 bg-gray-100 text-gray-700 text-xs font-semibold rounded">
                     {getCategoryName(heroArticle.category, locale)}
                   </span>
                 )}
-                <span className="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-sm border-2 border-white/20 px-4 py-1.5 text-white/90 group-hover:border-white/40 transition-all duration-300">
+                <span className="flex items-center gap-1.5">
                   <Calendar className="h-4 w-4" />
                   {formatDate(heroArticle.date, locale)}
                 </span>
               </div>
 
-              {/* Title and Excerpt */}
-              <div className="space-y-4 relative">
-                {/* Decorative Line Before Title */}
-                <div className="absolute -left-6 top-0 w-[2px] h-16 bg-gradient-to-b from-red-500/60 via-red-400/40 to-transparent rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 hidden md:block" />
-                
-                <h2 className="text-3xl md:text-4xl lg:text-6xl font-black leading-[1.1] drop-shadow-2xl bg-gradient-to-br from-white via-white to-slate-200 bg-clip-text text-transparent group-hover:from-red-100 group-hover:via-white group-hover:to-white transition-all duration-500 relative">
-                  {/* Underline Effect */}
-                  <span className="absolute -bottom-2 left-0 w-0 h-[3px] bg-gradient-to-r from-red-500 to-red-400 rounded-full group-hover:w-full transition-all duration-700" />
-                  {heroArticle.title}
-                </h2>
-                <p className="text-lg md:text-xl lg:text-2xl text-slate-200/95 max-w-2xl leading-relaxed font-medium relative pl-4 border-l-2 border-white/20 group-hover:border-red-400/40 transition-colors duration-500">
-                  {heroArticle.excerpt}
-                </p>
-              </div>
+              {/* Title */}
+              <h2 className="text-4xl md:text-5xl font-bold leading-tight text-gray-900 group-hover:text-red-600 transition-colors">
+                {heroArticle.title}
+              </h2>
 
-              {/* Action Buttons */}
-              <div className="flex flex-wrap items-center gap-4 pt-4 relative">
-                {/* Decorative Line Above Buttons */}
-                <div className="absolute -top-2 left-0 w-32 h-[1px] bg-gradient-to-r from-red-500/60 to-transparent group-hover:w-40 group-hover:from-red-400 transition-all duration-500" />
-                
-                <Link
-                  href={`/${locale}/news/${heroArticle.slug}${heroArticle.video ? '#video' : ''}`}
-                  className="group/btn relative inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-red-500 to-red-600 px-8 py-4 text-base font-bold text-white shadow-xl shadow-red-500/40 transition-all duration-300 hover:from-red-400 hover:to-red-500 hover:shadow-2xl hover:shadow-red-500/50 hover:scale-105 active:scale-95 border-2 border-red-400/30 hover:border-red-300/50"
-                >
-                  {/* Button Glow Effect */}
-                  <span className="absolute inset-0 rounded-full bg-red-400/20 blur-xl opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300" />
-                  <span className="relative z-10">{t('heroButton')}</span>
-                  <ArrowRight className="h-5 w-5 relative z-10 transition-transform duration-300 group-hover/btn:translate-x-1" />
-                </Link>
-                <Link
-                  href={`/${locale}/news`}
-                  className="relative inline-flex items-center gap-2 rounded-full border-2 border-white/40 backdrop-blur-sm bg-white/5 px-6 py-4 text-sm font-semibold text-white transition-all duration-300 hover:bg-white/20 hover:border-white/60 hover:scale-105 active:scale-95"
-                >
-                  {t('heroSecondary')}
-                </Link>
+              {/* Excerpt */}
+              <p className="text-xl text-gray-600 leading-relaxed">
+                {heroArticle.excerpt}
+              </p>
+
+              {/* Read More Link */}
+              <div className="pt-2">
+                <span className="text-red-600 font-semibold group-hover:underline">
+                  {t('heroButton')} →
+                </span>
               </div>
             </div>
-
-            {/* Sidebar - Tags */}
-            {heroArticle.tags && heroArticle.tags.length > 0 && (
-              <aside className="rounded-2xl bg-white/10 backdrop-blur-xl border-2 border-white/30 p-6 shadow-2xl h-fit relative group-hover:border-red-400/40 transition-all duration-500">
-                {/* Decorative Lines on Sidebar */}
-                <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/40 to-transparent group-hover:via-red-400 transition-colors duration-500" />
-                <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/40 to-transparent group-hover:via-red-400 transition-colors duration-500" />
-                
-                <h3 className="mb-4 text-xs font-bold uppercase tracking-widest text-white/80 flex items-center gap-2 relative">
-                  <span className="h-1 w-1 rounded-full bg-red-400 animate-pulse" />
-                  <span className="absolute left-0 bottom-0 w-8 h-[2px] bg-gradient-to-r from-red-500 to-transparent" />
-                  Tags
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {heroArticle.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="rounded-full bg-gradient-to-r from-white/20 to-white/10 backdrop-blur-sm border border-white/30 px-4 py-2 text-sm font-medium text-white/95 shadow-lg hover:from-white/30 hover:to-white/20 hover:scale-105 hover:border-red-400/40 transition-all duration-200 cursor-default"
-                    >
-                      #{tag}
-                    </span>
-                  ))}
-                </div>
-              </aside>
-            )}
-          </div>
-
-          {/* Decorative Elements */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-red-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-red-500/20 transition-all duration-500" />
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-slate-800/20 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
-          
-          {/* Corner Glow Effects */}
-          <div className="absolute top-0 left-0 w-32 h-32 bg-red-500/5 rounded-br-full blur-2xl group-hover:bg-red-500/10 transition-all duration-500" />
-          <div className="absolute bottom-0 right-0 w-32 h-32 bg-red-500/5 rounded-tl-full blur-2xl group-hover:bg-red-500/10 transition-all duration-500" />
-        </section>
+          </Link>
+        </article>
       )}
 
       {breakingItems.length > 0 && (

@@ -202,15 +202,50 @@ export default function NewsDetail({
     <article className="container mx-auto px-4 py-8 max-w-4xl">
       <Link 
         href={`/${locale}/news`}
-        className="inline-flex items-center text-primary-600 hover:text-primary-700 mb-6"
+        className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-8 text-sm font-medium"
       >
         <ArrowRight className={locale === 'en' ? 'mr-2 h-4 w-4' : 'ml-2 h-4 w-4'} />
         {t('backToList')}
       </Link>
 
-      <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+      <article className="bg-white">
+        {/* Header Section */}
+        <header className="mb-8 pb-6 border-b border-gray-200">
+          {/* Meta Information */}
+          <div className="flex items-center gap-4 text-sm text-gray-600 mb-4 flex-wrap">
+            {article.category && (
+              <span className="inline-block px-3 py-1 bg-red-50 text-red-700 text-xs font-semibold rounded">
+                {getCategoryName(article.category, locale)}
+              </span>
+            )}
+            <span className="flex items-center gap-1.5">
+              <Calendar className="h-4 w-4" />
+              {formatDate(article.date, locale)}
+            </span>
+            <span className="flex items-center gap-1.5">
+              <User className="h-4 w-4" />
+              {article.author}
+            </span>
+            <span className="flex items-center gap-1.5">
+              <Eye className="h-4 w-4" />
+              {views.toLocaleString()} {t('views')}
+            </span>
+          </div>
+
+          {/* Title */}
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight mb-4">
+            {translatedContent.title || article.title}
+          </h1>
+
+          {/* Excerpt */}
+          <p className="text-xl text-gray-600 leading-relaxed">
+            {translatedContent.excerpt || article.excerpt}
+          </p>
+        </header>
+
+        {/* Media Section */}
         {article.video && (
-          <div id="video" className="relative w-full aspect-[4/5] bg-gray-900 overflow-hidden">
+          <div id="video" className="relative w-full mb-8 bg-gray-900 rounded-lg overflow-hidden">
             <VideoPlayer 
               videoUrl={article.video} 
               title={article.title}
@@ -219,15 +254,17 @@ export default function NewsDetail({
           </div>
         )}
         {article.audio && (
-          <div className="p-8 pb-0">
-            <div className="w-full bg-slate-100 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-slate-900 mb-4">ئۆدیۆ</h3>
+          <div className="mb-8">
+            <div className="w-full bg-gray-100 rounded-lg p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                {locale === 'fa' ? 'صوت' : locale === 'ku' ? 'دەنگ' : 'Audio'}
+              </h3>
               <audio src={article.audio} controls className="w-full" />
             </div>
           </div>
         )}
         {article.image && !article.video && !article.audio && (
-          <div className="relative w-full aspect-[4/5] bg-gray-200 overflow-hidden">
+          <div className="relative w-full h-96 md:h-[500px] mb-8 bg-gray-200 rounded-lg overflow-hidden">
             <Image
               src={article.image}
               alt={article.title}
@@ -239,7 +276,7 @@ export default function NewsDetail({
           </div>
         )}
         {article.image && (article.video || article.audio) && (
-          <div className="relative w-full aspect-[4/5] bg-gray-200 overflow-hidden">
+          <div className="relative w-full h-96 md:h-[500px] mb-8 bg-gray-200 rounded-lg overflow-hidden">
             <Image
               src={article.image}
               alt={article.title}
@@ -250,62 +287,34 @@ export default function NewsDetail({
           </div>
         )}
 
-        <div className="p-8">
+        {/* Content Section */}
+        <div className="prose prose-lg max-w-none">
           {translating && (
-            <div className="mb-4 flex items-center gap-2 text-sm text-blue-600 bg-blue-50 px-4 py-2 rounded-lg">
+            <div className="mb-6 flex items-center gap-2 text-sm text-blue-600 bg-blue-50 px-4 py-2 rounded-lg">
               <Languages className="h-4 w-4 animate-pulse" />
               <span>{locale === 'fa' ? 'در حال ترجمه...' : locale === 'ku' ? 'وەرگێڕان...' : 'Translating...'}</span>
             </div>
           )}
-
-          <div className="flex items-center gap-4 text-sm text-gray-600 mb-4 flex-wrap">
-            <span className="flex items-center gap-1">
-              <Calendar className="h-4 w-4" />
-              {formatDate(article.date, locale)}
-            </span>
-            <span className="flex items-center gap-1">
-              <User className="h-4 w-4" />
-              {article.author}
-            </span>
-            <span className="flex items-center gap-1">
-              <Eye className="h-4 w-4" />
-              {views.toLocaleString()} {t('views')}
-            </span>
-            {article.category && (
-              <span className="px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-xs">
-                {getCategoryName(article.category, locale)}
-              </span>
-            )}
+            
+          <div className="text-gray-700 leading-relaxed space-y-4">
+            {(translatedContent.content || article.content).split('\n\n').map((paragraph, index) => (
+              <p key={index} className="text-lg leading-8">
+                {paragraph}
+              </p>
+            ))}
           </div>
 
-          <h1 className="text-4xl font-bold text-gray-900 mb-6">
-            {translatedContent.title || article.title}
-          </h1>
-
-          <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed">
-            <p className="text-xl text-gray-600 mb-6 leading-relaxed">
-              {translatedContent.excerpt || article.excerpt}
-            </p>
-            
-            <div className="space-y-4">
-              {(translatedContent.content || article.content).split('\n\n').map((paragraph, index) => (
-                <p key={index} className="text-base leading-7">
-                  {paragraph}
-                </p>
-              ))}
-            </div>
-
             {article.images && article.images.length > 0 && (
-              <div className="mt-8 space-y-4">
-                <h3 className="text-2xl font-semibold text-gray-900 mb-4">
-                  وێنە زیاتر | More Images
+              <div className="mt-12 space-y-4">
+                <h3 className="text-2xl font-semibold text-gray-900 mb-6">
+                  {locale === 'fa' ? 'تصاویر بیشتر' : locale === 'ku' ? 'وێنە زیاتر' : 'More Images'}
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {article.images.map((imageUrl, index) => (
                     <div key={index} className="relative w-full h-64 bg-gray-200 rounded-lg overflow-hidden">
                       <Image
                         src={imageUrl}
-                        alt={`${article.title} - وێنەی ${index + 1}`}
+                        alt={`${article.title} - ${locale === 'fa' ? 'تصویر' : locale === 'ku' ? 'وێنە' : 'Image'} ${index + 1}`}
                         fill
                         className="object-cover"
                         sizes="(max-width: 768px) 100vw, 50vw"
@@ -315,155 +324,153 @@ export default function NewsDetail({
                 </div>
               </div>
             )}
-          </div>
+        </div>
 
-          {/* Share Buttons */}
-          <div className="mt-8 pt-8 border-t border-slate-200">
-            <h3 className="text-lg font-semibold text-slate-900 mb-4">
-              {locale === 'fa' ? 'اشتراک‌گذاری' : locale === 'ku' ? 'هاوبەشکردن' : 'Share'}
+        {/* Share Buttons */}
+        <div className="mt-12 pt-8 border-t border-gray-200">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            {locale === 'fa' ? 'اشتراک‌گذاری' : locale === 'ku' ? 'هاوبەشکردن' : 'Share'}
+          </h3>
+          <div className="flex flex-wrap items-center gap-3">
+            {/* Facebook Share */}
+            <a
+              href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(typeof window !== 'undefined' ? window.location.href : `/${locale}/news/${resolvedParams.slug}`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded border border-blue-200 bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors"
+            >
+              <Facebook className="h-4 w-4" />
+              <span className="text-sm font-medium">Facebook</span>
+            </a>
+
+            {/* Twitter Share */}
+            <a
+              href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(typeof window !== 'undefined' ? window.location.href : `/${locale}/news/${resolvedParams.slug}`)}&text=${encodeURIComponent(article.title)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded border border-gray-200 bg-gray-50 text-gray-600 hover:bg-gray-100 transition-colors"
+            >
+              <Twitter className="h-4 w-4" />
+              <span className="text-sm font-medium">Twitter</span>
+            </a>
+
+            {/* Telegram Share */}
+            <a
+              href={`https://t.me/share/url?url=${encodeURIComponent(typeof window !== 'undefined' ? window.location.href : `/${locale}/news/${resolvedParams.slug}`)}&text=${encodeURIComponent(article.title)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded border border-blue-200 bg-blue-50 text-blue-500 hover:bg-blue-100 transition-colors"
+            >
+              <Send className="h-4 w-4" />
+              <span className="text-sm font-medium">Telegram</span>
+            </a>
+
+            {/* WhatsApp Share */}
+            <a
+              href={`https://wa.me/?text=${encodeURIComponent(`${article.title} ${typeof window !== 'undefined' ? window.location.href : `/${locale}/news/${resolvedParams.slug}`}`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded border border-green-200 bg-green-50 text-green-600 hover:bg-green-100 transition-colors"
+            >
+              <Share2 className="h-4 w-4" />
+              <span className="text-sm font-medium">WhatsApp</span>
+            </a>
+
+            {/* Copy Link */}
+            <button
+              onClick={() => {
+                const url = typeof window !== 'undefined' ? window.location.href : `/${locale}/news/${resolvedParams.slug}`
+                navigator.clipboard.writeText(url).then(() => {
+                  setLinkCopied(true)
+                  setTimeout(() => setLinkCopied(false), 2000)
+                })
+              }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded border border-gray-200 bg-gray-50 text-gray-600 hover:bg-gray-100 transition-colors"
+            >
+              {linkCopied ? (
+                <>
+                  <Check className="h-4 w-4 text-green-600" />
+                  <span className="text-sm font-medium text-green-600">
+                    {locale === 'fa' ? 'کپی شد!' : locale === 'ku' ? 'کۆپی کرا!' : 'Copied!'}
+                  </span>
+                </>
+              ) : (
+                <>
+                  <Copy className="h-4 w-4" />
+                  <span className="text-sm font-medium">
+                    {locale === 'fa' ? 'کپی لینک' : locale === 'ku' ? 'کۆپی لینک' : 'Copy Link'}
+                  </span>
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Author Social Media Links */}
+        {(article.authorInstagram || article.authorFacebook || article.authorTwitter || article.authorTelegram || article.authorYoutube) && (
+          <div className="mt-8 pt-8 border-t border-gray-200">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              {locale === 'fa' ? 'شبکه‌های اجتماعی نویسنده' : locale === 'ku' ? 'تۆرەکۆمەڵایەتییەکانی نووسەر' : 'Author Social Media'}
             </h3>
             <div className="flex flex-wrap items-center gap-3">
-              {/* Facebook Share */}
-              <a
-                href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(typeof window !== 'undefined' ? window.location.href : `/${locale}/news/${resolvedParams.slug}`)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-blue-200 bg-blue-50 text-blue-600 hover:bg-blue-100 transition"
-              >
-                <Facebook className="h-4 w-4" />
-                <span className="text-sm font-medium">Facebook</span>
-              </a>
-
-              {/* Twitter Share */}
-              <a
-                href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(typeof window !== 'undefined' ? window.location.href : `/${locale}/news/${resolvedParams.slug}`)}&text=${encodeURIComponent(article.title)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100 transition"
-              >
-                <Twitter className="h-4 w-4" />
-                <span className="text-sm font-medium">Twitter</span>
-              </a>
-
-              {/* Telegram Share */}
-              <a
-                href={`https://t.me/share/url?url=${encodeURIComponent(typeof window !== 'undefined' ? window.location.href : `/${locale}/news/${resolvedParams.slug}`)}&text=${encodeURIComponent(article.title)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-blue-200 bg-blue-50 text-blue-500 hover:bg-blue-100 transition"
-              >
-                <Send className="h-4 w-4" />
-                <span className="text-sm font-medium">Telegram</span>
-              </a>
-
-              {/* WhatsApp Share */}
-              <a
-                href={`https://wa.me/?text=${encodeURIComponent(`${article.title} ${typeof window !== 'undefined' ? window.location.href : `/${locale}/news/${resolvedParams.slug}`}`)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-green-200 bg-green-50 text-green-600 hover:bg-green-100 transition"
-              >
-                <Share2 className="h-4 w-4" />
-                <span className="text-sm font-medium">WhatsApp</span>
-              </a>
-
-              {/* Copy Link */}
-              <button
-                onClick={() => {
-                  const url = typeof window !== 'undefined' ? window.location.href : `/${locale}/news/${resolvedParams.slug}`
-                  navigator.clipboard.writeText(url).then(() => {
-                    setLinkCopied(true)
-                    setTimeout(() => setLinkCopied(false), 2000)
-                  })
-                }}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100 transition"
-              >
-                {linkCopied ? (
-                  <>
-                    <Check className="h-4 w-4 text-green-600" />
-                    <span className="text-sm font-medium text-green-600">
-                      {locale === 'fa' ? 'کپی شد!' : locale === 'ku' ? 'کۆپی کرا!' : 'Copied!'}
-                    </span>
-                  </>
-                ) : (
-                  <>
-                    <Copy className="h-4 w-4" />
-                    <span className="text-sm font-medium">
-                      {locale === 'fa' ? 'کپی لینک' : locale === 'ku' ? 'کۆپی لینک' : 'Copy Link'}
-                    </span>
-                  </>
-                )}
-              </button>
+              {article.authorInstagram && (
+                <a
+                  href={article.authorInstagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded border border-pink-200 bg-pink-50 text-pink-600 hover:bg-pink-100 transition-colors"
+                >
+                  <Instagram className="h-4 w-4" />
+                  <span className="text-sm font-medium">Instagram</span>
+                </a>
+              )}
+              {article.authorFacebook && (
+                <a
+                  href={article.authorFacebook}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded border border-blue-200 bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors"
+                >
+                  <Facebook className="h-4 w-4" />
+                  <span className="text-sm font-medium">Facebook</span>
+                </a>
+              )}
+              {article.authorTwitter && (
+                <a
+                  href={article.authorTwitter}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded border border-gray-200 bg-gray-50 text-gray-600 hover:bg-gray-100 transition-colors"
+                >
+                  <Twitter className="h-4 w-4" />
+                  <span className="text-sm font-medium">Twitter</span>
+                </a>
+              )}
+              {article.authorTelegram && (
+                <a
+                  href={article.authorTelegram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded border border-blue-200 bg-blue-50 text-blue-500 hover:bg-blue-100 transition-colors"
+                >
+                  <Send className="h-4 w-4" />
+                  <span className="text-sm font-medium">Telegram</span>
+                </a>
+              )}
+              {article.authorYoutube && (
+                <a
+                  href={article.authorYoutube}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded border border-red-200 bg-red-50 text-red-600 hover:bg-red-100 transition-colors"
+                >
+                  <Youtube className="h-4 w-4" />
+                  <span className="text-sm font-medium">YouTube</span>
+                </a>
+              )}
             </div>
           </div>
-
-          {/* Author Social Media Links */}
-          {(article.authorInstagram || article.authorFacebook || article.authorTwitter || article.authorTelegram || article.authorYoutube) && (
-            <div className="mt-8 pt-8 border-t border-slate-200">
-              <h3 className="text-lg font-semibold text-slate-900 mb-4">
-                {locale === 'fa' ? 'شبکه‌های اجتماعی نویسنده' : locale === 'ku' ? 'تۆرەکۆمەڵایەتییەکانی نووسەر' : 'Author Social Media'}
-              </h3>
-              <div className="flex flex-wrap items-center gap-3">
-                {article.authorInstagram && (
-                  <a
-                    href={article.authorInstagram}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-pink-200 bg-pink-50 text-pink-600 hover:bg-pink-100 transition"
-                  >
-                    <Instagram className="h-4 w-4" />
-                    <span className="text-sm font-medium">Instagram</span>
-                  </a>
-                )}
-                {article.authorFacebook && (
-                  <a
-                    href={article.authorFacebook}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-blue-200 bg-blue-50 text-blue-600 hover:bg-blue-100 transition"
-                  >
-                    <Facebook className="h-4 w-4" />
-                    <span className="text-sm font-medium">Facebook</span>
-                  </a>
-                )}
-                {article.authorTwitter && (
-                  <a
-                    href={article.authorTwitter}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100 transition"
-                  >
-                    <Twitter className="h-4 w-4" />
-                    <span className="text-sm font-medium">Twitter</span>
-                  </a>
-                )}
-                {article.authorTelegram && (
-                  <a
-                    href={article.authorTelegram}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-blue-200 bg-blue-50 text-blue-500 hover:bg-blue-100 transition"
-                  >
-                    <Send className="h-4 w-4" />
-                    <span className="text-sm font-medium">Telegram</span>
-                  </a>
-                )}
-                {article.authorYoutube && (
-                  <a
-                    href={article.authorYoutube}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-red-200 bg-red-50 text-red-600 hover:bg-red-100 transition"
-                  >
-                    <Youtube className="h-4 w-4" />
-                    <span className="text-sm font-medium">YouTube</span>
-                  </a>
-                )}
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
+        )}
     </article>
   )
 }
