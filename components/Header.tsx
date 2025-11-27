@@ -77,7 +77,7 @@ export default function Header() {
   }
 
   const languages = [
-    { code: 'ku', name: tCommon('kurdish'), flag: '🇹🇯' },
+    { code: 'ku', name: tCommon('kurdish'), flag: '🏴' }, // Kurdistan flag
     { code: 'fa', name: tCommon('persian') },
     { code: 'en', name: tCommon('english'), flag: '🇬🇧' },
   ]
@@ -111,6 +111,7 @@ export default function Header() {
                   onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
                   className="flex items-center gap-1 text-sm hover:text-blue-400 transition-colors"
                 >
+                  {currentLanguage.flag && <span>{currentLanguage.flag}</span>}
                   {currentLanguage.name}
                 </button>
                 {isLangMenuOpen && (
@@ -168,6 +169,7 @@ export default function Header() {
                             lang.code === locale ? 'bg-gray-700 text-white' : 'text-gray-300'
                           }`}
                         >
+                          {lang.flag && <span className="text-base">{lang.flag}</span>}
                           <span>{lang.name}</span>
                         </button>
                       )
