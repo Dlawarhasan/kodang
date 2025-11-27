@@ -76,34 +76,21 @@ export default function Home() {
   }, [news, selectedCategory, searchQuery])
 
   // Get posts by section
-  // Check for section field (might be undefined for old posts)
   const heroArticles = filteredNews.filter((item: any) => item.section === 'hero')
   const breakingArticles = filteredNews.filter((item: any) => item.section === 'breaking')
   const generalArticles = filteredNews.filter((item: any) => !item.section || item.section === 'general' || item.section === null)
 
-  // Sort all news by date (newest first) for breaking news
+  // Sort all news by date (newest first)
   const sortedNews = [...filteredNews].sort((a: any, b: any) => {
     const dateA = new Date(a.date || 0).getTime()
     const dateB = new Date(b.date || 0).getTime()
     return dateB - dateA
   })
 
-  // Debug logging
-  useEffect(() => {
-    console.log('News sections:', {
-      total: filteredNews.length,
-      hero: heroArticles.length,
-      breaking: breakingArticles.length,
-      general: generalArticles.length,
-      allSections: filteredNews.map((n: any) => ({ slug: n.slug, section: n.section, title: n.title?.substring(0, 30) })),
-    })
-  }, [filteredNews, heroArticles, breakingArticles, generalArticles])
-
   // Use first hero article, or first general article as fallback
   const heroArticle = heroArticles.length > 0 ? heroArticles[0] : (generalArticles.length > 0 ? generalArticles[0] : null)
   
-  // Breaking news: Show posts with section='breaking' OR newest posts (auto-include new posts)
-  // Get newest posts (last 24 hours or last 10 posts, whichever is more)
+  // Breaking news: Show posts with section='breaking' OR newest posts
   const now = new Date().getTime()
   const oneDayAgo = now - (24 * 60 * 60 * 1000)
   const newestPosts = sortedNews.filter((item: any) => {
@@ -111,18 +98,15 @@ export default function Home() {
     return postDate >= oneDayAgo
   }).slice(0, 10)
   
-  // Combine breaking articles with newest posts, remove duplicates
   const allBreakingCandidates = [...breakingArticles, ...newestPosts]
   const uniqueBreaking = allBreakingCandidates.filter((item, index, self) => 
     index === self.findIndex((t) => t.slug === item.slug)
   )
   
-  // Exclude hero article from breaking news
   const breakingItems = uniqueBreaking
     .filter((item: any) => item.slug !== heroArticle?.slug)
-    .slice(0, 10) // Limit to 10 items
-  // Remaining news: Show all posts except hero article
-  // Posts in breaking news should also appear in the main list
+    .slice(0, 10)
+
   const remainingNews = filteredNews.filter((item: any) => 
     item.slug !== heroArticle?.slug
   )
@@ -227,7 +211,6 @@ export default function Home() {
 
           {/* Main Content Column */}
           <div className="lg:col-span-3 space-y-6">
-
             {/* Featured Article - Large */}
             {heroArticle && (
               <article className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
@@ -321,84 +304,29 @@ export default function Home() {
               </section>
             )}
 
-          {/* News Grid */}
-          <section>
-            {searchQuery && (
-              <div className="mb-4">
-                <h2 className="text-xl font-bold text-gray-900 mb-2">
-                  {t('searchResults')}: &quot;{searchQuery}&quot;
-                </h2>
-                {remainingNews.length === 0 && (
-                  <p className="text-gray-600">{t('noResults')}</p>
-                )}
-              </div>
-            )}
-            {remainingNews.length > 0 ? (
-              <NewsList news={remainingNews} />
-            ) : searchQuery ? (
-              <div className="text-center py-12">
-                <p className="text-gray-600">{t('noResults')}</p>
-              </div>
-            ) : null}
-          </section>
-        </div>
-
-        {/* Sidebar */}
-        <aside className="lg:col-span-1 space-y-6">
-          {/* Latest News */}
-          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-            <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4 pb-2 border-b border-gray-200 dark:border-gray-700">
-              {locale === 'fa' ? 'آخرین اخبار' : locale === 'ku' ? 'دوایین هەواڵەکان' : 'Latest News'}
-            </h3>
-            <div className="space-y-4">
-              {sortedNews.slice(0, 5).map((item) => (
-                <Link
-                  key={item.id}
-                  href={`/${locale}/news/${item.slug}`}
-                  className="block group"
-                >
-                  {item.image && (
-                    <div className="relative w-full h-24 mb-2 bg-gray-100 rounded overflow-hidden">
-                      <Image
-                        src={item.image}
-                        alt={item.title}
-                        fill
-                        className="object-cover"
-                        sizes="300px"
-                      />
-                    </div>
+            {/* News Grid */}
+            <section>
+              {searchQuery && (
+                <div className="mb-4">
+                  <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+                    {t('searchResults')}: &quot;{searchQuery}&quot;
+                  </h2>
+                  {remainingNews.length === 0 && (
+                    <p className="text-gray-600 dark:text-gray-400">{t('noResults')}</p>
                   )}
-                  <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors line-clamp-2">
-                    {item.title}
-                  </h4>
-                  <span className="text-xs text-gray-500 dark:text-gray-400 mt-1 block">
-                    {formatDate(item.date, locale)}
-                  </span>
-                </Link>
-              ))}
-            </div>
+                </div>
+              )}
+              {remainingNews.length > 0 ? (
+                <NewsList news={remainingNews} />
+              ) : searchQuery ? (
+                <div className="text-center py-12">
+                  <p className="text-gray-600 dark:text-gray-400">{t('noResults')}</p>
+                </div>
+              ) : null}
+            </section>
           </div>
-
-          {/* Categories */}
-          <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-            <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4 pb-2 border-b border-gray-200 dark:border-gray-700">
-              {locale === 'fa' ? 'دسته‌بندی‌ها' : locale === 'ku' ? 'پۆلەکان' : 'Categories'}
-            </h3>
-            <div className="space-y-2">
-              {['politics', 'social', 'culture', 'health'].map((cat) => (
-                <Link
-                  key={cat}
-                  href={`/${locale}?category=${cat}`}
-                  className="block text-sm text-gray-700 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 transition-colors py-1"
-                >
-                  {getCategoryName(cat, locale)}
-                </Link>
-              ))}
-            </div>
-          </div>
-        </aside>
+        </div>
       </div>
     </div>
   )
 }
-
