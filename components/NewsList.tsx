@@ -82,9 +82,9 @@ export default function NewsList({ news }: NewsListProps) {
               <div className="flex-1 space-y-3">
 
                 {/* Meta Information */}
-                <div className="flex items-center gap-4 text-sm text-gray-600">
+                <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
                   {item.category && (
-                    <span className="inline-block px-2 py-1 bg-red-50 text-red-700 text-xs font-semibold rounded">
+                    <span className="inline-block px-2 py-1 bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 text-xs font-semibold rounded">
                       {getCategoryName(item.category, locale)}
                     </span>
                   )}
@@ -99,12 +99,12 @@ export default function NewsList({ news }: NewsListProps) {
                 </div>
 
                 {/* Title */}
-                <h2 className="text-2xl md:text-3xl font-bold leading-tight text-gray-900 group-hover:text-red-600 transition-colors duration-200">
+                <h2 className="text-2xl md:text-3xl font-bold leading-tight text-gray-900 dark:text-gray-100 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors duration-200">
                   {item.title}
                 </h2>
 
                 {/* Excerpt */}
-                <p className="text-gray-600 leading-relaxed line-clamp-2">
+                <p className="text-gray-600 dark:text-gray-300 leading-relaxed line-clamp-2">
                   {item.excerpt}
                 </p>
 
