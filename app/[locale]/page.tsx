@@ -124,28 +124,28 @@ export default function Home() {
       <div className="container mx-auto px-4 py-6 max-w-7xl">
         {/* Main Content Grid - Iran International Style */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* Main Content Column */}
-          <div className="lg:col-span-3 space-y-6">
-            {/* Most Viewed Section - Left Side */}
+          {/* Left Sidebar */}
+          <aside className="lg:col-span-1 space-y-6">
+            {/* Most Viewed Section */}
             <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
               <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100 mb-4 pb-2 border-b border-gray-200 dark:border-gray-700">
                 {locale === 'fa' ? 'پربازدیدترین ها' : locale === 'ku' ? 'زۆرترین بینراو' : 'Most Viewed'}
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {sortedNews.slice(0, 6).map((item) => (
+              <div className="space-y-4">
+                {sortedNews.slice(0, 5).map((item) => (
                   <Link
                     key={item.id}
                     href={`/${locale}/news/${item.slug}`}
                     className="block group"
                   >
                     {item.image && (
-                      <div className="relative w-full h-32 mb-2 bg-gray-100 dark:bg-gray-700 rounded overflow-hidden">
+                      <div className="relative w-full h-24 mb-2 bg-gray-100 dark:bg-gray-700 rounded overflow-hidden">
                         <Image
                           src={item.image}
                           alt={item.title}
                           fill
                           className="object-cover"
-                          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                          sizes="300px"
                         />
                       </div>
                     )}
@@ -159,6 +159,10 @@ export default function Home() {
                 ))}
               </div>
             </div>
+          </aside>
+
+          {/* Main Content Column */}
+          <div className="lg:col-span-3 space-y-6">
             {/* Featured Article - Large */}
             {heroArticle && (
               <article className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
