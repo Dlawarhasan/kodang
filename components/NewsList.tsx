@@ -66,7 +66,7 @@ export default function NewsList({ news }: NewsListProps) {
                         </span>
                       </div>
                     </>
-                  ) : (
+                  ) : item.image ? (
                     <Image
                       src={item.image}
                       alt={item.title}
@@ -74,7 +74,7 @@ export default function NewsList({ news }: NewsListProps) {
                       className="object-cover"
                       sizes="(max-width: 768px) 100vw, 320px"
                     />
-                  )}
+                  ) : null}
                 </div>
               )}
 
