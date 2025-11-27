@@ -101,7 +101,7 @@ export default function Header() {
       <div className="fixed top-0 left-0 right-0 bg-gray-900 dark:bg-gray-950 text-white text-sm z-40" style={{ borderBottom: '0.1px solid #1f2937' }}>
       
       {/* Top Line - Iran International Style - Full Width */}
-      <div className="fixed top-[25px] left-0 right-0 w-full z-50" style={{ height: '0.5px', background: 'linear-gradient(to right, #2563eb, #3b82f6, #2563eb)' }}></div>
+      <div className="fixed top-[25px] left-0 right-0 w-full h-px bg-gradient-to-r from-blue-600 via-blue-500 to-blue-600 z-50"></div>
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="flex items-center justify-end py-2">
             <div className="flex items-center gap-4">
