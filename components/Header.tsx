@@ -100,16 +100,10 @@ export default function Header() {
       {/* Top Line - Iran International Style - Full Width */}
       <div className="fixed top-0 left-0 right-0 w-full h-1 bg-gradient-to-r from-blue-600 via-blue-500 to-blue-600 z-50"></div>
       
-      {/* Top Bar - Live TV, Language, Icons */}
+      {/* Top Bar - Language, Icons */}
       <div className="bg-gray-900 dark:bg-gray-950 text-white text-sm mt-1">
         <div className="container mx-auto px-4 max-w-7xl">
-          <div className="flex items-center justify-between py-2">
-            <div className="flex items-center gap-4">
-              <Link href="/live" className="flex items-center gap-2 hover:text-blue-400 transition-colors">
-                <Radio className="h-4 w-4" />
-                <span>{locale === 'fa' ? 'پخش زنده' : locale === 'ku' ? 'پەخشی ڕاستەوخۆ' : 'Live TV'}</span>
-              </Link>
-            </div>
+          <div className="flex items-center justify-end py-2">
             <div className="flex items-center gap-4">
               {/* Language Selector - Compact */}
               <div className="relative z-50">
