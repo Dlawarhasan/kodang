@@ -97,11 +97,11 @@ export default function Header() {
 
   return (
     <>
-      {/* Top Line - Iran International Style - Full Width */}
-      <div className="fixed top-[1px] left-0 right-0 w-full h-px bg-gradient-to-r from-blue-600 via-blue-500 to-blue-600 z-50"></div>
-      
       {/* Top Bar - Language, Icons */}
-      <div className="fixed top-[2px] left-0 right-0 bg-gray-900 dark:bg-gray-950 text-white text-sm z-40" style={{ borderBottom: '0.2px solid #1f2937' }}>
+      <div className="fixed top-0 left-0 right-0 bg-gray-900 dark:bg-gray-950 text-white text-sm z-40" style={{ borderBottom: '0.2px solid #1f2937' }}>
+      
+      {/* Top Line - Iran International Style - Full Width */}
+      <div className="fixed top-[25px] left-0 right-0 w-full h-px bg-gradient-to-r from-blue-600 via-blue-500 to-blue-600 z-50"></div>
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="flex items-center justify-end py-2">
             <div className="flex items-center gap-4">
@@ -225,7 +225,7 @@ export default function Header() {
       </div>
 
       {/* Main Navigation Bar */}
-      <header className="bg-blue-900 dark:bg-blue-950 text-white sticky top-[25px] z-30 border-b border-blue-800" style={{ borderWidth: '0.5px' }}>
+      <header className="bg-blue-900 dark:bg-blue-950 text-white sticky top-[26px] z-30 border-b border-blue-800" style={{ borderWidth: '0.5px' }}>
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="flex items-center justify-between gap-4 py-4">
             {/* Logo */}
