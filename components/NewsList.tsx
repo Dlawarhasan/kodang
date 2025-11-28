@@ -31,7 +31,7 @@ export default function NewsList({ news }: NewsListProps) {
       {news.map((item, index) => (
         <article
           key={item.id}
-          className="group border-b border-gray-200 dark:border-gray-700 pb-8 last:border-b-0 hover:border-gray-300 dark:hover:border-gray-600 transition-colors duration-300"
+          className="group border-b border-gray-200 dark:border-gray-700 pb-8 last:border-b-0 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 hover:translate-x-2 hover:shadow-md"
         >
           <Link
             href={`/${locale}/news/${item.slug}${item.video ? '#video' : ''}`}
@@ -41,7 +41,7 @@ export default function NewsList({ news }: NewsListProps) {
 
               {/* Media Section */}
               {(item.image || item.video) && (
-                <div className="relative w-full md:w-80 lg:w-96 aspect-[4/3] flex-shrink-0 overflow-hidden bg-gray-100 rounded-lg">
+                <div className="relative w-full md:w-80 lg:w-96 aspect-[4/3] flex-shrink-0 overflow-hidden bg-gray-100 rounded-lg group-hover:scale-105 transition-transform duration-300">
                   {item.video ? (
                     <>
                       {(() => {

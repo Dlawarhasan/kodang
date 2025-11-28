@@ -127,7 +127,7 @@ export default function Home() {
           <div className="lg:col-span-3 space-y-6">
             {/* Featured Article - Large */}
             {heroArticle && (
-              <article className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+              <article className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
                 <Link href={`/${locale}/news/${heroArticle.slug}${heroArticle.video ? '#video' : ''}`} className="block group">
                   {(heroArticle.image || heroArticle.video) && (
                     <div className="relative w-full aspect-[16/9] mb-4 bg-gray-100 dark:bg-gray-700 overflow-hidden">
