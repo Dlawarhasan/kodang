@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@/lib/supabase'
+import sharp from 'sharp'
 
 // Increase timeout for large video uploads
 export const maxDuration = 300 // 5 minutes
@@ -88,14 +89,91 @@ export async function POST(request: NextRequest) {
       throw new Error(`Bucket "${bucket}" not found. Please create the bucket in Supabase Dashboard → Storage.`)
     }
 
-    // Convert File to ArrayBuffer
-    const arrayBuffer = await file.arrayBuffer()
-    const buffer = Buffer.from(arrayBuffer)
+    // Process image files: resize and optimize
+    let buffer: Buffer
+    let contentType = file.type
+    let finalFileName = fileName
+    
+    if (fileType === 'image' && file.type.startsWith('image/')) {
+      try {
+        const arrayBuffer = await file.arrayBuffer()
+        const originalBuffer = Buffer.from(arrayBuffer)
+        
+        // Get image metadata
+        const metadata = await sharp(originalBuffer).metadata()
+        const { width, height, format } = metadata
+        
+        console.log('Original image:', { width, height, format, size: originalBuffer.length })
+        
+        // Resize if image is too large (max width: 1920px, maintain aspect ratio)
+        const maxWidth = 1920
+        const maxHeight = 1920
+        
+        let processedImage = sharp(originalBuffer)
+        
+        // Resize if needed
+        if (width && height && (width > maxWidth || height > maxHeight)) {
+          processedImage = processedImage.resize(maxWidth, maxHeight, {
+            fit: 'inside',
+            withoutEnlargement: true
+          })
+          console.log('Resizing image to max', maxWidth, 'x', maxHeight)
+        }
+        
+        // Optimize based on format
+        if (format === 'jpeg' || format === 'jpg') {
+          buffer = await processedImage
+            .jpeg({ quality: 85, progressive: true, mozjpeg: true })
+            .toBuffer()
+          contentType = 'image/jpeg'
+          finalFileName = fileName.replace(/\.(png|webp|gif)$/i, '.jpg')
+        } else if (format === 'png') {
+          buffer = await processedImage
+            .png({ quality: 85, compressionLevel: 9 })
+            .toBuffer()
+          contentType = 'image/png'
+        } else if (format === 'webp') {
+          buffer = await processedImage
+            .webp({ quality: 85 })
+            .toBuffer()
+          contentType = 'image/webp'
+        } else {
+          // For other formats, convert to jpeg
+          buffer = await processedImage
+            .jpeg({ quality: 85, progressive: true })
+            .toBuffer()
+          contentType = 'image/jpeg'
+          finalFileName = fileName.replace(/\.[^.]+$/, '.jpg')
+        }
+        
+        const processedMetadata = await sharp(buffer).metadata()
+        console.log('Processed image:', { 
+          width: processedMetadata.width, 
+          height: processedMetadata.height, 
+          format: processedMetadata.format,
+          size: buffer.length,
+          originalSize: originalBuffer.length,
+          reduction: `${((1 - buffer.length / originalBuffer.length) * 100).toFixed(1)}%`
+        })
+      } catch (error: any) {
+        console.error('Image processing error:', error)
+        // Fallback to original if processing fails
+        const arrayBuffer = await file.arrayBuffer()
+        buffer = Buffer.from(arrayBuffer)
+      }
+    } else {
+      // For non-image files, just convert to buffer
+      const arrayBuffer = await file.arrayBuffer()
+      buffer = Buffer.from(arrayBuffer)
+    }
+    
+    // Update filePath with final filename
+    const finalFilePath = `${folder}/${finalFileName}`
 
     const { data, error } = await supabase.storage
       .from(bucket)
-      .upload(filePath, buffer, {
-        contentType: file.type,
+      .upload(finalFilePath, buffer, {
+        contentType: contentType,
         upsert: false
       })
 
@@ -124,14 +202,14 @@ export async function POST(request: NextRequest) {
     // Get public URL
     const { data: urlData } = supabase.storage
       .from(bucket)
-      .getPublicUrl(filePath)
+      .getPublicUrl(finalFilePath)
 
-    console.log('Upload successful:', { bucket, filePath, url: urlData.publicUrl })
+    console.log('Upload successful:', { bucket, filePath: finalFilePath, url: urlData.publicUrl })
 
     return NextResponse.json({
       success: true,
       url: urlData.publicUrl,
-      path: filePath
+      path: finalFilePath
     }, {
       headers: {
         'Content-Type': 'application/json',
