@@ -303,13 +303,14 @@ export default function Home() {
                     className="block group"
                   >
                     {item.image && (
-                      <div className="relative w-full h-24 mb-2 bg-gray-100 dark:bg-gray-700 rounded overflow-hidden">
+                      <div className="relative w-full aspect-[16/9] mb-2 bg-gray-100 dark:bg-gray-700 rounded overflow-hidden">
                         <Image
                           src={item.image}
                           alt={item.title}
                           fill
                           className="object-cover"
                           sizes="300px"
+                          style={{ objectFit: 'cover' }}
                         />
                       </div>
                     )}
