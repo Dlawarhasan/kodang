@@ -11,6 +11,7 @@ import Image from 'next/image'
 export default function AdminPage() {
   const locale = useLocale()
   const t = useTranslations('admin')
+  const tCategories = useTranslations('categories')
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [isCheckingAuth, setIsCheckingAuth] = useState(true)
   const [loginUsername, setLoginUsername] = useState('')
@@ -364,8 +365,8 @@ export default function AdminPage() {
         const sizeMB = (file.size / 1024 / 1024).toFixed(2)
         const maxSizeMB = (maxSize / 1024 / 1024).toFixed(0)
         const errorMsg = type === 'video' 
-          ? `قەبارەی ڤیدیۆ (${sizeMB}MB) زۆر گەورەیە. تکایە فایلی بچووکتر هەڵبژێرە (کەمتر لە ${maxSizeMB}MB)`
-          : `قەبارەی فایل (${sizeMB}MB) زۆر گەورەیە. تکایە فایلی بچووکتر هەڵبژێرە (کەمتر لە ${maxSizeMB}MB)`
+          ? t('videoTooLarge').replace('{size}', sizeMB).replace('{maxSize}', maxSizeMB)
+          : t('fileTooLarge').replace('{size}', sizeMB).replace('{maxSize}', maxSizeMB)
         setMessage({ type: 'error', text: errorMsg })
         return null
       }
@@ -597,10 +598,10 @@ export default function AdminPage() {
       setMessage({ 
         type: 'error', 
         text: locale === 'fa' 
-          ? 'لطفاً همه فیلدهای فارسی را پر کنید (عنوان، خلاصه، محتوا)' 
+          ? t('farsiFieldsRequired')
           : locale === 'ku'
-          ? 'تکایە هەموو فیلدە کوردییەکان پڕ بکەوە (ناونیشان، پوختە، ناوەرۆک)'
-          : 'Please fill all English fields (title, excerpt, content)'
+          ? t('kurdishFieldsRequired')
+          : t('englishFieldsRequired')
       })
       return
     }
@@ -1232,24 +1233,24 @@ export default function AdminPage() {
           {/* Category */}
           <div>
             <label className="block text-sm font-semibold text-slate-700 mb-2">
-              بابەت
+              {t('category')}
             </label>
             <select
               value={formData.category}
               onChange={(e) => setFormData({ ...formData, category: e.target.value })}
               className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
             >
-              <option value="social">کۆمەڵایەتی</option>
-              <option value="politics">سیاسی</option>
-              <option value="culture">کلتور</option>
-              <option value="health">تەندروستی</option>
-              <option value="women">ژنان</option>
-              <option value="workers">کارگر</option>
-              <option value="kolbar">کۆڵبەر</option>
-              <option value="children">منداڵان</option>
-              <option value="arrest">دەستبەسەرکردن</option>
-              <option value="students">خوێندکار</option>
-              <option value="suicide">خۆکوژی</option>
+              <option value="social">{tCategories('social')}</option>
+              <option value="politics">{tCategories('politics')}</option>
+              <option value="culture">{tCategories('culture')}</option>
+              <option value="health">{tCategories('health')}</option>
+              <option value="women">{tCategories('women')}</option>
+              <option value="workers">{tCategories('workers')}</option>
+              <option value="kolbar">{tCategories('kolbar')}</option>
+              <option value="children">{tCategories('children')}</option>
+              <option value="arrest">{tCategories('arrest')}</option>
+              <option value="students">{tCategories('students')}</option>
+              <option value="suicide">{tCategories('suicide')}</option>
             </select>
           </div>
 
@@ -1507,7 +1508,7 @@ export default function AdminPage() {
         {locale === 'fa' && (
         <div className="border-t border-slate-200 pt-6">
           <h2 className="text-xl font-bold text-slate-900 mb-4">
-            {t('farsi')} <span className="text-red-500 text-sm">(الزامی)</span>
+            {t('farsi')} <span className="text-red-500 text-sm">({t('required')})</span>
           </h2>
           <div className="space-y-4">
             <div>
@@ -1542,7 +1543,7 @@ export default function AdminPage() {
         {locale === 'ku' && (
         <div className="border-t border-slate-200 pt-6">
           <h2 className="text-xl font-bold text-slate-900 mb-4">
-            {t('kurdish')} <span className="text-red-500 text-sm">(پێویست)</span>
+            {t('kurdish')} <span className="text-red-500 text-sm">({t('required')})</span>
           </h2>
           <div className="space-y-4">
             <div>
@@ -1577,7 +1578,7 @@ export default function AdminPage() {
         {locale === 'en' && (
         <div className="border-t border-slate-200 pt-6">
           <h2 className="text-xl font-bold text-slate-900 mb-4">
-            {t('english')} <span className="text-red-500 text-sm">(Required)</span>
+            {t('english')} <span className="text-red-500 text-sm">({t('required')})</span>
           </h2>
           <div className="space-y-4">
             <div>
@@ -1639,12 +1640,12 @@ export default function AdminPage() {
         </div>
 
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
-          <p className="font-semibold mb-2">رێنمایی:</p>
+          <p className="font-semibold mb-2">{t('instructions')}</p>
           <ol className="list-decimal list-inside space-y-1">
-            <li>فۆرمەکە پڕ بکەوە</li>
-            <li>وێنە upload بکە (یان لینکی وێنە بنووسە)</li>
-            <li>کلیک لە &quot;پۆست زیاد بکە&quot; بکە</li>
-            <li>پۆستەکە خۆکار لە database زیاد دەبێت</li>
+            <li>{t('instruction1')}</li>
+            <li>{t('instruction2')}</li>
+            <li>{t('instruction3')}</li>
+            <li>{t('instruction4')}</li>
           </ol>
         </div>
       </div>

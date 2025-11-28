@@ -142,14 +142,22 @@
     "generalSection": "General Section",
     "heroSection": "Hero/Top Story",
     "breakingSection": "Breaking News",
-    "tags": "Tags",
     "upload": "Upload",
     "orLink": "or Link",
     "confirmDelete": "Are you sure you want to delete this post?",
     "confirmDeleteUser": "Are you sure you want to delete this user?",
     "usernamePasswordRequired": "Username and password are required",
-    "farsiFieldsRequired": "Please fill in the Farsi title, excerpt, and content",
-    "views": "views"
+    "farsiFieldsRequired": "Please fill in the Farsi title and content",
+    "kurdishFieldsRequired": "Please fill in the Kurdish title and content",
+    "englishFieldsRequired": "Please fill in the English title and content",
+    "views": "views",
+    "instructions": "Instructions:",
+    "instruction1": "Fill out the form",
+    "instruction2": "Upload an image (or enter image link)",
+    "instruction3": "Click \"Add Post\"",
+    "instruction4": "The post will be automatically added to the database",
+    "fileTooLarge": "File size ({size}MB) is too large. Please select a smaller file (less than {maxSize}MB)",
+    "videoTooLarge": "Video size ({size}MB) is too large. Please select a smaller file (less than {maxSize}MB)"
   }
 }
 
