@@ -130,7 +130,7 @@ export default function Home() {
               <article className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
                 <Link href={`/${locale}/news/${heroArticle.slug}${heroArticle.video ? '#video' : ''}`} className="block group">
                   {(heroArticle.image || heroArticle.video) && (
-                    <div className="relative w-full h-96 mb-4 bg-gray-100 dark:bg-gray-700 overflow-hidden">
+                    <div className="relative w-full aspect-[16/9] mb-4 bg-gray-100 dark:bg-gray-700 overflow-hidden">
                       {heroArticle.video ? (
                         <>
                           {(() => {
@@ -145,6 +145,7 @@ export default function Home() {
                                 priority
                                 className="object-cover"
                                 sizes="(max-width: 768px) 100vw, 900px"
+                                style={{ objectFit: 'cover' }}
                                 onError={(e) => {
                                   // Fallback to hqdefault if maxresdefault fails
                                   const videoId = heroArticle.video ? getYouTubeVideoId(heroArticle.video) : null

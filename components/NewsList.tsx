@@ -41,7 +41,7 @@ export default function NewsList({ news }: NewsListProps) {
 
               {/* Media Section */}
               {(item.image || item.video) && (
-                <div className="relative w-full md:w-80 lg:w-96 h-64 md:h-48 lg:h-56 flex-shrink-0 overflow-hidden bg-gray-100 rounded-lg">
+                <div className="relative w-full md:w-80 lg:w-96 aspect-[4/3] flex-shrink-0 overflow-hidden bg-gray-100 rounded-lg">
                   {item.video ? (
                     <>
                       {(() => {
@@ -55,6 +55,7 @@ export default function NewsList({ news }: NewsListProps) {
                             fill
                             className="object-cover"
                             sizes="(max-width: 768px) 100vw, 320px"
+                            style={{ objectFit: 'cover' }}
                             onError={(e) => {
                               // Fallback to hqdefault if maxresdefault fails
                               const videoId = item.video ? getYouTubeVideoId(item.video) : null
@@ -111,6 +112,7 @@ export default function NewsList({ news }: NewsListProps) {
                       fill
                       className="object-cover"
                       sizes="(max-width: 768px) 100vw, 320px"
+                      style={{ objectFit: 'cover' }}
                     />
                   ) : null}
                 </div>
