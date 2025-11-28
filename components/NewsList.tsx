@@ -31,7 +31,7 @@ export default function NewsList({ news }: NewsListProps) {
       {news.map((item, index) => (
         <article
           key={item.id}
-          className="group border-b border-gray-200 dark:border-gray-700 pb-8 last:border-b-0 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-300 hover:translate-x-2 hover:shadow-md"
+          className="group border-b border-gray-200 dark:border-gray-700 pb-8 last:border-b-0 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-500 ease-out hover:translate-x-3 hover:shadow-lg hover:bg-gray-50 dark:hover:bg-gray-800/50 rounded-lg px-2 -mx-2"
         >
           <Link
             href={`/${locale}/news/${item.slug}${item.video ? '#video' : ''}`}
@@ -41,7 +41,7 @@ export default function NewsList({ news }: NewsListProps) {
 
               {/* Media Section */}
               {(item.image || item.video) && (
-                <div className="relative w-full md:w-80 lg:w-96 aspect-[4/3] flex-shrink-0 overflow-hidden bg-gray-100 rounded-lg group-hover:scale-105 transition-transform duration-300">
+                <div className="relative w-full md:w-80 lg:w-96 aspect-[4/3] flex-shrink-0 overflow-hidden bg-gray-100 rounded-lg group-hover:scale-110 group-hover:shadow-xl transition-all duration-500 ease-out">
                   {item.video ? (
                     <>
                       {(() => {
@@ -53,7 +53,7 @@ export default function NewsList({ news }: NewsListProps) {
                             src={thumbnailUrl}
                             alt={item.title}
                             fill
-                            className="object-cover"
+                            className="object-cover transition-transform duration-700 ease-out group-hover:scale-125"
                             sizes="(max-width: 768px) 100vw, 320px"
                             style={{ objectFit: 'cover' }}
                             onError={(e) => {
@@ -93,9 +93,9 @@ export default function NewsList({ news }: NewsListProps) {
                           <div className="absolute inset-0 bg-gray-200" />
                         )
                       })()}
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-                        <div className="bg-red-600 rounded-full p-4 shadow-lg">
-                          <Play className="h-6 w-6 text-white fill-white ml-1" />
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/40 transition-colors duration-300">
+                        <div className="bg-red-600 rounded-full p-4 shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:shadow-2xl">
+                          <Play className="h-6 w-6 text-white fill-white ml-1 transition-transform duration-300 group-hover:scale-110" />
                         </div>
                       </div>
                       <div className="absolute top-3 right-3">
@@ -110,7 +110,7 @@ export default function NewsList({ news }: NewsListProps) {
                       src={item.image}
                       alt={item.title}
                       fill
-                      className="object-cover"
+                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-125"
                       sizes="(max-width: 768px) 100vw, 320px"
                       style={{ objectFit: 'cover' }}
                     />
@@ -139,7 +139,7 @@ export default function NewsList({ news }: NewsListProps) {
                 </div>
 
                 {/* Title */}
-                <h2 className="text-base md:text-lg font-bold leading-snug text-gray-900 dark:text-gray-100 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors duration-200">
+                <h2 className="text-base md:text-lg font-bold leading-snug text-gray-900 dark:text-gray-100 group-hover:text-red-600 dark:group-hover:text-red-400 transition-all duration-300 group-hover:translate-x-1">
                   {item.title}
                 </h2>
 

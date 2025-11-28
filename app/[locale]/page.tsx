@@ -127,10 +127,10 @@ export default function Home() {
           <div className="lg:col-span-3 space-y-6">
             {/* Featured Article - Large */}
             {heroArticle && (
-              <article className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+              <article className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden transition-all duration-500 ease-out hover:shadow-2xl hover:-translate-y-2 hover:scale-[1.02]">
                 <Link href={`/${locale}/news/${heroArticle.slug}${heroArticle.video ? '#video' : ''}`} className="block group">
                   {(heroArticle.image || heroArticle.video) && (
-                    <div className="relative w-full aspect-[16/9] mb-4 bg-gray-100 dark:bg-gray-700 overflow-hidden">
+                    <div className="relative w-full aspect-[16/9] mb-4 bg-gray-100 dark:bg-gray-700 overflow-hidden group-hover:overflow-visible">
                       {heroArticle.video ? (
                         <>
                           {(() => {
@@ -143,7 +143,7 @@ export default function Home() {
                                 alt={heroArticle.title}
                                 fill
                                 priority
-                                className="object-cover"
+                                className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                                 sizes="(max-width: 768px) 100vw, 900px"
                                 style={{ objectFit: 'cover' }}
                                 onError={(e) => {
@@ -183,9 +183,9 @@ export default function Home() {
                               <div className="absolute inset-0 bg-gray-200 dark:bg-gray-800" />
                             )
                           })()}
-                          <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-                            <div className="bg-red-600 rounded-full p-6">
-                              <Play className="h-10 w-10 text-white fill-white ml-1" />
+                          <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/40 transition-colors duration-300">
+                            <div className="bg-red-600 rounded-full p-6 transition-all duration-300 group-hover:scale-110 group-hover:shadow-2xl">
+                              <Play className="h-10 w-10 text-white fill-white ml-1 transition-transform duration-300 group-hover:scale-110" />
                             </div>
                           </div>
                           <div className="absolute top-4 right-4">
@@ -201,7 +201,7 @@ export default function Home() {
                           alt={heroArticle.title}
                           fill
                           priority
-                          className="object-cover"
+                          className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                           sizes="(max-width: 768px) 100vw, 900px"
                         />
                       ) : null}
@@ -219,10 +219,10 @@ export default function Home() {
                         {formatDate(heroArticle.date, locale)}
                       </span>
                     </div>
-                    <h2 className="text-xl md:text-2xl font-bold leading-snug text-gray-900 dark:text-gray-100 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">
+                    <h2 className="text-xl md:text-2xl font-bold leading-snug text-gray-900 dark:text-gray-100 group-hover:text-red-600 dark:group-hover:text-red-400 transition-all duration-300 group-hover:translate-x-1">
                       {heroArticle.title}
                     </h2>
-                    <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm">
+                    <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm transition-all duration-300 group-hover:translate-x-1">
                       {(heroArticle.content || '').substring(0, 150)}...
                     </p>
                   </div>
