@@ -140,6 +140,119 @@ body {
   animation: float 3s ease-in-out infinite;
 }
 
+/* Animated Lines for Posts */
+@keyframes drawLineTop {
+  0% {
+    width: 0;
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    width: 100%;
+    opacity: 1;
+  }
+}
+
+@keyframes drawLineRight {
+  0% {
+    height: 0;
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    height: 100%;
+    opacity: 1;
+  }
+}
+
+@keyframes drawLineBottom {
+  0% {
+    width: 0;
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    width: 100%;
+    opacity: 1;
+  }
+}
+
+@keyframes drawLineLeft {
+  0% {
+    height: 0;
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    height: 100%;
+    opacity: 1;
+  }
+}
+
+.animated-line-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #dc2626, #ef4444, #dc2626);
+  animation: drawLineTop 0.6s ease-out forwards;
+}
+
+.animated-line-right {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 2px;
+  background: linear-gradient(180deg, #dc2626, #ef4444, #dc2626);
+  animation: drawLineRight 0.6s ease-out 0.2s forwards;
+}
+
+.animated-line-bottom {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(270deg, #dc2626, #ef4444, #dc2626);
+  animation: drawLineBottom 0.6s ease-out 0.4s forwards;
+}
+
+.animated-line-left {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  background: linear-gradient(360deg, #dc2626, #ef4444, #dc2626);
+  animation: drawLineLeft 0.6s ease-out 0.6s forwards;
+}
+
+/* Ripple effect on click */
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.ripple-effect {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(220, 38, 38, 0.3);
+  animation: ripple 0.6s ease-out;
+  pointer-events: none;
+}
+
 /* RTL Support */
 [dir="rtl"] {
   direction: rtl;

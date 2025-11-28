@@ -16,10 +16,31 @@ export default function Home() {
   const t = useTranslations('home')
   const locale = useLocale()
   const searchParams = useSearchParams()
+  const [clickedHero, setClickedHero] = useState(false)
+  const [heroRipples, setHeroRipples] = useState<{ id: string; x: number; y: number }[]>([])
+
   const [news, setNews] = useState<NewsItem[]>([])
   const [loading, setLoading] = useState(true)
   const selectedCategory = searchParams.get('category') || 'all'
   const searchQuery = searchParams.get('search') || ''
+
+  const handleHeroClick = (e: React.MouseEvent<HTMLElement>) => {
+    setClickedHero(true)
+    const rect = e.currentTarget.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    
+    const rippleId = `hero-${Date.now()}`
+    setHeroRipples(prev => [...prev, { id: rippleId, x, y }])
+    
+    setTimeout(() => {
+      setHeroRipples(prev => prev.filter(r => r.id !== rippleId))
+    }, 600)
+    
+    setTimeout(() => {
+      setClickedHero(false)
+    }, 1200)
+  }
 
   useEffect(() => {
     setLoading(true)
@@ -127,8 +148,37 @@ export default function Home() {
           <div className="lg:col-span-3 space-y-6">
             {/* Featured Article - Large */}
             {heroArticle && (
-              <article className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden transition-all duration-500 ease-out hover:shadow-2xl hover:-translate-y-2 hover:scale-[1.02]">
-                <Link href={`/${locale}/news/${heroArticle.slug}${heroArticle.video ? '#video' : ''}`} className="block group">
+              <article 
+                className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden transition-all duration-500 ease-out hover:shadow-2xl hover:-translate-y-2 hover:scale-[1.02] relative"
+                onClick={handleHeroClick}
+              >
+                {/* Animated Lines */}
+                {clickedHero && (
+                  <>
+                    <div className="animated-line-top"></div>
+                    <div className="animated-line-right"></div>
+                    <div className="animated-line-bottom"></div>
+                    <div className="animated-line-left"></div>
+                  </>
+                )}
+                
+                {/* Ripple Effects */}
+                {heroRipples.map(ripple => (
+                  <div
+                    key={ripple.id}
+                    className="ripple-effect"
+                    style={{
+                      left: `${ripple.x}px`,
+                      top: `${ripple.y}px`,
+                      width: '30px',
+                      height: '30px',
+                      marginLeft: '-15px',
+                      marginTop: '-15px'
+                    }}
+                  />
+                ))}
+                
+                <Link href={`/${locale}/news/${heroArticle.slug}${heroArticle.video ? '#video' : ''}`} className="block group relative z-10">
                   {(heroArticle.image || heroArticle.video) && (
                     <div className="relative w-full aspect-[16/9] mb-4 bg-gray-100 dark:bg-gray-700 overflow-hidden group-hover:overflow-visible">
                       {heroArticle.video ? (

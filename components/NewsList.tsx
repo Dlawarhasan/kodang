@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useTranslations, useLocale } from 'next-intl'
@@ -17,6 +18,26 @@ export default function NewsList({ news }: NewsListProps) {
   const t = useTranslations('news')
   const tCommon = useTranslations('common')
   const locale = useLocale()
+  const [clickedPost, setClickedPost] = useState<string | null>(null)
+  const [ripples, setRipples] = useState<{ id: string; x: number; y: number }[]>([])
+
+  const handlePostClick = (postId: string, e: React.MouseEvent<HTMLElement>) => {
+    setClickedPost(postId)
+    const rect = e.currentTarget.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    
+    const rippleId = `${postId}-${Date.now()}`
+    setRipples(prev => [...prev, { id: rippleId, x, y }])
+    
+    setTimeout(() => {
+      setRipples(prev => prev.filter(r => r.id !== rippleId))
+    }, 600)
+    
+    setTimeout(() => {
+      setClickedPost(null)
+    }, 1200)
+  }
 
   if (news.length === 0) {
     return (
@@ -31,11 +52,40 @@ export default function NewsList({ news }: NewsListProps) {
       {news.map((item, index) => (
         <article
           key={item.id}
-          className="group border-b border-gray-200 dark:border-gray-700 pb-8 last:border-b-0 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-500 ease-out hover:translate-x-3 hover:shadow-lg hover:bg-gray-50 dark:hover:bg-gray-800/50 rounded-lg px-2 -mx-2"
+          className="group border-b border-gray-200 dark:border-gray-700 pb-8 last:border-b-0 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-500 ease-out hover:translate-x-3 hover:shadow-lg hover:bg-gray-50 dark:hover:bg-gray-800/50 rounded-lg px-2 -mx-2 relative overflow-hidden"
+          onClick={(e) => handlePostClick(item.id, e)}
         >
+          {/* Animated Lines */}
+          {clickedPost === item.id && (
+            <>
+              <div className="animated-line-top"></div>
+              <div className="animated-line-right"></div>
+              <div className="animated-line-bottom"></div>
+              <div className="animated-line-left"></div>
+            </>
+          )}
+          
+          {/* Ripple Effects */}
+          {ripples
+            .filter(r => r.id.startsWith(item.id))
+            .map(ripple => (
+              <div
+                key={ripple.id}
+                className="ripple-effect"
+                style={{
+                  left: `${ripple.x}px`,
+                  top: `${ripple.y}px`,
+                  width: '20px',
+                  height: '20px',
+                  marginLeft: '-10px',
+                  marginTop: '-10px'
+                }}
+              />
+            ))}
+          
           <Link
             href={`/${locale}/news/${item.slug}${item.video ? '#video' : ''}`}
-            className="block"
+            className="block relative z-10"
           >
             <div className="flex flex-col md:flex-row gap-6">
 
