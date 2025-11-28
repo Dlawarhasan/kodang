@@ -31,23 +31,26 @@ export default function VideoPlayer({ videoUrl, title, autoplay = false, thumbna
     }
   }, [])
 
-  // Extract video ID from YouTube URL
-  const getYouTubeEmbedUrl = (url: string) => {
+  // Extract YouTube video ID from URL
+  const getYouTubeVideoId = (url: string): string | null => {
     if (url.includes('youtube.com/embed')) {
-      // Add autoplay parameter if needed
-      if (shouldAutoplay && !url.includes('autoplay=1')) {
-        return url.includes('?') ? `${url}&autoplay=1` : `${url}?autoplay=1`
-      }
-      return url
+      const match = url.match(/youtube\.com\/embed\/([^?&#]+)/)
+      return match ? match[1] : null
     }
     if (url.includes('youtube.com/watch') || url.includes('youtu.be/')) {
-      const videoId = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/)?.[1]
-      if (videoId) {
-        return shouldAutoplay 
-          ? `https://www.youtube.com/embed/${videoId}?autoplay=1`
-          : `https://www.youtube.com/embed/${videoId}`
-      }
-      return url
+      const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/)
+      return match ? match[1] : null
+    }
+    return null
+  }
+
+  // Extract video ID from YouTube URL
+  const getYouTubeEmbedUrl = (url: string) => {
+    const videoId = getYouTubeVideoId(url)
+    if (videoId) {
+      return shouldAutoplay 
+        ? `https://www.youtube.com/embed/${videoId}?autoplay=1`
+        : `https://www.youtube.com/embed/${videoId}`
     }
     // For direct video URLs (Supabase storage), return as is
     return url
@@ -57,6 +60,19 @@ export default function VideoPlayer({ videoUrl, title, autoplay = false, thumbna
 
   // Check if it's a direct video URL (not YouTube)
   const isDirectVideo = !videoUrl.includes('youtube.com') && !videoUrl.includes('youtu.be')
+  
+  // Get YouTube thumbnail URL if no thumbnail is provided
+  const getThumbnailUrl = (): string | null => {
+    if (thumbnail) return thumbnail
+    const videoId = getYouTubeVideoId(videoUrl)
+    if (videoId) {
+      // Try maxresdefault first (best quality), fallback to hqdefault
+      return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
+    }
+    return null
+  }
+
+  const thumbnailUrl = getThumbnailUrl()
 
   const handlePlay = () => {
     setIsPlaying(true)
@@ -69,15 +85,23 @@ export default function VideoPlayer({ videoUrl, title, autoplay = false, thumbna
 
   return (
     <div ref={videoRef} id="video" className="w-full aspect-video bg-gray-100 rounded-lg overflow-hidden shadow-sm relative">
-      {!isPlaying && thumbnail ? (
+      {!isPlaying && thumbnailUrl ? (
         // Show thumbnail with play button
         <div className="relative w-full h-full cursor-pointer" onClick={handlePlay}>
           <Image
-            src={thumbnail}
+            src={thumbnailUrl}
             alt={title}
             fill
             className="object-cover"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+            onError={(e) => {
+              // Fallback to hqdefault if maxresdefault fails
+              const videoId = getYouTubeVideoId(videoUrl)
+              if (videoId && thumbnailUrl?.includes('maxresdefault')) {
+                const target = e.target as HTMLImageElement
+                target.src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
+              }
+            }}
           />
           <div className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/40 transition-colors">
             <div className="bg-red-600 rounded-full p-6 shadow-lg hover:scale-110 transition-transform">
@@ -85,7 +109,7 @@ export default function VideoPlayer({ videoUrl, title, autoplay = false, thumbna
             </div>
           </div>
         </div>
-      ) : !isPlaying && !thumbnail ? (
+      ) : !isPlaying && !thumbnailUrl ? (
         // Show placeholder with play button when no thumbnail
         <div className="relative w-full h-full bg-gray-800 cursor-pointer" onClick={handlePlay}>
           <div className="absolute inset-0 flex items-center justify-center">
