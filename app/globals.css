@@ -204,6 +204,7 @@ body {
   height: 2px;
   background: linear-gradient(90deg, #dc2626, #ef4444, #dc2626);
   animation: drawLineTop 0.6s ease-out forwards;
+  opacity: 0;
 }
 
 .animated-line-right {
@@ -213,6 +214,7 @@ body {
   width: 2px;
   background: linear-gradient(180deg, #dc2626, #ef4444, #dc2626);
   animation: drawLineRight 0.6s ease-out 0.2s forwards;
+  opacity: 0;
 }
 
 .animated-line-bottom {
@@ -222,6 +224,7 @@ body {
   height: 2px;
   background: linear-gradient(270deg, #dc2626, #ef4444, #dc2626);
   animation: drawLineBottom 0.6s ease-out 0.4s forwards;
+  opacity: 0;
 }
 
 .animated-line-left {
@@ -231,6 +234,15 @@ body {
   width: 2px;
   background: linear-gradient(360deg, #dc2626, #ef4444, #dc2626);
   animation: drawLineLeft 0.6s ease-out 0.6s forwards;
+  opacity: 0;
+}
+
+/* Keep lines visible when parent is hovered or clicked */
+.group:hover .animated-line-top,
+.group:hover .animated-line-right,
+.group:hover .animated-line-bottom,
+.group:hover .animated-line-left {
+  opacity: 1;
 }
 
 /* Ripple effect on click */

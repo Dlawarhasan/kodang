@@ -17,6 +17,7 @@ export default function Home() {
   const locale = useLocale()
   const searchParams = useSearchParams()
   const [clickedHero, setClickedHero] = useState(false)
+  const [hoveredHero, setHoveredHero] = useState(false)
   const [heroRipples, setHeroRipples] = useState<{ id: string; x: number; y: number }[]>([])
 
   const [news, setNews] = useState<NewsItem[]>([])
@@ -40,6 +41,14 @@ export default function Home() {
     setTimeout(() => {
       setClickedHero(false)
     }, 1200)
+  }
+
+  const handleHeroHover = () => {
+    setHoveredHero(true)
+  }
+
+  const handleHeroLeave = () => {
+    setHoveredHero(false)
   }
 
   useEffect(() => {
@@ -151,9 +160,11 @@ export default function Home() {
               <article 
                 className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden transition-all duration-500 ease-out hover:shadow-2xl hover:-translate-y-2 hover:scale-[1.02] relative"
                 onClick={handleHeroClick}
+                onMouseEnter={handleHeroHover}
+                onMouseLeave={handleHeroLeave}
               >
-                {/* Animated Lines */}
-                {clickedHero && (
+                {/* Animated Lines - Show on hover or click */}
+                {(hoveredHero || clickedHero) && (
                   <>
                     <div className="animated-line-top"></div>
                     <div className="animated-line-right"></div>

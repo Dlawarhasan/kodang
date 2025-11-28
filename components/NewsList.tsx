@@ -19,6 +19,7 @@ export default function NewsList({ news }: NewsListProps) {
   const tCommon = useTranslations('common')
   const locale = useLocale()
   const [clickedPost, setClickedPost] = useState<string | null>(null)
+  const [hoveredPost, setHoveredPost] = useState<string | null>(null)
   const [ripples, setRipples] = useState<{ id: string; x: number; y: number }[]>([])
 
   const handlePostClick = (postId: string, e: React.MouseEvent<HTMLElement>) => {
@@ -39,6 +40,14 @@ export default function NewsList({ news }: NewsListProps) {
     }, 1200)
   }
 
+  const handlePostHover = (postId: string) => {
+    setHoveredPost(postId)
+  }
+
+  const handlePostLeave = () => {
+    setHoveredPost(null)
+  }
+
   if (news.length === 0) {
     return (
       <div className="text-center py-12">
@@ -54,9 +63,11 @@ export default function NewsList({ news }: NewsListProps) {
           key={item.id}
           className="group border-b border-gray-200 dark:border-gray-700 pb-8 last:border-b-0 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-500 ease-out hover:translate-x-3 hover:shadow-lg hover:bg-gray-50 dark:hover:bg-gray-800/50 rounded-lg px-2 -mx-2 relative overflow-hidden"
           onClick={(e) => handlePostClick(item.id, e)}
+          onMouseEnter={() => handlePostHover(item.id)}
+          onMouseLeave={handlePostLeave}
         >
-          {/* Animated Lines */}
-          {clickedPost === item.id && (
+          {/* Animated Lines - Show on hover or click */}
+          {(hoveredPost === item.id || clickedPost === item.id) && (
             <>
               <div className="animated-line-top"></div>
               <div className="animated-line-right"></div>
