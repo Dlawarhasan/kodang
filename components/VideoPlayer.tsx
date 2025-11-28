@@ -1,16 +1,20 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import Image from 'next/image'
+import { Play } from 'lucide-react'
 
 interface VideoPlayerProps {
   videoUrl: string
   title: string
   autoplay?: boolean
+  thumbnail?: string
 }
 
-export default function VideoPlayer({ videoUrl, title, autoplay = false }: VideoPlayerProps) {
+export default function VideoPlayer({ videoUrl, title, autoplay = false, thumbnail }: VideoPlayerProps) {
   const videoRef = useRef<HTMLDivElement>(null)
   const [shouldAutoplay, setShouldAutoplay] = useState(autoplay)
+  const [isPlaying, setIsPlaying] = useState(autoplay)
 
   useEffect(() => {
     // Check if URL has #video hash (user clicked play button)
@@ -53,9 +57,43 @@ export default function VideoPlayer({ videoUrl, title, autoplay = false }: Video
   // Check if it's a direct video URL (not YouTube)
   const isDirectVideo = !videoUrl.includes('youtube.com') && !videoUrl.includes('youtu.be')
 
+  const handlePlay = () => {
+    setIsPlaying(true)
+    setShouldAutoplay(true)
+    // Update URL hash to #video
+    if (typeof window !== 'undefined') {
+      window.history.replaceState(null, '', '#video')
+    }
+  }
+
   return (
-    <div ref={videoRef} id="video" className="w-full aspect-video bg-gray-100 rounded-lg overflow-hidden shadow-sm">
-      {isDirectVideo ? (
+    <div ref={videoRef} id="video" className="w-full aspect-video bg-gray-100 rounded-lg overflow-hidden shadow-sm relative">
+      {!isPlaying && thumbnail ? (
+        // Show thumbnail with play button
+        <div className="relative w-full h-full cursor-pointer" onClick={handlePlay}>
+          <Image
+            src={thumbnail}
+            alt={title}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+          />
+          <div className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/40 transition-colors">
+            <div className="bg-red-600 rounded-full p-6 shadow-lg hover:scale-110 transition-transform">
+              <Play className="h-10 w-10 text-white fill-white ml-1" />
+            </div>
+          </div>
+        </div>
+      ) : !isPlaying && !thumbnail ? (
+        // Show placeholder with play button when no thumbnail
+        <div className="relative w-full h-full bg-gray-800 cursor-pointer" onClick={handlePlay}>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="bg-red-600 rounded-full p-6 shadow-lg hover:scale-110 transition-transform">
+              <Play className="h-10 w-10 text-white fill-white ml-1" />
+            </div>
+          </div>
+        </div>
+      ) : isDirectVideo ? (
         <video
           src={videoUrl}
           controls

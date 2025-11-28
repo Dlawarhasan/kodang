@@ -239,6 +239,7 @@ export default function NewsDetail({
               videoUrl={article.video} 
               title={article.title}
               autoplay={typeof window !== 'undefined' && window.location.hash === '#video'}
+              thumbnail={article.image}
             />
           </div>
         )}
