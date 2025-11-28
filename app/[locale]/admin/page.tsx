@@ -373,9 +373,28 @@ export default function AdminPage() {
 
       console.log('Uploading file:', { name: file.name, type: file.type, size: file.size, uploadType: type })
 
+      // Process images before upload (resize and optimize)
+      let fileToUpload = file
+      if (type === 'image' && file.type.startsWith('image/')) {
+        try {
+          const { processImageClient } = await import('@/lib/image-processor')
+          const processed = await processImageClient(file, 1920, 1920, 0.85)
+          fileToUpload = processed.file
+          console.log('Image processed:', {
+            original: `${(processed.originalSize / 1024 / 1024).toFixed(2)}MB`,
+            new: `${(processed.newSize / 1024 / 1024).toFixed(2)}MB`,
+            reduction: `${((1 - processed.newSize / processed.originalSize) * 100).toFixed(1)}%`,
+            dimensions: `${processed.width}x${processed.height}`
+          })
+        } catch (error) {
+          console.warn('Image processing failed, using original:', error)
+          // Continue with original file if processing fails
+        }
+      }
+
       // For large files (especially videos), upload directly to Supabase
       // This bypasses Vercel's 4.5MB serverless function limit
-      if (file.size > 4 * 1024 * 1024) { // If file is larger than 4MB, use direct upload
+      if (fileToUpload.size > 4 * 1024 * 1024) { // If file is larger than 4MB, use direct upload
         const { uploadFileDirect } = await import('@/lib/upload-direct')
         const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
         const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
@@ -384,14 +403,14 @@ export default function AdminPage() {
           throw new Error('Supabase configuration missing')
         }
 
-        const result = await uploadFileDirect(file, type, supabaseUrl, supabaseAnonKey)
+        const result = await uploadFileDirect(fileToUpload, type, supabaseUrl, supabaseAnonKey)
         console.log('Direct upload successful:', result.url)
         return result.url
       }
 
       // For smaller files, use API route
       const formData = new FormData()
-      formData.append('file', file)
+      formData.append('file', fileToUpload)
       formData.append('type', type)
 
       const response = await fetch('/api/upload', {
