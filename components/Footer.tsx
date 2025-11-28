@@ -111,7 +111,7 @@ export default function Footer() {
 
           {/* Categories */}
           <div>
-            <h4 className="text-lg font-semibold mb-4">بابەتەکان</h4>
+            <h4 className="text-lg font-semibold mb-4">{tCategories('title')}</h4>
             <ul className="space-y-2">
               {footerLinks.categories.map((link) => (
                 <li key={link.href}>
@@ -128,7 +128,7 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-gray-200 mt-8 pt-8 text-center text-gray-500">
-          <p>© {currentYear} کۆدەنگ. {t('copyright')}.</p>
+          <p>© {currentYear} KODANG. {t('copyright')}.</p>
         </div>
       </div>
     </footer>
