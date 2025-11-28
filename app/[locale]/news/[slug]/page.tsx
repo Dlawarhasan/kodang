@@ -254,7 +254,7 @@ export default function NewsDetail({
           </div>
         )}
         {article.image && !article.video && !article.audio && (
-          <div className="relative w-full h-96 md:h-[500px] mb-8 bg-gray-200 rounded-lg overflow-hidden">
+          <div className="relative w-full aspect-[16/9] mb-8 bg-gray-200 rounded-lg overflow-hidden">
             <Image
               src={article.image}
               alt={article.title}
@@ -262,17 +262,19 @@ export default function NewsDetail({
               className="object-cover"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
               priority
+              style={{ objectFit: 'cover' }}
             />
           </div>
         )}
         {article.image && (article.video || article.audio) && (
-          <div className="relative w-full h-96 md:h-[500px] mb-8 bg-gray-200 rounded-lg overflow-hidden">
+          <div className="relative w-full aspect-[16/9] mb-8 bg-gray-200 rounded-lg overflow-hidden">
             <Image
               src={article.image}
               alt={article.title}
               fill
               className="object-cover"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+              style={{ objectFit: 'cover' }}
             />
           </div>
         )}
