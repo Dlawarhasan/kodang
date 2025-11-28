@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation'
 import { useTranslations, useLocale } from 'next-intl'
 import { getNews, getNewsBySlug, type NewsItem } from '@/lib/news'
 import { translateText } from '@/lib/translate'
-import { Calendar, User, ArrowRight, Instagram, Facebook, Twitter, Send, Youtube, Eye, Languages, Share2, Copy, Check } from 'lucide-react'
+import { Calendar, User, ArrowRight, Instagram, Facebook, Twitter, Send, Youtube, Eye, Languages, Share2, Copy, Check, X, Maximize2 } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { use } from 'react'
@@ -32,6 +32,7 @@ export default function NewsDetail({
     content?: string
   }>({})
   const [linkCopied, setLinkCopied] = useState(false)
+  const [lightboxImage, setLightboxImage] = useState<string | null>(null)
 
   useEffect(() => {
     // Clear article state when locale changes to force re-render
@@ -254,28 +255,44 @@ export default function NewsDetail({
           </div>
         )}
         {article.image && !article.video && !article.audio && (
-          <div className="relative w-full aspect-[16/9] mb-8 bg-gray-200 rounded-lg overflow-hidden">
+          <div 
+            className="relative w-full aspect-[16/9] mb-8 bg-gray-200 rounded-lg overflow-hidden cursor-pointer group"
+            onClick={() => setLightboxImage(article.image || null)}
+          >
             <Image
               src={article.image}
               alt={article.title}
               fill
-              className="object-cover"
+              className="object-cover transition-transform group-hover:scale-105"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
               priority
               style={{ objectFit: 'cover' }}
             />
+            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+              <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-black/50 rounded-full p-3">
+                <Maximize2 className="h-6 w-6 text-white" />
+              </div>
+            </div>
           </div>
         )}
         {article.image && (article.video || article.audio) && (
-          <div className="relative w-full aspect-[16/9] mb-8 bg-gray-200 rounded-lg overflow-hidden">
+          <div 
+            className="relative w-full aspect-[16/9] mb-8 bg-gray-200 rounded-lg overflow-hidden cursor-pointer group"
+            onClick={() => setLightboxImage(article.image || null)}
+          >
             <Image
               src={article.image}
               alt={article.title}
               fill
-              className="object-cover"
+              className="object-cover transition-transform group-hover:scale-105"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
               style={{ objectFit: 'cover' }}
             />
+            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+              <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-black/50 rounded-full p-3">
+                <Maximize2 className="h-6 w-6 text-white" />
+              </div>
+            </div>
           </div>
         )}
 
@@ -303,14 +320,23 @@ export default function NewsDetail({
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {article.images.map((imageUrl, index) => (
-                    <div key={index} className="relative w-full h-64 bg-gray-200 rounded-lg overflow-hidden">
+                    <div 
+                      key={index} 
+                      className="relative w-full aspect-[4/3] bg-gray-200 rounded-lg overflow-hidden cursor-pointer group"
+                      onClick={() => setLightboxImage(imageUrl)}
+                    >
                       <Image
                         src={imageUrl}
                         alt={`${article.title} - ${locale === 'fa' ? 'تصویر' : locale === 'ku' ? 'وێنە' : 'Image'} ${index + 1}`}
                         fill
-                        className="object-cover"
+                        className="object-cover transition-transform group-hover:scale-105"
                         sizes="(max-width: 768px) 100vw, 50vw"
                       />
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                        <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-black/50 rounded-full p-2">
+                          <Maximize2 className="h-5 w-5 text-white" />
+                        </div>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -464,6 +490,33 @@ export default function NewsDetail({
           </div>
         )}
       </article>
+
+      {/* Lightbox Modal */}
+      {lightboxImage && (
+        <div 
+          className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4"
+          onClick={() => setLightboxImage(null)}
+        >
+          <button
+            onClick={() => setLightboxImage(null)}
+            className="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors z-10"
+            aria-label={locale === 'fa' ? 'بستن' : locale === 'ku' ? 'داخستن' : 'Close'}
+          >
+            <X className="h-8 w-8" />
+          </button>
+          <div className="relative max-w-7xl max-h-[90vh] w-full h-full flex items-center justify-center">
+            <Image
+              src={lightboxImage}
+              alt={article.title}
+              width={1920}
+              height={1080}
+              className="max-w-full max-h-[90vh] w-auto h-auto object-contain"
+              sizes="100vw"
+              onClick={(e) => e.stopPropagation()}
+            />
+          </div>
+        </div>
+      )}
     </div>
   )
 }
