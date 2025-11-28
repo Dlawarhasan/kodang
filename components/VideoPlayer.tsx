@@ -22,6 +22,7 @@ export default function VideoPlayer({ videoUrl, title, autoplay = false, thumbna
       const hash = window.location.hash
       if (hash === '#video') {
         setShouldAutoplay(true)
+        setIsPlaying(true)
         // Scroll to video when page loads
         setTimeout(() => {
           videoRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
