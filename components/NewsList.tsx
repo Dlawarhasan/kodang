@@ -7,7 +7,7 @@ import { Calendar, User, ArrowLeft, Play, Facebook, Instagram, Twitter, Share2 }
 import type { NewsItem } from '@/lib/news'
 import { getCategoryName } from '@/lib/category-mapping'
 import { formatDateShort } from '@/lib/date-format'
-import { getYouTubeThumbnail, getYouTubeVideoId } from '@/lib/video-utils'
+import { getYouTubeThumbnail, getYouTubeVideoId, isDirectVideoUrl } from '@/lib/video-utils'
 
 interface NewsListProps {
   news: NewsItem[]
@@ -46,6 +46,8 @@ export default function NewsList({ news }: NewsListProps) {
                     <>
                       {(() => {
                         const thumbnailUrl = item.video ? getYouTubeThumbnail(item.video, item.image) : null
+                        const isDirectVideo = item.video ? isDirectVideoUrl(item.video) : false
+                        
                         return thumbnailUrl ? (
                           <Image
                             src={thumbnailUrl}
@@ -70,6 +72,20 @@ export default function NewsList({ news }: NewsListProps) {
                                   parent.appendChild(placeholder)
                                 }
                               }
+                            }}
+                          />
+                        ) : isDirectVideo ? (
+                          // For direct videos without thumbnail, show video preview
+                          <video
+                            src={item.video!}
+                            className="absolute inset-0 w-full h-full object-cover"
+                            muted
+                            playsInline
+                            preload="metadata"
+                            onLoadedMetadata={(e) => {
+                              // Show first frame
+                              const video = e.target as HTMLVideoElement
+                              video.currentTime = 0.1
                             }}
                           />
                         ) : (

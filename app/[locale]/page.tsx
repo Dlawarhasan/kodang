@@ -10,7 +10,7 @@ import NewsList from '@/components/NewsList'
 import { getNews, type NewsItem } from '@/lib/news'
 import { getCategoryName } from '@/lib/category-mapping'
 import { formatDate } from '@/lib/date-format'
-import { getYouTubeThumbnail, getYouTubeVideoId } from '@/lib/video-utils'
+import { getYouTubeThumbnail, getYouTubeVideoId, isDirectVideoUrl } from '@/lib/video-utils'
 
 export default function Home() {
   const t = useTranslations('home')
@@ -135,6 +135,8 @@ export default function Home() {
                         <>
                           {(() => {
                             const thumbnailUrl = heroArticle.video ? getYouTubeThumbnail(heroArticle.video, heroArticle.image) : null
+                            const isDirectVideo = heroArticle.video ? isDirectVideoUrl(heroArticle.video) : false
+                            
                             return thumbnailUrl ? (
                               <Image
                                 src={thumbnailUrl}
@@ -160,6 +162,20 @@ export default function Home() {
                                       parent.appendChild(placeholder)
                                     }
                                   }
+                                }}
+                              />
+                            ) : isDirectVideo && heroArticle.video ? (
+                              // For direct videos without thumbnail, show video preview
+                              <video
+                                src={heroArticle.video}
+                                className="absolute inset-0 w-full h-full object-cover"
+                                muted
+                                playsInline
+                                preload="metadata"
+                                onLoadedMetadata={(e) => {
+                                  // Show first frame
+                                  const video = e.target as HTMLVideoElement
+                                  video.currentTime = 0.1
                                 }}
                               />
                             ) : (

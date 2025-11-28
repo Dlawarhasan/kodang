@@ -35,6 +35,18 @@ export function getYouTubeThumbnail(videoUrl: string, providedThumbnail?: string
 }
 
 /**
+ * Check if video URL is a direct video file (not YouTube)
+ */
+export function isDirectVideoUrl(url: string): boolean {
+  if (!url) return false
+  const directVideoExtensions = ['.mp4', '.webm', '.ogg', '.mov', '.avi', '.mkv']
+  const lowerUrl = url.toLowerCase()
+  return directVideoExtensions.some(ext => lowerUrl.includes(ext)) || 
+         lowerUrl.includes('supabase.co/storage') ||
+         lowerUrl.includes('/videos/')
+}
+
+/**
  * Check if a URL is a YouTube video
  */
 export function isYouTubeVideo(url: string): boolean {
