@@ -38,9 +38,6 @@ export default function AdminPage() {
     titleFa: '', // Farsi is optional
     titleKu: '', // Kurdish is optional
     titleEn: '', // English is optional
-    excerptFa: '', // Farsi is optional
-    excerptKu: '', // Kurdish is optional
-    excerptEn: '', // English is optional
     contentFa: '', // Farsi is optional
     contentKu: '', // Kurdish is optional
     contentEn: '', // English is optional
@@ -247,9 +244,6 @@ export default function AdminPage() {
         titleFa: post.translations?.fa?.title || post.title || '',
         titleKu: post.translations?.ku?.title || '',
         titleEn: post.translations?.en?.title || '',
-        excerptFa: post.translations?.fa?.excerpt || post.excerpt || '',
-        excerptKu: post.translations?.ku?.excerpt || '',
-        excerptEn: post.translations?.en?.excerpt || '',
         contentFa: post.translations?.fa?.content || post.content || '',
         contentKu: post.translations?.ku?.content || '',
         contentEn: post.translations?.en?.content || '',
@@ -597,10 +591,9 @@ export default function AdminPage() {
 
     // Validate: Current language fields must be provided
     const currentTitle = locale === 'fa' ? formData.titleFa : locale === 'ku' ? formData.titleKu : formData.titleEn
-    const currentExcerpt = locale === 'fa' ? formData.excerptFa : locale === 'ku' ? formData.excerptKu : formData.excerptEn
     const currentContent = locale === 'fa' ? formData.contentFa : locale === 'ku' ? formData.contentKu : formData.contentEn
     
-    if (!currentTitle || !currentExcerpt || !currentContent) {
+    if (!currentTitle || !currentContent) {
       setMessage({ 
         type: 'error', 
         text: locale === 'fa' 
@@ -663,9 +656,6 @@ export default function AdminPage() {
           titleFa: locale === 'fa' ? formData.titleFa : '',
           titleKu: locale === 'ku' ? formData.titleKu : '',
           titleEn: locale === 'en' ? formData.titleEn : '',
-          excerptFa: locale === 'fa' ? formData.excerptFa : '',
-          excerptKu: locale === 'ku' ? formData.excerptKu : '',
-          excerptEn: locale === 'en' ? formData.excerptEn : '',
           contentFa: locale === 'fa' ? formData.contentFa : '',
           contentKu: locale === 'ku' ? formData.contentKu : '',
           contentEn: locale === 'en' ? formData.contentEn : '',
@@ -711,9 +701,6 @@ export default function AdminPage() {
           titleFa: '',
           titleKu: '',
           titleEn: '',
-          excerptFa: '',
-          excerptKu: '',
-          excerptEn: '',
           contentFa: '',
           contentKu: '',
           contentEn: '',
@@ -776,17 +763,14 @@ export default function AdminPage() {
       translations: {
         ku: {
           title: formData.titleKu,
-          excerpt: formData.excerptKu,
           content: formData.contentKu,
         },
         fa: {
           title: formData.titleFa,
-          excerpt: formData.excerptFa,
           content: formData.contentFa,
         },
         en: {
           title: formData.titleEn,
-          excerpt: formData.excerptEn,
           content: formData.contentEn,
         },
       },
@@ -928,9 +912,6 @@ export default function AdminPage() {
                     titleKu: '',
                     titleFa: '',
                     titleEn: '',
-                    excerptKu: '',
-                    excerptFa: '',
-                    excerptEn: '',
                     contentKu: '',
                     contentFa: '',
                     contentEn: '',
@@ -1543,18 +1524,6 @@ export default function AdminPage() {
             </div>
             <div>
               <label className="block text-sm font-semibold text-slate-700 mb-2">
-                {t('excerpt')} ({t('farsi')})
-              </label>
-              <textarea
-                value={formData.excerptFa}
-                onChange={(e) => setFormData({ ...formData, excerptFa: e.target.value })}
-                className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                placeholder={`${t('excerpt')} (${t('farsi')})`}
-                rows={2}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">
                 {t('content')} ({t('farsi')})
               </label>
               <textarea
@@ -1590,18 +1559,6 @@ export default function AdminPage() {
             </div>
             <div>
               <label className="block text-sm font-semibold text-slate-700 mb-2">
-                {t('excerpt')} ({t('kurdish')})
-              </label>
-              <textarea
-                value={formData.excerptKu}
-                onChange={(e) => setFormData({ ...formData, excerptKu: e.target.value })}
-                className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                placeholder={`${t('excerpt')} (${t('kurdish')})`}
-                rows={2}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">
                 {t('content')} ({t('kurdish')})
               </label>
               <textarea
@@ -1633,18 +1590,6 @@ export default function AdminPage() {
                 onChange={(e) => setFormData({ ...formData, titleEn: e.target.value })}
                 className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
                 placeholder={`${t('title')} (${t('english')})`}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">
-                {t('excerpt')} ({t('english')})
-              </label>
-              <textarea
-                value={formData.excerptEn}
-                onChange={(e) => setFormData({ ...formData, excerptEn: e.target.value })}
-                className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
-                placeholder={`${t('excerpt')} (${t('english')})`}
-                rows={2}
               />
             </div>
             <div>

@@ -103,9 +103,9 @@ export default function NewsList({ news }: NewsListProps) {
                   {item.title}
                 </h2>
 
-                {/* Excerpt */}
+                {/* Content Preview */}
                 <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm line-clamp-2 mt-1">
-                  {item.excerpt}
+                  {(item.content || '').substring(0, 150)}...
                 </p>
 
                 {/* Footer with Share Icons */}

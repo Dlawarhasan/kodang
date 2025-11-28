@@ -29,7 +29,6 @@ export default function NewsDetail({
   const [translating, setTranslating] = useState(false)
   const [translatedContent, setTranslatedContent] = useState<{
     title?: string
-    excerpt?: string
     content?: string
   }>({})
   const [linkCopied, setLinkCopied] = useState(false)
@@ -67,16 +66,14 @@ export default function NewsDetail({
     setTranslating(true)
     
     try {
-      // Translate title, excerpt, and content
-      const [translatedTitle, translatedExcerpt, translatedContent] = await Promise.all([
+      // Translate title and content
+      const [translatedTitle, translatedContent] = await Promise.all([
         translateText(articleData.title || '', from, to),
-        translateText(articleData.excerpt || '', from, to),
         translateText(articleData.content || '', from, to),
       ])
       
       setTranslatedContent({
         title: translatedTitle,
-        excerpt: translatedExcerpt,
         content: translatedContent,
       })
     } catch (error) {
@@ -134,7 +131,7 @@ export default function NewsDetail({
     const siteUrl = typeof window !== 'undefined' ? window.location.origin : (process.env.NEXT_PUBLIC_SITE_URL || 'https://kodang.news')
     const postUrl = `${siteUrl}/${locale}/news/${resolvedParams.slug}`
     const postTitle = translatedContent.title || article.title
-    const postExcerpt = translatedContent.excerpt || article.excerpt
+    const postDescription = (translatedContent.content || article.content || '').substring(0, 160)
     const postImage = article.image || `${siteUrl}/og-image.jpg`
 
     // Update or create meta tags
@@ -158,13 +155,13 @@ export default function NewsDetail({
     document.title = `${postTitle} | کۆدەنگ | KODANG`
 
     // Basic meta tags
-    updateMetaTag('description', postExcerpt, false)
+    updateMetaTag('description', postDescription, false)
     
     // Open Graph tags
     updateMetaTag('og:type', 'article')
     updateMetaTag('og:url', postUrl)
     updateMetaTag('og:title', postTitle)
-    updateMetaTag('og:description', postExcerpt)
+    updateMetaTag('og:description', postDescription)
     updateMetaTag('og:image', postImage)
     updateMetaTag('og:image:width', '1200')
     updateMetaTag('og:image:height', '630')
@@ -175,7 +172,7 @@ export default function NewsDetail({
     updateMetaTag('twitter:card', 'summary_large_image', false)
     updateMetaTag('twitter:url', postUrl, false)
     updateMetaTag('twitter:title', postTitle, false)
-    updateMetaTag('twitter:description', postExcerpt, false)
+    updateMetaTag('twitter:description', postDescription, false)
     updateMetaTag('twitter:image', postImage, false)
     
     // Article meta tags
@@ -209,39 +206,31 @@ export default function NewsDetail({
       </Link>
 
       <article className="bg-white">
-        {/* Header Section */}
-        <header className="mb-8 pb-6 border-b border-gray-200">
-          {/* Meta Information */}
-          <div className="flex items-center gap-4 text-sm text-gray-600 mb-4 flex-wrap">
-            {article.category && (
-              <span className="inline-block px-3 py-1 bg-red-50 text-red-700 text-xs font-semibold rounded">
-                {getCategoryName(article.category, locale)}
-              </span>
-            )}
-            <span className="flex items-center gap-1.5">
-              <Calendar className="h-4 w-4" />
-              {formatDate(article.date, locale)}
+        {/* Meta Information */}
+        <div className="flex items-center gap-4 text-sm text-gray-600 mb-4 flex-wrap">
+          {article.category && (
+            <span className="inline-block px-3 py-1 bg-red-50 text-red-700 text-xs font-semibold rounded">
+              {getCategoryName(article.category, locale)}
             </span>
-            <span className="flex items-center gap-1.5">
-              <User className="h-4 w-4" />
-              {article.author}
-            </span>
-            <span className="flex items-center gap-1.5">
-              <Eye className="h-4 w-4" />
-              {views.toLocaleString()} {t('views')}
-            </span>
-          </div>
+          )}
+          <span className="flex items-center gap-1.5">
+            <Calendar className="h-4 w-4" />
+            {formatDate(article.date, locale)}
+          </span>
+          <span className="flex items-center gap-1.5">
+            <User className="h-4 w-4" />
+            {article.author}
+          </span>
+          <span className="flex items-center gap-1.5">
+            <Eye className="h-4 w-4" />
+            {views.toLocaleString()} {t('views')}
+          </span>
+        </div>
 
-          {/* Title */}
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 leading-snug mb-4">
-            {translatedContent.title || article.title}
-          </h1>
-
-          {/* Excerpt */}
-          <p className="text-base text-gray-600 leading-relaxed">
-            {translatedContent.excerpt || article.excerpt}
-          </p>
-        </header>
+        {/* Title - Above Media */}
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-900 leading-snug mb-6">
+          {translatedContent.title || article.title}
+        </h1>
 
         {/* Media Section */}
         {article.video && (
