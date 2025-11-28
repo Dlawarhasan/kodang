@@ -45,7 +45,7 @@ export default function NewsList({ news }: NewsListProps) {
                   {item.video ? (
                     <>
                       {(() => {
-                        const thumbnailUrl = getYouTubeThumbnail(item.video, item.image)
+                        const thumbnailUrl = item.video ? getYouTubeThumbnail(item.video, item.image) : null
                         return thumbnailUrl ? (
                           <Image
                             src={thumbnailUrl}
@@ -55,7 +55,7 @@ export default function NewsList({ news }: NewsListProps) {
                             sizes="(max-width: 768px) 100vw, 320px"
                             onError={(e) => {
                               // Fallback to hqdefault if maxresdefault fails
-                              const videoId = getYouTubeVideoId(item.video)
+                              const videoId = item.video ? getYouTubeVideoId(item.video) : null
                               if (videoId && thumbnailUrl.includes('maxresdefault')) {
                                 const target = e.target as HTMLImageElement
                                 target.src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`

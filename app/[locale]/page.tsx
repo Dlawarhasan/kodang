@@ -134,7 +134,7 @@ export default function Home() {
                       {heroArticle.video ? (
                         <>
                           {(() => {
-                            const thumbnailUrl = getYouTubeThumbnail(heroArticle.video, heroArticle.image)
+                            const thumbnailUrl = heroArticle.video ? getYouTubeThumbnail(heroArticle.video, heroArticle.image) : null
                             return thumbnailUrl ? (
                               <Image
                                 src={thumbnailUrl}
@@ -145,7 +145,7 @@ export default function Home() {
                                 sizes="(max-width: 768px) 100vw, 900px"
                                 onError={(e) => {
                                   // Fallback to hqdefault if maxresdefault fails
-                                  const videoId = getYouTubeVideoId(heroArticle.video)
+                                  const videoId = heroArticle.video ? getYouTubeVideoId(heroArticle.video) : null
                                   if (videoId && thumbnailUrl.includes('maxresdefault')) {
                                     const target = e.target as HTMLImageElement
                                     target.src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
