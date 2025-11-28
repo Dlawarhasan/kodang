@@ -7,6 +7,7 @@ import { Calendar, User, ArrowLeft, Play, Facebook, Instagram, Twitter, Share2 }
 import type { NewsItem } from '@/lib/news'
 import { getCategoryName } from '@/lib/category-mapping'
 import { formatDateShort } from '@/lib/date-format'
+import { getYouTubeThumbnail } from '@/lib/video-utils'
 
 interface NewsListProps {
   news: NewsItem[]
@@ -43,17 +44,39 @@ export default function NewsList({ news }: NewsListProps) {
                 <div className="relative w-full md:w-80 lg:w-96 h-64 md:h-48 lg:h-56 flex-shrink-0 overflow-hidden bg-gray-100 rounded-lg">
                   {item.video ? (
                     <>
-                      {item.image ? (
-                        <Image
-                          src={item.image}
-                          alt={item.title}
-                          fill
-                          className="object-cover"
-                          sizes="(max-width: 768px) 100vw, 320px"
-                        />
-                      ) : (
-                        <div className="absolute inset-0 bg-gray-200" />
-                      )}
+                      {(() => {
+                        const thumbnailUrl = getYouTubeThumbnail(item.video, item.image)
+                        return thumbnailUrl ? (
+                          <Image
+                            src={thumbnailUrl}
+                            alt={item.title}
+                            fill
+                            className="object-cover"
+                            sizes="(max-width: 768px) 100vw, 320px"
+                            onError={(e) => {
+                              // Fallback to hqdefault if maxresdefault fails
+                              const { getYouTubeVideoId } = require('@/lib/video-utils')
+                              const videoId = getYouTubeVideoId(item.video)
+                              if (videoId && thumbnailUrl.includes('maxresdefault')) {
+                                const target = e.target as HTMLImageElement
+                                target.src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
+                              } else {
+                                // If still fails, show placeholder
+                                const target = e.target as HTMLImageElement
+                                target.style.display = 'none'
+                                const parent = target.parentElement
+                                if (parent) {
+                                  const placeholder = document.createElement('div')
+                                  placeholder.className = 'absolute inset-0 bg-gray-200'
+                                  parent.appendChild(placeholder)
+                                }
+                              }
+                            }}
+                          />
+                        ) : (
+                          <div className="absolute inset-0 bg-gray-200" />
+                        )
+                      })()}
                       <div className="absolute inset-0 flex items-center justify-center bg-black/30">
                         <div className="bg-red-600 rounded-full p-4 shadow-lg">
                           <Play className="h-6 w-6 text-white fill-white ml-1" />

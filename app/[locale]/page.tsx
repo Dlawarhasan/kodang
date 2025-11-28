@@ -10,6 +10,7 @@ import NewsList from '@/components/NewsList'
 import { getNews, type NewsItem } from '@/lib/news'
 import { getCategoryName } from '@/lib/category-mapping'
 import { formatDate } from '@/lib/date-format'
+import { getYouTubeThumbnail } from '@/lib/video-utils'
 
 export default function Home() {
   const t = useTranslations('home')
@@ -132,18 +133,40 @@ export default function Home() {
                     <div className="relative w-full h-96 mb-4 bg-gray-100 dark:bg-gray-700 overflow-hidden">
                       {heroArticle.video ? (
                         <>
-                          {heroArticle.image ? (
-                            <Image
-                              src={heroArticle.image}
-                              alt={heroArticle.title}
-                              fill
-                              priority
-                              className="object-cover"
-                              sizes="(max-width: 768px) 100vw, 900px"
-                            />
-                          ) : (
-                            <div className="absolute inset-0 bg-gray-200 dark:bg-gray-800" />
-                          )}
+                          {(() => {
+                            const thumbnailUrl = getYouTubeThumbnail(heroArticle.video, heroArticle.image)
+                            return thumbnailUrl ? (
+                              <Image
+                                src={thumbnailUrl}
+                                alt={heroArticle.title}
+                                fill
+                                priority
+                                className="object-cover"
+                                sizes="(max-width: 768px) 100vw, 900px"
+                                onError={(e) => {
+                                  // Fallback to hqdefault if maxresdefault fails
+                                  const { getYouTubeVideoId } = require('@/lib/video-utils')
+                                  const videoId = getYouTubeVideoId(heroArticle.video)
+                                  if (videoId && thumbnailUrl.includes('maxresdefault')) {
+                                    const target = e.target as HTMLImageElement
+                                    target.src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
+                                  } else {
+                                    // If still fails, show placeholder
+                                    const target = e.target as HTMLImageElement
+                                    target.style.display = 'none'
+                                    const parent = target.parentElement
+                                    if (parent) {
+                                      const placeholder = document.createElement('div')
+                                      placeholder.className = 'absolute inset-0 bg-gray-200 dark:bg-gray-800'
+                                      parent.appendChild(placeholder)
+                                    }
+                                  }
+                                }}
+                              />
+                            ) : (
+                              <div className="absolute inset-0 bg-gray-200 dark:bg-gray-800" />
+                            )
+                          })()}
                           <div className="absolute inset-0 flex items-center justify-center bg-black/30">
                             <div className="bg-red-600 rounded-full p-6">
                               <Play className="h-10 w-10 text-white fill-white ml-1" />

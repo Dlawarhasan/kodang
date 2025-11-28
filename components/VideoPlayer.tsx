@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { Play } from 'lucide-react'
+import { getYouTubeVideoId, getYouTubeThumbnail } from '@/lib/video-utils'
 
 interface VideoPlayerProps {
   videoUrl: string
@@ -31,19 +32,6 @@ export default function VideoPlayer({ videoUrl, title, autoplay = false, thumbna
     }
   }, [])
 
-  // Extract YouTube video ID from URL
-  const getYouTubeVideoId = (url: string): string | null => {
-    if (url.includes('youtube.com/embed')) {
-      const match = url.match(/youtube\.com\/embed\/([^?&#]+)/)
-      return match ? match[1] : null
-    }
-    if (url.includes('youtube.com/watch') || url.includes('youtu.be/')) {
-      const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/)
-      return match ? match[1] : null
-    }
-    return null
-  }
-
   // Extract video ID from YouTube URL
   const getYouTubeEmbedUrl = (url: string) => {
     const videoId = getYouTubeVideoId(url)
@@ -62,17 +50,7 @@ export default function VideoPlayer({ videoUrl, title, autoplay = false, thumbna
   const isDirectVideo = !videoUrl.includes('youtube.com') && !videoUrl.includes('youtu.be')
   
   // Get YouTube thumbnail URL if no thumbnail is provided
-  const getThumbnailUrl = (): string | null => {
-    if (thumbnail) return thumbnail
-    const videoId = getYouTubeVideoId(videoUrl)
-    if (videoId) {
-      // Try maxresdefault first (best quality), fallback to hqdefault
-      return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
-    }
-    return null
-  }
-
-  const thumbnailUrl = getThumbnailUrl()
+  const thumbnailUrl = getYouTubeThumbnail(videoUrl, thumbnail)
 
   const handlePlay = () => {
     setIsPlaying(true)
@@ -100,6 +78,10 @@ export default function VideoPlayer({ videoUrl, title, autoplay = false, thumbna
               if (videoId && thumbnailUrl?.includes('maxresdefault')) {
                 const target = e.target as HTMLImageElement
                 target.src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
+              } else {
+                // If still fails, hide image and show placeholder
+                const target = e.target as HTMLImageElement
+                target.style.display = 'none'
               }
             }}
           />
