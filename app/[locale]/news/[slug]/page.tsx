@@ -184,6 +184,17 @@ export default function NewsDetail({
     }
   }, [article, locale, resolvedParams.slug, translatedContent])
 
+  // Handle ESC key to close lightbox
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && lightboxImage) {
+        setLightboxImage(null)
+      }
+    }
+    window.addEventListener('keydown', handleEscape)
+    return () => window.removeEventListener('keydown', handleEscape)
+  }, [lightboxImage])
+
   if (loading) {
     return (
       <div className="container mx-auto px-4 py-8 text-center">
