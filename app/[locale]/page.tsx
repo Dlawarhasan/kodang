@@ -10,7 +10,7 @@ import NewsList from '@/components/NewsList'
 import { getNews, type NewsItem } from '@/lib/news'
 import { getCategoryName } from '@/lib/category-mapping'
 import { formatDate } from '@/lib/date-format'
-import { getYouTubeThumbnail } from '@/lib/video-utils'
+import { getYouTubeThumbnail, getYouTubeVideoId } from '@/lib/video-utils'
 
 export default function Home() {
   const t = useTranslations('home')
@@ -145,7 +145,6 @@ export default function Home() {
                                 sizes="(max-width: 768px) 100vw, 900px"
                                 onError={(e) => {
                                   // Fallback to hqdefault if maxresdefault fails
-                                  const { getYouTubeVideoId } = require('@/lib/video-utils')
                                   const videoId = getYouTubeVideoId(heroArticle.video)
                                   if (videoId && thumbnailUrl.includes('maxresdefault')) {
                                     const target = e.target as HTMLImageElement

@@ -7,7 +7,7 @@ import { Calendar, User, ArrowLeft, Play, Facebook, Instagram, Twitter, Share2 }
 import type { NewsItem } from '@/lib/news'
 import { getCategoryName } from '@/lib/category-mapping'
 import { formatDateShort } from '@/lib/date-format'
-import { getYouTubeThumbnail } from '@/lib/video-utils'
+import { getYouTubeThumbnail, getYouTubeVideoId } from '@/lib/video-utils'
 
 interface NewsListProps {
   news: NewsItem[]
@@ -55,7 +55,6 @@ export default function NewsList({ news }: NewsListProps) {
                             sizes="(max-width: 768px) 100vw, 320px"
                             onError={(e) => {
                               // Fallback to hqdefault if maxresdefault fails
-                              const { getYouTubeVideoId } = require('@/lib/video-utils')
                               const videoId = getYouTubeVideoId(item.video)
                               if (videoId && thumbnailUrl.includes('maxresdefault')) {
                                 const target = e.target as HTMLImageElement
