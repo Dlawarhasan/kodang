@@ -100,7 +100,47 @@ export default function Header() {
       {/* Top Bar - Language, Icons */}
       <div className="fixed top-0 left-0 right-0 bg-gray-900 dark:bg-gray-950 text-white text-sm z-40" style={{ borderBottom: '0.1px solid #1f2937' }}>
         <div className="container mx-auto px-4 max-w-7xl">
-          <div className="flex items-center justify-end py-2">
+          <div className="flex items-center justify-between py-2">
+            {/* Social Media Links */}
+            <div className="hidden md:flex items-center gap-3">
+              <a
+                href="https://www.instagram.com/kodang.official?igsh=MWN3dThraTZ4YmFldw=="
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-1.5 hover:text-pink-400 transition-colors"
+                aria-label="Instagram"
+              >
+                <Instagram className="h-4 w-4" />
+              </a>
+              <a
+                href="https://www.facebook.com/share/1GqxCa4MuK/?mibextid=wwXIfr"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-1.5 hover:text-blue-400 transition-colors"
+                aria-label="Facebook"
+              >
+                <Facebook className="h-4 w-4" />
+              </a>
+              <a
+                href="https://t.me/kodangofficial"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-1.5 hover:text-blue-300 transition-colors"
+                aria-label="Telegram"
+              >
+                <Send className="h-4 w-4" />
+              </a>
+              <a
+                href="https://youtube.com/@kodangnews?si=KNdtPuv8XCvCwp93"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-1.5 hover:text-red-400 transition-colors"
+                aria-label="YouTube"
+              >
+                <Youtube className="h-4 w-4" />
+              </a>
+            </div>
+            
             <div className="flex items-center gap-4">
               {/* Language Selector - Compact */}
               <div className="relative z-50">
