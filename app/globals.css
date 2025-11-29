@@ -333,31 +333,12 @@ body {
 
 /* Shimmer effect is handled by .shimmer-overlay class */
 
-.post-card-hover::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(220, 38, 38, 0.95);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-  z-index: 1;
-  border-radius: inherit;
-}
-
 .post-card-hover:hover {
   transform: translateY(-8px) scale(1.02);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15),
               0 0 20px rgba(220, 38, 38, 0.2);
   animation: glow 2s ease-in-out infinite;
   background: linear-gradient(135deg, rgba(220, 38, 38, 0.3), rgba(239, 68, 68, 0.25)) !important;
-}
-
-.post-card-hover:hover::after {
-  opacity: 1;
 }
 
 .post-card-hover:hover * {
