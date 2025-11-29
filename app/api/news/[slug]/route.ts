@@ -44,7 +44,7 @@ export async function GET(
     }
 
     // Check if post is fully in the requested language
-    // Post must have title AND excerpt AND content in the requested language
+    // Post must have title AND content in the requested language
     // This ensures only posts that are actually "posted in" that language are accessible
     const translation = data.translations?.[locale]
     if (!translation) {
@@ -55,12 +55,11 @@ export async function GET(
     }
     
     const hasTitle = translation.title && translation.title.trim() !== ''
-    const hasExcerpt = translation.excerpt && translation.excerpt.trim() !== ''
     const hasContent = translation.content && translation.content.trim() !== ''
     
-    // Post must have ALL THREE: title, excerpt, AND content in the requested language
+    // Post must have BOTH: title AND content in the requested language
     // This ensures the post is fully written in that language
-    if (!hasTitle || !hasExcerpt || !hasContent) {
+    if (!hasTitle || !hasContent) {
       return NextResponse.json(
         { error: 'Post not found in this language' },
         { status: 404 }
@@ -71,7 +70,7 @@ export async function GET(
     const newsItem = {
       ...data,
       title: translation?.title || '',
-      excerpt: translation?.excerpt || '',
+      excerpt: translation?.excerpt || null, // Excerpt is optional
       content: translation?.content || '',
       // Map database column names to camelCase for frontend
       authorInstagram: data.author_instagram || null,

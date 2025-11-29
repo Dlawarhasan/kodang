@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Filter posts: Only show posts that are fully in the requested language
-    // Post must have title AND excerpt AND content in the requested language
+    // Post must have title AND content in the requested language
     // This ensures only posts that are actually "posted in" that language are shown
     const filteredData = data?.filter(item => {
       const translation = item.translations?.[locale]
@@ -40,17 +40,15 @@ export async function GET(request: NextRequest) {
       
       // Check if fields exist and are not empty (handle both string and null)
       const hasTitle = translation.title && typeof translation.title === 'string' && translation.title.trim() !== ''
-      const hasExcerpt = translation.excerpt && typeof translation.excerpt === 'string' && translation.excerpt.trim() !== ''
       const hasContent = translation.content && typeof translation.content === 'string' && translation.content.trim() !== ''
       
-      // Post must have ALL THREE: title, excerpt, AND content in the requested language
+      // Post must have BOTH: title AND content in the requested language
       // This ensures the post is fully written in that language, not just partially translated
-      const isValid = hasTitle && hasExcerpt && hasContent
+      const isValid = hasTitle && hasContent
       
       if (!isValid) {
         console.log(`Post ${item.slug}: Missing fields for locale ${locale}`, {
           hasTitle,
-          hasExcerpt,
           hasContent,
           title: translation.title?.substring(0, 30),
         })
@@ -63,7 +61,7 @@ export async function GET(request: NextRequest) {
     const news = filteredData.map(item => ({
       ...item,
       title: item.translations?.[locale]?.title || '',
-      excerpt: item.translations?.[locale]?.excerpt || '',
+      excerpt: item.translations?.[locale]?.excerpt || null, // Excerpt is optional
       content: item.translations?.[locale]?.content || '',
       // Map database column names (snake_case) to camelCase for frontend
       authorInstagram: item.author_instagram || null,
@@ -75,6 +73,7 @@ export async function GET(request: NextRequest) {
     })).filter(item => item.title || item.excerpt || item.content) // Remove empty posts
 
     console.log(`Filtered news for locale ${locale}: ${news.length} posts (from ${data?.length || 0} total)`)
+    console.log(`Posts filtered out: ${(data?.length || 0) - (filteredData?.length || 0)} posts`)
 
     return NextResponse.json({ news })
   } catch (error: any) {
