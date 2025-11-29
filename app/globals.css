@@ -340,7 +340,7 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(220, 38, 38, 0.05);
+  background: rgba(220, 38, 38, 0.4);
   opacity: 0;
   transition: opacity 0.3s ease;
   pointer-events: none;
@@ -353,7 +353,7 @@ body {
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15),
               0 0 20px rgba(220, 38, 38, 0.2);
   animation: glow 2s ease-in-out infinite;
-  background: linear-gradient(135deg, rgba(220, 38, 38, 0.2), rgba(239, 68, 68, 0.15)) !important;
+  background: linear-gradient(135deg, rgba(220, 38, 38, 0.3), rgba(239, 68, 68, 0.25)) !important;
 }
 
 .post-card-hover:hover::after {
@@ -385,12 +385,12 @@ body {
 .post-card-hover:hover .bg-white,
 .post-card-hover:hover .bg-gray-50,
 .post-card-hover:hover .bg-gray-100 {
-  background: rgba(220, 38, 38, 0.1) !important;
+  background: rgba(220, 38, 38, 0.25) !important;
 }
 
 .post-card-hover:hover .dark\:bg-gray-800,
 .post-card-hover:hover .dark\:bg-gray-700 {
-  background: rgba(220, 38, 38, 0.2) !important;
+  background: rgba(220, 38, 38, 0.35) !important;
 }
 
 .post-card-hover:hover .post-image {
