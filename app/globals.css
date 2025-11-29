@@ -375,6 +375,14 @@ body {
   position: relative;
 }
 
+/* Apply blue title color for non-suicide posts on hover */
+.post-card-hover:not(.post-suicide):hover .post-title {
+  color: #3b82f6 !important;
+  transform: translateX(5px);
+  font-weight: 700;
+  position: relative;
+}
+
 /* Animated blue underline for post title */
 .post-title::after {
   content: '';
