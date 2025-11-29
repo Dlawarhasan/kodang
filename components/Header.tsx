@@ -83,14 +83,14 @@ export default function Header() {
   ]
 
   const navItems = [
-    { href: `/${locale}`, label: tCategories('all'), category: 'all' },
-    { href: `/${locale}`, label: tCategories('women'), category: 'women' },
-    { href: `/${locale}`, label: tCategories('workers'), category: 'workers' },
-    { href: `/${locale}`, label: tCategories('kolbar'), category: 'kolbar' },
-    { href: `/${locale}`, label: tCategories('children'), category: 'children' },
-    { href: `/${locale}`, label: tCategories('arrest'), category: 'arrest' },
-    { href: `/${locale}`, label: tCategories('students'), category: 'students' },
-    { href: `/${locale}`, label: tCategories('suicide'), category: 'suicide' },
+    { href: `/${locale}`, label: 'همه', category: 'all' },
+    { href: `/${locale}`, label: 'زنان', category: 'women' },
+    { href: `/${locale}`, label: 'کارگر', category: 'workers' },
+    { href: `/${locale}`, label: 'کولبر', category: 'kolbar' },
+    { href: `/${locale}`, label: 'کودکان', category: 'children' },
+    { href: `/${locale}`, label: 'بازداشت', category: 'arrest' },
+    { href: `/${locale}`, label: 'دانشجو', category: 'students' },
+    { href: `/${locale}`, label: 'خودکشی', category: 'suicide' },
   ]
 
   const currentLanguage = languages.find(lang => lang.code === locale) || languages[0]
@@ -271,7 +271,7 @@ export default function Header() {
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center gap-1 flex-1 justify-center">
+            <nav className="hidden md:flex items-center gap-2 flex-1 justify-center">
               {navItems.map((item) => {
                 const isActive = selectedCategory === item.category
                 return (
@@ -283,13 +283,16 @@ export default function Header() {
                       params.set('category', item.category)
                       router.push(`/${locale}?${params.toString()}`)
                     }}
-                    className={`px-3 py-2 text-sm font-medium transition-colors whitespace-nowrap ${
+                    className={`px-4 py-2.5 text-sm font-semibold transition-all duration-300 whitespace-nowrap rounded-md relative overflow-hidden group ${
                       isActive
-                        ? 'text-white border-b-2 border-red-500'
-                        : 'text-blue-200 hover:text-white'
+                        ? 'text-white bg-red-600 shadow-lg shadow-red-500/50'
+                        : 'text-blue-200 hover:text-white hover:bg-blue-800/50'
                     }`}
                   >
-                    {item.label}
+                    <span className="relative z-10">{item.label}</span>
+                    {!isActive && (
+                      <span className="absolute inset-0 bg-gradient-to-r from-blue-600/0 via-blue-500/20 to-blue-600/0 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-center"></span>
+                    )}
                   </button>
                 )
               })}
@@ -353,9 +356,11 @@ export default function Header() {
           <nav className="container mx-auto px-4 max-w-7xl py-4 space-y-4">
             {/* Category Navigation Items */}
             <div className="space-y-2">
-              {navItems.map((item) => (
-                <button
-                  key={item.category}
+              {navItems.map((item) => {
+                const isActive = selectedCategory === item.category
+                return (
+                  <button
+                    key={item.category}
                   onClick={() => {
                     setSelectedCategory(item.category)
                     setIsMenuOpen(false)
@@ -363,13 +368,16 @@ export default function Header() {
                     params.set('category', item.category)
                     router.push(`/${locale}?${params.toString()}`)
                   }}
-                  className={`block w-full text-left px-4 py-2 text-sm text-blue-200 hover:text-white transition-colors ${
-                    selectedCategory === item.category ? 'font-bold text-white border-r-2 border-red-500' : ''
+                  className={`block w-full text-left px-4 py-3 text-sm font-semibold rounded-md transition-all duration-300 ${
+                    isActive
+                      ? 'text-white bg-red-600 shadow-lg'
+                      : 'text-blue-200 hover:text-white hover:bg-blue-800/50'
                   }`}
                 >
                   {item.label}
                 </button>
-              ))}
+                )
+              })}
             </div>
           </nav>
         </div>
