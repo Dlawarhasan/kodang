@@ -202,7 +202,7 @@ export default function NewsList({ news }: NewsListProps) {
                 </div>
 
                 {/* Title */}
-                <h2 className="post-title text-base md:text-lg font-bold leading-snug text-gray-900 dark:text-gray-100 group-hover:text-red-600 dark:group-hover:text-red-400">
+                <h2 className="post-title text-base md:text-lg font-bold leading-snug text-gray-900 dark:text-gray-100 group-hover:text-red-600 dark:group-hover:text-red-400 inline-block">
                   {item.title}
                 </h2>
 

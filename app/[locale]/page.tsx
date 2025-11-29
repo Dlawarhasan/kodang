@@ -283,7 +283,7 @@ export default function Home() {
                         {formatDate(heroArticle.date, locale)}
                       </span>
                     </div>
-                    <h2 className="post-title text-xl md:text-2xl font-bold leading-snug text-gray-900 dark:text-gray-100 group-hover:text-red-600 dark:group-hover:text-red-400">
+                    <h2 className="post-title text-xl md:text-2xl font-bold leading-snug text-gray-900 dark:text-gray-100 group-hover:text-red-600 dark:group-hover:text-red-400 inline-block">
                       {heroArticle.title}
                     </h2>
                     <p className="post-content text-gray-600 dark:text-gray-300 leading-relaxed text-sm">
