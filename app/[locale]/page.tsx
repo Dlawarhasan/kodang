@@ -158,7 +158,7 @@ export default function Home() {
             {/* Featured Article - Large */}
             {heroArticle && (
               <article 
-                className="post-card-hover bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden relative"
+                className={`post-card-hover bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden relative ${heroArticle.category === 'suicide' ? 'post-suicide' : ''}`}
                 onClick={handleHeroClick}
                 onMouseEnter={handleHeroHover}
                 onMouseLeave={handleHeroLeave}

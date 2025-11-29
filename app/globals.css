@@ -336,25 +336,26 @@ body {
 .post-card-hover:hover {
 }
 
-.post-card-hover:hover * {
+/* Only apply red text color for suicide category posts */
+.post-suicide.post-card-hover:hover * {
   color: #dc2626 !important;
   position: relative;
   z-index: 2;
 }
 
-.post-card-hover:hover .text-gray-900,
-.post-card-hover:hover .text-gray-600,
-.post-card-hover:hover .text-gray-500,
-.post-card-hover:hover .text-gray-400,
-.post-card-hover:hover .text-gray-300,
-.post-card-hover:hover .text-gray-700,
-.post-card-hover:hover .text-gray-800 {
+.post-suicide.post-card-hover:hover .text-gray-900,
+.post-suicide.post-card-hover:hover .text-gray-600,
+.post-suicide.post-card-hover:hover .text-gray-500,
+.post-suicide.post-card-hover:hover .text-gray-400,
+.post-suicide.post-card-hover:hover .text-gray-300,
+.post-suicide.post-card-hover:hover .text-gray-700,
+.post-suicide.post-card-hover:hover .text-gray-800 {
   color: #dc2626 !important;
 }
 
-.post-card-hover:hover .dark\:text-gray-100,
-.post-card-hover:hover .dark\:text-gray-300,
-.post-card-hover:hover .dark\:text-gray-400 {
+.post-suicide.post-card-hover:hover .dark\:text-gray-100,
+.post-suicide.post-card-hover:hover .dark\:text-gray-300,
+.post-suicide.post-card-hover:hover .dark\:text-gray-400 {
   color: #dc2626 !important;
 }
 
@@ -366,7 +367,8 @@ body {
   mix-blend-mode: multiply;
 }
 
-.post-card-hover:hover .post-title {
+/* Only apply red title color for suicide category posts */
+.post-suicide.post-card-hover:hover .post-title {
   color: #dc2626 !important;
   transform: translateX(5px);
   font-weight: 700;

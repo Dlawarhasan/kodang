@@ -61,7 +61,7 @@ export default function NewsList({ news }: NewsListProps) {
       {news.map((item, index) => (
         <article
           key={item.id}
-          className="post-card-hover group border-b border-gray-200 dark:border-gray-700 pb-8 last:border-b-0 hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800/50 rounded-lg px-2 -mx-2 relative overflow-hidden"
+          className={`post-card-hover group border-b border-gray-200 dark:border-gray-700 pb-8 last:border-b-0 hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800/50 rounded-lg px-2 -mx-2 relative overflow-hidden ${item.category === 'suicide' ? 'post-suicide' : ''}`}
           onClick={(e) => handlePostClick(item.id, e)}
           onMouseEnter={() => handlePostHover(item.id)}
           onMouseLeave={handlePostLeave}
