@@ -266,7 +266,7 @@ export default function Header() {
         <div className="container mx-auto px-4 max-w-7xl">
           <div className="flex items-center justify-between gap-4 py-4">
             {/* Logo */}
-            <Link href="/" className="flex items-center">
+            <Link href="/" className="flex items-center mt-1">
               <Logo size="small" variant="inline" />
             </Link>
 
