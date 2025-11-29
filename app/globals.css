@@ -334,10 +334,6 @@ body {
 /* Shimmer effect is handled by .shimmer-overlay class */
 
 .post-card-hover:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15),
-              0 0 20px rgba(220, 38, 38, 0.2);
-  animation: glow 2s ease-in-out infinite;
 }
 
 .post-card-hover:hover * {
@@ -362,16 +358,6 @@ body {
   color: #dc2626 !important;
 }
 
-.post-card-hover:hover .bg-white,
-.post-card-hover:hover .bg-gray-50,
-.post-card-hover:hover .bg-gray-100 {
-  background: rgba(220, 38, 38, 0.25) !important;
-}
-
-.post-card-hover:hover .dark\:bg-gray-800,
-.post-card-hover:hover .dark\:bg-gray-700 {
-  background: rgba(220, 38, 38, 0.35) !important;
-}
 
 .post-card-hover:hover .post-image {
   transform: scale(1.15);
