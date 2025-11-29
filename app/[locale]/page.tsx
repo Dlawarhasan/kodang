@@ -158,11 +158,14 @@ export default function Home() {
             {/* Featured Article - Large */}
             {heroArticle && (
               <article 
-                className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden transition-all duration-500 ease-out hover:shadow-2xl hover:-translate-y-2 hover:scale-[1.02] relative"
+                className="post-card-hover bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden relative"
                 onClick={handleHeroClick}
                 onMouseEnter={handleHeroHover}
                 onMouseLeave={handleHeroLeave}
               >
+                {/* Shimmer Overlay */}
+                <div className="shimmer-overlay"></div>
+                
                 {/* Animated Lines - Show on hover or click */}
                 {(hoveredHero || clickedHero) && (
                   <>
@@ -191,7 +194,7 @@ export default function Home() {
                 
                 <Link href={`/${locale}/news/${heroArticle.slug}${heroArticle.video ? '#video' : ''}`} className="block group relative z-10">
                   {(heroArticle.image || heroArticle.video) && (
-                    <div className="relative w-full aspect-[16/9] mb-4 bg-gray-100 dark:bg-gray-700 overflow-hidden group-hover:overflow-visible">
+                    <div className="post-image-container relative w-full aspect-[16/9] mb-4 bg-gray-100 dark:bg-gray-700 overflow-hidden">
                       {heroArticle.video ? (
                         <>
                           {(() => {
@@ -204,7 +207,7 @@ export default function Home() {
                                 alt={heroArticle.title}
                                 fill
                                 priority
-                                className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                                className="post-image object-cover transition-transform duration-700 ease-out"
                                 sizes="(max-width: 768px) 100vw, 900px"
                                 style={{ objectFit: 'cover' }}
                                 onError={(e) => {
@@ -280,10 +283,10 @@ export default function Home() {
                         {formatDate(heroArticle.date, locale)}
                       </span>
                     </div>
-                    <h2 className="text-xl md:text-2xl font-bold leading-snug text-gray-900 dark:text-gray-100 group-hover:text-red-600 dark:group-hover:text-red-400 transition-all duration-300 group-hover:translate-x-1">
+                    <h2 className="post-title text-xl md:text-2xl font-bold leading-snug text-gray-900 dark:text-gray-100 group-hover:text-red-600 dark:group-hover:text-red-400">
                       {heroArticle.title}
                     </h2>
-                    <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm transition-all duration-300 group-hover:translate-x-1">
+                    <p className="post-content text-gray-600 dark:text-gray-300 leading-relaxed text-sm">
                       {(heroArticle.content || '').substring(0, 150)}...
                     </p>
                   </div>

@@ -265,6 +265,204 @@ body {
   pointer-events: none;
 }
 
+/* Enhanced Hover Animations */
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(220, 38, 38, 0.2),
+                0 0 10px rgba(220, 38, 38, 0.1),
+                0 0 15px rgba(220, 38, 38, 0.05);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(220, 38, 38, 0.4),
+                0 0 30px rgba(220, 38, 38, 0.2),
+                0 0 40px rgba(220, 38, 38, 0.1);
+  }
+}
+
+@keyframes shimmerOverlay {
+  0% {
+    transform: translateX(-100%) translateY(-100%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateX(100%) translateY(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes slideInFromLeft {
+  0% {
+    transform: translateX(-20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  0% {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Post Card Hover Effects */
+.post-card-hover {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.post-card-hover::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(220, 38, 38, 0.1),
+    transparent
+  );
+  transition: left 0.5s ease;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.post-card-hover:hover::before {
+  left: 100%;
+}
+
+.post-card-hover:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15),
+              0 0 20px rgba(220, 38, 38, 0.2);
+  animation: glow 2s ease-in-out infinite;
+}
+
+.post-card-hover:hover .post-image {
+  transform: scale(1.15);
+  filter: brightness(1.1) saturate(1.2);
+}
+
+.post-card-hover:hover .post-title {
+  color: #dc2626;
+  transform: translateX(5px);
+}
+
+.post-card-hover:hover .post-content {
+  transform: translateY(-2px);
+}
+
+/* Shimmer effect overlay */
+.shimmer-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.post-card-hover:hover .shimmer-overlay {
+  opacity: 1;
+  animation: shimmerOverlay 1.5s ease-in-out infinite;
+}
+
+/* Enhanced image container */
+.post-image-container {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.post-image-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.post-card-hover:hover .post-image-container::after {
+  opacity: 1;
+}
+
+/* Text animations */
+.post-title {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.post-content {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Border glow effect */
+.post-card-hover::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(
+    45deg,
+    #dc2626,
+    #ef4444,
+    #dc2626,
+    #ef4444
+  );
+  border-radius: inherit;
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 0.3s ease;
+  filter: blur(8px);
+}
+
+.post-card-hover:hover::after {
+  opacity: 0.6;
+  animation: pulse 2s ease-in-out infinite;
+}
+
 /* RTL Support */
 [dir="rtl"] {
   direction: rtl;

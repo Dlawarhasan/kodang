@@ -61,11 +61,13 @@ export default function NewsList({ news }: NewsListProps) {
       {news.map((item, index) => (
         <article
           key={item.id}
-          className="group border-b border-gray-200 dark:border-gray-700 pb-8 last:border-b-0 hover:border-gray-300 dark:hover:border-gray-600 transition-all duration-500 ease-out hover:translate-x-3 hover:shadow-lg hover:bg-gray-50 dark:hover:bg-gray-800/50 rounded-lg px-2 -mx-2 relative overflow-hidden"
+          className="post-card-hover group border-b border-gray-200 dark:border-gray-700 pb-8 last:border-b-0 hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800/50 rounded-lg px-2 -mx-2 relative overflow-hidden"
           onClick={(e) => handlePostClick(item.id, e)}
           onMouseEnter={() => handlePostHover(item.id)}
           onMouseLeave={handlePostLeave}
         >
+          {/* Shimmer Overlay */}
+          <div className="shimmer-overlay"></div>
           {/* Animated Lines - Show on hover or click */}
           {(hoveredPost === item.id || clickedPost === item.id) && (
             <>
@@ -102,7 +104,7 @@ export default function NewsList({ news }: NewsListProps) {
 
               {/* Media Section */}
               {(item.image || item.video) && (
-                <div className="relative w-full md:w-80 lg:w-96 aspect-[4/3] flex-shrink-0 overflow-hidden bg-gray-100 rounded-lg group-hover:scale-110 group-hover:shadow-xl transition-all duration-500 ease-out">
+                <div className="post-image-container relative w-full md:w-80 lg:w-96 aspect-[4/3] flex-shrink-0 overflow-hidden bg-gray-100 rounded-lg">
                   {item.video ? (
                     <>
                       {(() => {
@@ -171,7 +173,7 @@ export default function NewsList({ news }: NewsListProps) {
                       src={item.image}
                       alt={item.title}
                       fill
-                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-125"
+                      className="post-image object-cover transition-transform duration-700 ease-out"
                       sizes="(max-width: 768px) 100vw, 320px"
                       style={{ objectFit: 'cover' }}
                     />
@@ -200,12 +202,12 @@ export default function NewsList({ news }: NewsListProps) {
                 </div>
 
                 {/* Title */}
-                <h2 className="text-base md:text-lg font-bold leading-snug text-gray-900 dark:text-gray-100 group-hover:text-red-600 dark:group-hover:text-red-400 transition-all duration-300 group-hover:translate-x-1">
+                <h2 className="post-title text-base md:text-lg font-bold leading-snug text-gray-900 dark:text-gray-100 group-hover:text-red-600 dark:group-hover:text-red-400">
                   {item.title}
                 </h2>
 
                 {/* Content Preview */}
-                <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm line-clamp-2 mt-1">
+                <p className="post-content text-gray-600 dark:text-gray-300 leading-relaxed text-sm line-clamp-2 mt-1">
                   {(item.content || '').substring(0, 150)}...
                 </p>
 
