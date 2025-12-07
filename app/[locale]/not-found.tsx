@@ -13,25 +13,25 @@ export default function NotFound() {
   const [loading, setLoading] = useState(true)
 
   // Extract slug from pathname if it's a news article
-  const slugMatch = pathname?.match(/\/news\/(.+)$/)
-  const slug = slugMatch ? slugMatch[1] : null
+  // Try multiple patterns to catch different URL formats
+  const slugMatch = pathname?.match(/\/news\/(.+)$/) || 
+                    pathname?.match(/news\/(.+)$/) ||
+                    (typeof window !== 'undefined' && window.location.pathname.match(/\/news\/(.+)$/))
+  const slug = slugMatch ? decodeURIComponent(slugMatch[1]) : null
 
   useEffect(() => {
-    if (slug) {
-      // Fetch all slugs for debugging
-      fetch('/api/news/list-slugs?limit=50')
-        .then(res => res.json())
-        .then(data => {
-          setAllSlugs(data.slugs || [])
-          setLoading(false)
-        })
-        .catch(() => {
-          setLoading(false)
-        })
-    } else {
-      setLoading(false)
-    }
-  }, [slug])
+    // Always fetch slugs for debugging, even if slug not detected
+    fetch('/api/news/list-slugs?limit=50')
+      .then(res => res.json())
+      .then(data => {
+        setAllSlugs(data.slugs || [])
+        setLoading(false)
+      })
+      .catch((error) => {
+        console.error('Error fetching slugs:', error)
+        setLoading(false)
+      })
+  }, [])
 
   return (
     <div className="container mx-auto px-4 py-16 max-w-4xl">
@@ -45,20 +45,24 @@ export default function NotFound() {
         </p>
       </div>
 
-      {slug && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6 mb-8">
-          <h3 className="font-semibold text-red-900 mb-2">
-            {locale === 'fa' ? 'زانیاری Debug:' : locale === 'ku' ? 'زانیاری Debug:' : 'Debug Information:'}
-          </h3>
+      <div className="bg-red-50 border border-red-200 rounded-lg p-6 mb-8">
+        <h3 className="font-semibold text-red-900 mb-2">
+          {locale === 'fa' ? 'زانیاری Debug:' : locale === 'ku' ? 'زانیاری Debug:' : 'Debug Information:'}
+        </h3>
+        {slug && (
           <p className="text-sm text-gray-700 mb-2">
             <strong>Slug:</strong> <code className="bg-gray-100 px-2 py-1 rounded">{slug}</code>
           </p>
-          
-          {loading ? (
-            <p className="text-sm text-gray-500 italic">
-              {locale === 'fa' ? 'بارکردنی زانیاری...' : locale === 'ku' ? 'بارکردنی زانیاری...' : 'Loading...'}
-            </p>
-          ) : allSlugs.length > 0 && (
+        )}
+        <p className="text-sm text-gray-700 mb-2">
+          <strong>Pathname:</strong> <code className="bg-gray-100 px-2 py-1 rounded">{pathname || 'N/A'}</code>
+        </p>
+        
+        {loading ? (
+          <p className="text-sm text-gray-500 italic">
+            {locale === 'fa' ? 'بارکردنی زانیاری...' : locale === 'ku' ? 'بارکردنی زانیاری...' : 'Loading...'}
+          </p>
+        ) : allSlugs.length > 0 ? (
             <div className="mt-3">
               <p className="text-sm font-semibold text-gray-700 mb-2">
                 {locale === 'fa' ? 'هەموو Article-ەکان (20 یەکەم):' : locale === 'ku' ? 'هەموو Article-ەکان (20 یەکەم):' : 'All Articles (First 20):'}
@@ -76,9 +80,12 @@ export default function NotFound() {
                 ))}
               </ul>
             </div>
+          ) : (
+            <p className="text-sm text-gray-500">
+              {locale === 'fa' ? 'هیچ article-ێک نەدۆزرایەوە' : locale === 'ku' ? 'هیچ article-ێک نەدۆزرایەوە' : 'No articles found'}
+            </p>
           )}
-        </div>
-      )}
+      </div>
 
       <div className="text-center">
         <Link
