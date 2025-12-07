@@ -377,8 +377,14 @@ export default function NewsDetail({
     )
   }
 
+  // This shouldn't happen - we show error page above if !article
+  // But TypeScript needs this check
   if (!article) {
-    return null // This shouldn't happen due to error page above, but TypeScript needs it
+    return (
+      <div className="container mx-auto px-4 py-8 text-center">
+        <p className="text-gray-500">Loading...</p>
+      </div>
+    )
   }
 
   return (
