@@ -1,54 +1,40 @@
-'use client'
+import { redirect } from 'next/navigation'
+import { createServerClient } from '@/lib/supabase'
 
-import { useEffect, Suspense } from 'react'
-import { useParams, useRouter } from 'next/navigation'
+export const dynamic = 'force-dynamic'
 
-function ShortUrlRedirectContent() {
-  const params = useParams()
-  const router = useRouter()
-  const code = params?.code as string
-
-  useEffect(() => {
-    if (!code) {
-      router.replace('/')
-      return
-    }
-
-    // Fetch the full URL from the database
-    const baseUrl = typeof window !== 'undefined' ? window.location.origin : ''
-    fetch(`${baseUrl}/api/shorten/resolve?code=${encodeURIComponent(code)}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.slug && data.locale) {
-          // Redirect to the full URL
-          router.replace(`/${data.locale}/news/${data.slug}`)
-        } else {
-          // Invalid short URL, redirect to homepage
-          router.replace('/')
-        }
-      })
-      .catch(error => {
-        console.error('Error resolving short URL:', error)
-        router.replace('/')
-      })
-  }, [code, router])
-
-  return (
-    <div className="container mx-auto px-4 py-8 text-center">
-      <p className="text-gray-500 text-lg">در حال هدایت...</p>
-    </div>
-  )
+interface PageProps {
+  params: Promise<{ code: string }> | { code: string }
 }
 
-export default function ShortUrlRedirect() {
-  return (
-    <Suspense fallback={
-      <div className="container mx-auto px-4 py-8 text-center">
-        <p className="text-gray-500 text-lg">در حال هدایت...</p>
-      </div>
-    }>
-      <ShortUrlRedirectContent />
-    </Suspense>
-  )
+export default async function ShortUrlRedirect({ params }: PageProps) {
+  const resolvedParams = 'then' in params ? await params : params
+  const code = resolvedParams.code
+
+  if (!code) {
+    redirect('/')
+  }
+
+  try {
+    const supabase = createServerClient()
+
+    // Look up the short URL
+    const { data, error } = await supabase
+      .from('short_urls')
+      .select('slug, locale')
+      .eq('code', code)
+      .single()
+
+    if (error || !data) {
+      console.error('Short URL not found:', code, error)
+      redirect('/')
+    }
+
+    // Redirect to the full URL
+    redirect(`/${data.locale}/news/${data.slug}`)
+  } catch (error) {
+    console.error('Error resolving short URL:', error)
+    redirect('/')
+  }
 }
 

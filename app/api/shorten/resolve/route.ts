@@ -24,7 +24,19 @@ export async function GET(request: NextRequest) {
       .eq('code', code)
       .single()
 
-    if (error || !data) {
+    if (error) {
+      console.error('Supabase error:', error)
+      // Check if table doesn't exist
+      if (error.code === 'PGRST116' || error.message?.includes('does not exist')) {
+        return NextResponse.json({ 
+          error: 'Short URLs table does not exist. Please run the SQL script in Supabase.',
+          code: 'TABLE_NOT_FOUND'
+        }, { status: 500 })
+      }
+      return NextResponse.json({ error: 'Short URL not found', details: error.message }, { status: 404 })
+    }
+
+    if (!data) {
       return NextResponse.json({ error: 'Short URL not found' }, { status: 404 })
     }
 
