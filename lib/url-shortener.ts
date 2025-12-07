@@ -18,24 +18,37 @@ export async function getShortUrl(
     console.log('Fetching short URL from:', apiUrl)
     
     const response = await fetch(apiUrl)
-    const data = await response.json()
     
-    if (response.ok && data.shortUrl) {
-      console.log('Short URL created successfully:', data.shortUrl)
-      return data.shortUrl
+    if (response.ok) {
+      const data = await response.json()
+      
+      if (data.shortUrl) {
+        console.log('Short URL created successfully:', data.shortUrl)
+        return data.shortUrl
+      }
+      
+      if (data.code) {
+        const shortUrl = `${origin}/s/${data.code}`
+        console.log('Short URL created with code:', shortUrl)
+        return shortUrl
+      }
     }
     
-    if (response.ok && data.code) {
-      const shortUrl = `${origin}/s/${data.code}`
-      console.log('Short URL created with code:', shortUrl)
-      return shortUrl
+    // API returned error - only try to parse JSON if response might be JSON
+    let errorData = null
+    const contentType = response.headers.get('content-type')
+    if (contentType && contentType.includes('application/json')) {
+      try {
+        errorData = await response.json()
+      } catch (e) {
+        // Ignore JSON parse errors for error responses
+      }
     }
     
-    // API returned error
     console.error('API error response:', {
       status: response.status,
       statusText: response.statusText,
-      data
+      data: errorData
     })
     
     // Fallback to old format if API fails
