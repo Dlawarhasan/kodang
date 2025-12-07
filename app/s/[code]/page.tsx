@@ -51,33 +51,59 @@ export default async function ShortUrlRedirect({ params }: PageProps) {
     const validLocales = ['fa', 'ku', 'en']
     const locale = validLocales.includes(data.locale) ? data.locale : 'fa'
 
-    // Handle slug - slugs in database might be URL-encoded or unencoded
-    // The news API route expects the slug to be URL-encoded in the path
-    // So we need to ensure proper encoding for the redirect
+    // Handle slug encoding
+    // Next.js routes automatically decode URL parameters
+    // So we need to ensure the slug is properly formatted for the URL
     let slug = data.slug
     
-    // If slug contains % signs, it's likely URL-encoded
-    // Decode it first, then we'll encode it properly for the URL
+    // If slug contains % signs, it's URL-encoded - decode it
     if (slug.includes('%')) {
       try {
         slug = decodeURIComponent(slug)
       } catch (e) {
-        // If decode fails, slug might not be properly encoded, try to use as-is
-        console.warn('Failed to decode slug, trying direct redirect:', slug)
+        console.warn('Failed to decode slug:', slug, e)
+        // If decode fails, try using as-is
       }
     }
 
-    // The slug should match what's in the news table
-    // Next.js will handle URL encoding in the route, but we encode it here for safety
-    // Use the slug directly - Next.js route will decode it
+    // Verify the article exists before redirecting
+    // This helps catch issues early
+    try {
+      const { data: article, error: articleError } = await supabase
+        .from('news')
+        .select('slug')
+        .eq('slug', slug)
+        .single()
+
+      if (articleError || !article) {
+        console.error('Article not found for slug:', {
+          code,
+          slug,
+          locale,
+          error: articleError?.message
+        })
+        // Still redirect - let the article page handle the 404
+        // This allows for edge cases where slug format differs slightly
+      }
+    } catch (verifyError) {
+      console.warn('Could not verify article existence:', verifyError)
+      // Continue with redirect anyway
+    }
+
+    // Next.js will automatically encode the slug in the URL
+    // The route handler will receive it decoded
+    // So we just use the slug directly (unencoded)
     const redirectUrl = `/${locale}/news/${slug}`
+    
     console.log('Redirecting short URL:', { 
       code, 
       originalSlug: data.slug, 
       processedSlug: slug,
       locale, 
-      redirectUrl 
+      redirectUrl,
+      timestamp: new Date().toISOString()
     })
+    
     redirect(redirectUrl)
   } catch (error: any) {
     console.error('Error resolving short URL:', {
