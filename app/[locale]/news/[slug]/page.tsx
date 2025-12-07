@@ -35,6 +35,11 @@ export default function NewsDetail({
   const [linkCopied, setLinkCopied] = useState(false)
   const [lightboxImage, setLightboxImage] = useState<string | null>(null)
   const [shortUrl, setShortUrl] = useState<string>('')
+  const [errorDetails, setErrorDetails] = useState<{
+    slug?: string
+    similarSlugs?: string[]
+    allSlugs?: Array<{ slug: string; titleFa: string | null }>
+  } | null>(null)
 
   useEffect(() => {
     // Clear article state when locale changes to force re-render
@@ -58,10 +63,29 @@ export default function NewsDetail({
       
       if (!data) {
         console.error('Article not found:', { slug, locale })
+        
+        // Fetch error details and similar slugs
+        Promise.all([
+          fetch(`/api/news/${encodeURIComponent(slug)}?locale=${locale}`)
+            .then(res => res.json())
+            .catch(() => ({})),
+          fetch('/api/news/list-slugs?limit=50')
+            .then(res => res.json())
+            .catch(() => ({ slugs: [] }))
+        ]).then(([errorResponse, slugsResponse]) => {
+          setErrorDetails({
+            slug: slug,
+            similarSlugs: errorResponse.similarSlugs || [],
+            allSlugs: slugsResponse.slugs || []
+          })
+        })
+        
         setLoading(false)
         // notFound() will be called in render when !article
         return
       }
+      
+      setErrorDetails(null) // Clear error details on success
       
       setArticle(data)
       setViews(data?.views || 0)
@@ -241,11 +265,86 @@ export default function NewsDetail({
   }
 
   if (!article && !loading) {
-    notFound()
+    // Show error page with debugging info instead of just notFound()
+    return (
+      <div className="container mx-auto px-4 py-8 max-w-4xl">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-6">
+          <h1 className="text-2xl font-bold text-red-900 mb-4">
+            {locale === 'fa' ? 'پەڕەکە نەدۆزرایەوە' : locale === 'ku' ? 'پەڕەکە نەدۆزرایەوە' : 'Page Not Found'}
+          </h1>
+          <p className="text-red-700 mb-4">
+            {locale === 'fa' ? 'پەڕەیەک کە داوات کردووە بوونی نییە.' : locale === 'ku' ? 'پەڕەیەک کە داوات کردووە بوونی نییە.' : 'The page you requested does not exist.'}
+          </p>
+          
+          {errorDetails && (
+            <div className="mt-6 space-y-4">
+              <div className="bg-white rounded p-4 border border-red-200">
+                <h2 className="font-semibold text-red-900 mb-2">
+                  {locale === 'fa' ? 'زانیاری Debug:' : locale === 'ku' ? 'زانیاری Debug:' : 'Debug Information:'}
+                </h2>
+                <p className="text-sm text-gray-700 mb-2">
+                  <strong>Slug:</strong> <code className="bg-gray-100 px-2 py-1 rounded">{errorDetails.slug}</code>
+                </p>
+                
+                {errorDetails.similarSlugs && errorDetails.similarSlugs.length > 0 && (
+                  <div className="mt-3">
+                    <p className="text-sm font-semibold text-gray-700 mb-2">
+                      {locale === 'fa' ? 'Slug-ە هاوشێوەکان:' : locale === 'ku' ? 'Slug-ە هاوشێوەکان:' : 'Similar Slugs:'}
+                    </p>
+                    <ul className="list-disc list-inside space-y-1">
+                      {errorDetails.similarSlugs.map((similarSlug, idx) => (
+                        <li key={idx} className="text-sm">
+                          <Link 
+                            href={`/${locale}/news/${similarSlug}`}
+                            className="text-blue-600 hover:underline"
+                          >
+                            {similarSlug}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                
+                {errorDetails.allSlugs && errorDetails.allSlugs.length > 0 && (
+                  <div className="mt-3">
+                    <p className="text-sm font-semibold text-gray-700 mb-2">
+                      {locale === 'fa' ? 'هەموو Article-ەکان (20 یەکەم):' : locale === 'ku' ? 'هەموو Article-ەکان (20 یەکەم):' : 'All Articles (First 20):'}
+                    </p>
+                    <ul className="list-disc list-inside space-y-1 max-h-60 overflow-y-auto">
+                      {errorDetails.allSlugs.slice(0, 20).map((item, idx) => (
+                        <li key={idx} className="text-sm">
+                          <Link 
+                            href={`/${locale}/news/${item.slug}`}
+                            className="text-blue-600 hover:underline"
+                          >
+                            {item.slug} {item.titleFa && `- ${item.titleFa.substring(0, 30)}`}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+          
+          <div className="mt-6">
+            <Link 
+              href={`/${locale}/news`}
+              className="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+            >
+              <ArrowRight className={locale === 'en' ? 'mr-2 h-4 w-4' : 'ml-2 h-4 w-4'} />
+              {t('backToList')}
+            </Link>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   if (!article) {
-    return null // This shouldn't happen due to notFound() above, but TypeScript needs it
+    return null // This shouldn't happen due to error page above, but TypeScript needs it
   }
 
   return (
