@@ -136,19 +136,9 @@ export async function GET(
       availableLocales: Object.keys(data.translations || {})
     })
     
-    // Only fail if we have absolutely no content at all
-    if (!title && !content) {
-      console.error('API: Post has no title or content in any language:', { slug, locale, availableLocales: Object.keys(data.translations || {}) })
-      return NextResponse.json(
-        { 
-          error: 'Post not found - no content available',
-          slug: slug,
-          locale: locale,
-          availableLocales: Object.keys(data.translations || {})
-        },
-        { status: 404 }
-      )
-    }
+    // Always return the article if it exists, even if translations are missing
+    // The frontend can handle missing translations
+    // Only fail if article doesn't exist at all (which we already checked above)
 
     // Map translations based on locale with fallbacks
     const newsItem = {
