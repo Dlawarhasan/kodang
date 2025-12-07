@@ -244,8 +244,22 @@ export async function getNewsBySlug(slug: string, locale: string = 'fa'): Promis
     
     if (response.ok) {
       const data = await response.json()
-      console.log('Fetched post data:', { slug, locale, hasTitle: !!data.news?.title, title: data.news?.title?.substring(0, 50) })
-      return data.news
+      console.log('Fetched post data:', { 
+        slug, 
+        locale, 
+        hasNews: !!data.news,
+        hasTitle: !!data.news?.title, 
+        title: data.news?.title?.substring(0, 50),
+        hasContent: !!data.news?.content
+      })
+      
+      // Make sure we return the article even if some fields are missing
+      if (data.news) {
+        return data.news
+      } else {
+        console.error('API returned OK but no news object:', data)
+        return undefined
+      }
     } else {
       const errorData = await response.json().catch(() => ({}))
       console.error('API response not OK for slug:', { 
@@ -254,7 +268,8 @@ export async function getNewsBySlug(slug: string, locale: string = 'fa'): Promis
         status: response.status, 
         statusText: response.statusText,
         error: errorData.error,
-        details: errorData.details
+        details: errorData.details,
+        fullResponse: errorData
       })
       // Return undefined so the component can handle it
       return undefined
