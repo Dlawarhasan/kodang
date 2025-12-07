@@ -30,7 +30,8 @@ export default async function ShortUrlRedirect({ params }: PageProps) {
         code,
         error: error.message,
         errorCode: error.code,
-        hint: error.hint
+        hint: error.hint,
+        details: error.details
       })
       
       // If table doesn't exist, show helpful error
@@ -39,6 +40,15 @@ export default async function ShortUrlRedirect({ params }: PageProps) {
         notFound()
       }
       
+      // If it's a "not found" error (PGRST116 or similar), that's expected for invalid codes
+      // But log it for debugging
+      if (error.code === 'PGRST116' || error.message?.includes('No rows')) {
+        console.error('Short URL code not found in database:', code)
+        notFound()
+      }
+      
+      // For other errors, still return 404 but log more details
+      console.error('Unexpected error looking up short URL:', error)
       notFound()
     }
 
