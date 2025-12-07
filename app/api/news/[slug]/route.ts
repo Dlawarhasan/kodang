@@ -38,9 +38,10 @@ export async function GET(
 
     if (exactMatch.data && !exactMatch.error) {
       data = exactMatch.data
+      console.log('API: Found article with exact match:', { slug, hasTranslations: !!data.translations })
     } else {
       error = exactMatch.error
-      console.warn('API: Exact match failed, trying case-insensitive search:', { slug, error: error?.message })
+      console.warn('API: Exact match failed, trying case-insensitive search:', { slug, error: error?.message, errorCode: error?.code })
       
       // Try case-insensitive search as fallback
       const caseInsensitiveMatch = await supabase
@@ -51,11 +52,34 @@ export async function GET(
         .maybeSingle()
       
       if (caseInsensitiveMatch.data && !caseInsensitiveMatch.error) {
-        console.log('API: Found article with case-insensitive search')
+        console.log('API: Found article with case-insensitive search:', { 
+          requestedSlug: slug, 
+          foundSlug: caseInsensitiveMatch.data.slug,
+          hasTranslations: !!caseInsensitiveMatch.data.translations
+        })
         data = caseInsensitiveMatch.data
         error = null
       } else {
-        error = caseInsensitiveMatch.error || error
+        // Try partial match as last resort
+        console.warn('API: Case-insensitive match also failed, trying partial match:', { slug })
+        const partialMatch = await supabase
+          .from('news')
+          .select('*')
+          .ilike('slug', `%${slug}%`)
+          .limit(5)
+        
+        if (partialMatch.data && partialMatch.data.length > 0) {
+          console.log('API: Found articles with partial match:', { 
+            requestedSlug: slug, 
+            foundCount: partialMatch.data.length,
+            foundSlugs: partialMatch.data.map(d => d.slug)
+          })
+          // Use the first one that matches closely
+          data = partialMatch.data[0]
+          error = null
+        } else {
+          error = caseInsensitiveMatch.error || error
+        }
       }
     }
 
