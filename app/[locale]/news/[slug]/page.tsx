@@ -270,6 +270,119 @@ export default function NewsDetail({
     if (article.category) {
       updateMetaTag('article:section', article.category, false)
     }
+
+    // Add canonical URL
+    let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement
+    if (!canonical) {
+      canonical = document.createElement('link')
+      canonical.setAttribute('rel', 'canonical')
+      document.head.appendChild(canonical)
+    }
+    canonical.setAttribute('href', postUrl)
+
+    // Add hreflang tags for multi-language support
+    const locales = ['fa', 'ku', 'en']
+    locales.forEach(loc => {
+      const hreflangUrl = `${siteUrl}/${loc}/news/${resolvedParams.slug}`
+      let hreflang = document.querySelector(`link[rel="alternate"][hreflang="${loc}"]`) as HTMLLinkElement
+      if (!hreflang) {
+        hreflang = document.createElement('link')
+        hreflang.setAttribute('rel', 'alternate')
+        hreflang.setAttribute('hreflang', loc)
+        document.head.appendChild(hreflang)
+      }
+      hreflang.setAttribute('href', hreflangUrl)
+    })
+
+    // Add x-default hreflang (default to Farsi)
+    let xDefault = document.querySelector('link[rel="alternate"][hreflang="x-default"]') as HTMLLinkElement
+    if (!xDefault) {
+      xDefault = document.createElement('link')
+      xDefault.setAttribute('rel', 'alternate')
+      xDefault.setAttribute('hreflang', 'x-default')
+      document.head.appendChild(xDefault)
+    }
+    xDefault.setAttribute('href', `${siteUrl}/fa/news/${resolvedParams.slug}`)
+
+    // Add structured data (JSON-LD) for better SEO
+    let jsonLd = document.querySelector('script[type="application/ld+json"][data-article]') as HTMLScriptElement
+    if (!jsonLd) {
+      jsonLd = document.createElement('script')
+      jsonLd.setAttribute('type', 'application/ld+json')
+      jsonLd.setAttribute('data-article', 'true')
+      document.head.appendChild(jsonLd)
+    }
+
+    const structuredData = {
+      '@context': 'https://schema.org',
+      '@type': 'NewsArticle',
+      headline: postTitle,
+      description: postDescription,
+      image: postImage ? [postImage] : [],
+      datePublished: article.date || article.created_at,
+      dateModified: article.updated_at || article.date || article.created_at,
+      author: {
+        '@type': 'Person',
+        name: article.author || 'کۆدەنگ',
+        ...(article.authorInstagram && { sameAs: `https://instagram.com/${article.authorInstagram}` }),
+        ...(article.authorFacebook && { sameAs: `https://facebook.com/${article.authorFacebook}` }),
+        ...(article.authorTwitter && { sameAs: `https://twitter.com/${article.authorTwitter}` }),
+        ...(article.authorTelegram && { sameAs: `https://t.me/${article.authorTelegram}` }),
+        ...(article.authorYoutube && { sameAs: `https://youtube.com/${article.authorYoutube}` }),
+      },
+      publisher: {
+        '@type': 'Organization',
+        name: 'کۆدەنگ | KODANG',
+        logo: {
+          '@type': 'ImageObject',
+          url: `${siteUrl}/logo.png`,
+        },
+      },
+      mainEntityOfPage: {
+        '@type': 'WebPage',
+        '@id': postUrl,
+      },
+      articleSection: article.category || 'News',
+      inLanguage: locale === 'fa' ? 'fa-IR' : locale === 'ku' ? 'ku' : 'en',
+    }
+
+    jsonLd.textContent = JSON.stringify(structuredData)
+
+    // Add breadcrumb structured data
+    let breadcrumbJsonLd = document.querySelector('script[type="application/ld+json"][data-breadcrumb]') as HTMLScriptElement
+    if (!breadcrumbJsonLd) {
+      breadcrumbJsonLd = document.createElement('script')
+      breadcrumbJsonLd.setAttribute('type', 'application/ld+json')
+      breadcrumbJsonLd.setAttribute('data-breadcrumb', 'true')
+      document.head.appendChild(breadcrumbJsonLd)
+    }
+
+    const breadcrumbData = {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: locale === 'fa' ? 'ماڵەوە' : locale === 'ku' ? 'ماڵەوە' : 'Home',
+          item: `${siteUrl}/${locale}`,
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: locale === 'fa' ? 'هەواڵەکان' : locale === 'ku' ? 'هەواڵەکان' : 'News',
+          item: `${siteUrl}/${locale}/news`,
+        },
+        {
+          '@type': 'ListItem',
+          position: 3,
+          name: postTitle,
+          item: postUrl,
+        },
+      ],
+    }
+
+    breadcrumbJsonLd.textContent = JSON.stringify(breadcrumbData)
   }, [article, locale, resolvedParams.slug, translatedContent])
 
   // Handle ESC key to close lightbox
