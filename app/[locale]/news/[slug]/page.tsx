@@ -319,8 +319,8 @@ export default function NewsDetail({
       headline: postTitle,
       description: postDescription,
       image: postImage ? [postImage] : [],
-      datePublished: article.date || article.created_at,
-      dateModified: article.updated_at || article.date || article.created_at,
+      datePublished: article.date || new Date().toISOString(),
+      dateModified: article.date || new Date().toISOString(),
       author: {
         '@type': 'Person',
         name: article.author || 'کۆدەنگ',
