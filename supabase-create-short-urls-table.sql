@@ -30,6 +30,10 @@ CREATE INDEX IF NOT EXISTS idx_short_urls_slug_locale ON short_urls(slug, locale
 -- Enable Row Level Security
 ALTER TABLE short_urls ENABLE ROW LEVEL SECURITY;
 
+-- Drop existing policies if they exist (to avoid errors on re-run)
+DROP POLICY IF EXISTS "Anyone can read short URLs" ON short_urls;
+DROP POLICY IF EXISTS "Service role can manage short URLs" ON short_urls;
+
 -- Policy: Allow everyone to read short URLs
 CREATE POLICY "Anyone can read short URLs" ON short_urls
   FOR SELECT
