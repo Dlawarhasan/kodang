@@ -165,10 +165,23 @@ export default async function ShortUrlRedirect({ params }: PageProps) {
     // redirect() throws a NEXT_REDIRECT error which is expected behavior
     redirect(redirectUrl)
   } catch (error: any) {
+    // redirect() throws a NEXT_REDIRECT error which is expected
+    // Don't treat it as an error - re-throw it so Next.js can handle the redirect
+    if (error?.digest?.includes('NEXT_REDIRECT') || 
+        error?.message?.includes('NEXT_REDIRECT') ||
+        error?.digest?.startsWith('NEXT_REDIRECT')) {
+      // This is expected - re-throw it so Next.js can handle the redirect
+      throw error
+    }
+    
+    // For actual errors, log and return 404
     console.error('Error resolving short URL:', {
       code,
       error: error?.message || error,
-      stack: error?.stack
+      stack: error?.stack,
+      errorType: typeof error,
+      errorKeys: error ? Object.keys(error) : [],
+      digest: error?.digest
     })
     notFound()
   }
