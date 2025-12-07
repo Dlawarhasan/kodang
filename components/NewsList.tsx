@@ -215,45 +215,58 @@ export default function NewsList({ news }: NewsListProps) {
                 {/* Footer with Share Icons */}
                 <div className="flex items-center justify-between pt-2">
                   <div className="flex items-center gap-2">
-                    {(() => {
-                      const baseUrl = typeof window !== 'undefined' ? window.location.origin : (process.env.NEXT_PUBLIC_SITE_URL || 'https://kodang.news')
-                      const shortUrl = getShortUrl(item.slug, locale, baseUrl)
-                      
-                      return (
-                        <>
-                          <a
-                            href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shortUrl)}`}
-                            onClick={(e) => e.stopPropagation()}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="p-1.5 rounded hover:bg-blue-50 text-gray-500 hover:text-blue-600 transition-colors"
-                            aria-label="Share on Facebook"
-                          >
-                            <Facebook className="h-4 w-4" />
-                          </a>
-                          <a
-                            href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shortUrl)}&text=${encodeURIComponent(item.title)}`}
-                            onClick={(e) => e.stopPropagation()}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="p-1.5 rounded hover:bg-gray-100 text-gray-500 hover:text-gray-800 transition-colors"
-                            aria-label="Share on Twitter"
-                          >
-                            <Twitter className="h-4 w-4" />
-                          </a>
-                          <a
-                            href={`https://www.instagram.com/kodang.official?igsh=MWN3dThraTZ4YmFldw==`}
-                            onClick={(e) => e.stopPropagation()}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="p-1.5 rounded hover:bg-pink-50 text-gray-500 hover:text-pink-600 transition-colors"
-                            aria-label="Follow on Instagram"
-                          >
-                            <Instagram className="h-4 w-4" />
-                          </a>
-                        </>
-                      )
-                    })()}
+                    <a
+                      href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(typeof window !== 'undefined' ? `${window.location.origin}/${locale}/news/${item.slug}` : `/${locale}/news/${item.slug}`)}`}
+                      onClick={async (e) => {
+                        e.stopPropagation()
+                        // Get short URL for better sharing
+                        const baseUrl = typeof window !== 'undefined' ? window.location.origin : (process.env.NEXT_PUBLIC_SITE_URL || 'https://kodang.news')
+                        try {
+                          const shortUrl = await getShortUrl(item.slug, locale, baseUrl)
+                          window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shortUrl)}`, '_blank')
+                        } catch (error) {
+                          // Fallback to full URL
+                          console.error('Error getting short URL:', error)
+                        }
+                      }}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-1.5 rounded hover:bg-blue-50 text-gray-500 hover:text-blue-600 transition-colors"
+                      aria-label="Share on Facebook"
+                    >
+                      <Facebook className="h-4 w-4" />
+                    </a>
+                    <a
+                      href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(typeof window !== 'undefined' ? `${window.location.origin}/${locale}/news/${item.slug}` : `/${locale}/news/${item.slug}`)}&text=${encodeURIComponent(item.title)}`}
+                      onClick={async (e) => {
+                        e.stopPropagation()
+                        // Get short URL for better sharing
+                        const baseUrl = typeof window !== 'undefined' ? window.location.origin : (process.env.NEXT_PUBLIC_SITE_URL || 'https://kodang.news')
+                        try {
+                          const shortUrl = await getShortUrl(item.slug, locale, baseUrl)
+                          window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(shortUrl)}&text=${encodeURIComponent(item.title)}`, '_blank')
+                        } catch (error) {
+                          // Fallback to full URL
+                          console.error('Error getting short URL:', error)
+                        }
+                      }}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-1.5 rounded hover:bg-gray-100 text-gray-500 hover:text-gray-800 transition-colors"
+                      aria-label="Share on Twitter"
+                    >
+                      <Twitter className="h-4 w-4" />
+                    </a>
+                    <a
+                      href={`https://www.instagram.com/kodang.official?igsh=MWN3dThraTZ4YmFldw==`}
+                      onClick={(e) => e.stopPropagation()}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-1.5 rounded hover:bg-pink-50 text-gray-500 hover:text-pink-600 transition-colors"
+                      aria-label="Follow on Instagram"
+                    >
+                      <Instagram className="h-4 w-4" />
+                    </a>
                   </div>
                   <span className="text-sm text-gray-500 dark:text-gray-400 font-medium group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">
                     {tCommon('readMore')} →

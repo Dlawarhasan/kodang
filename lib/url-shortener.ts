@@ -1,67 +1,44 @@
 // URL Shortener utility
-// Generates short URLs for news posts without requiring a database
-
-// Base62 characters for encoding
-const BASE62 = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+// Uses database to store short URL mappings for truly short URLs
 
 /**
- * Generate a short code from a slug and locale
- * Uses a simple hash function to create a deterministic short code
+ * Get or create a short URL for a slug and locale
+ * Returns a promise that resolves to the short URL
  */
-export function generateShortCode(slug: string, locale: string = 'fa'): string {
-  // Combine slug and locale for uniqueness
-  const input = `${locale}:${slug}`
-  
-  // Simple hash function
-  let hash = 0
-  for (let i = 0; i < input.length; i++) {
-    const char = input.charCodeAt(i)
-    hash = ((hash << 5) - hash) + char
-    hash = hash & hash // Convert to 32-bit integer
-  }
-  
-  // Make it positive
-  hash = Math.abs(hash)
-  
-  // Convert to base62 (6-8 characters)
-  let code = ''
-  while (hash > 0) {
-    code = BASE62[hash % 62] + code
-    hash = Math.floor(hash / 62)
-  }
-  
-  // Ensure minimum length of 6 characters
-  while (code.length < 6) {
-    code = BASE62[0] + code
-  }
-  
-  // Limit to 8 characters max
-  return code.substring(0, 8)
-}
-
-/**
- * Get short URL - uses the shortest possible format
- * Format: /s/{shortCode}?l={locale}&s={slug}
- * The shortCode is deterministic based on slug+locale, so same inputs = same code
- */
-export function getShortUrl(slug: string, locale: string = 'fa', baseUrl?: string): string {
-  const shortCode = generateShortCode(slug, locale)
+export async function getShortUrl(
+  slug: string, 
+  locale: string = 'fa', 
+  baseUrl?: string
+): Promise<string> {
   const origin = baseUrl || (typeof window !== 'undefined' ? window.location.origin : '')
-  // Use minimal query params: l for locale, s for slug
-  return `${origin}/s/${shortCode}?l=${locale}&s=${encodeURIComponent(slug)}`
+  
+  try {
+    // Call API to get or create short URL
+    const response = await fetch(`${origin}/api/shorten?slug=${encodeURIComponent(slug)}&locale=${locale}`)
+    
+    if (response.ok) {
+      const data = await response.json()
+      return data.shortUrl || `${origin}/s/${data.code}`
+    }
+    
+    // Fallback to old format if API fails
+    console.warn('Failed to get short URL from API, using fallback')
+    return `${origin}/${locale}/news/${slug}`
+  } catch (error) {
+    console.error('Error getting short URL:', error)
+    // Fallback to full URL if API fails
+    return `${origin}/${locale}/news/${slug}`
+  }
 }
 
 /**
- * Parse short URL parameters
+ * Get short URL synchronously (for cases where we can't use async)
+ * This will return a placeholder that will be replaced when the API call completes
  */
-export function parseShortUrl(searchParams: URLSearchParams): { locale: string; slug: string } | null {
-  const locale = searchParams.get('l') || 'fa'
-  const slug = searchParams.get('s')
-  
-  if (!slug) {
-    return null
-  }
-  
-  return { locale, slug: decodeURIComponent(slug) }
+export function getShortUrlSync(slug: string, locale: string = 'fa', baseUrl?: string): string {
+  const origin = baseUrl || (typeof window !== 'undefined' ? window.location.origin : '')
+  // Return a placeholder - the actual short URL will be fetched asynchronously
+  // This is a fallback for cases where async is not possible
+  return `${origin}/s/...`
 }
 

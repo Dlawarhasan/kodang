@@ -34,6 +34,7 @@ export default function NewsDetail({
   }>({})
   const [linkCopied, setLinkCopied] = useState(false)
   const [lightboxImage, setLightboxImage] = useState<string | null>(null)
+  const [shortUrl, setShortUrl] = useState<string>('')
 
   useEffect(() => {
     // Clear article state when locale changes to force re-render
@@ -125,6 +126,20 @@ export default function NewsDetail({
         })
     }
   }, [article, loading, resolvedParams.slug])
+
+  // Get short URL when article loads
+  useEffect(() => {
+    if (article && !loading) {
+      const baseUrl = typeof window !== 'undefined' ? window.location.origin : (process.env.NEXT_PUBLIC_SITE_URL || 'https://kodang.news')
+      getShortUrl(resolvedParams.slug, locale, baseUrl)
+        .then(url => setShortUrl(url))
+        .catch(error => {
+          console.error('Error getting short URL:', error)
+          // Fallback to full URL
+          setShortUrl(`${baseUrl}/${locale}/news/${resolvedParams.slug}`)
+        })
+    }
+  }, [article, loading, resolvedParams.slug, locale])
 
   // Update meta tags for social sharing
   useEffect(() => {
@@ -362,85 +377,84 @@ export default function NewsDetail({
             {locale === 'fa' ? 'اشتراک‌گذاری' : locale === 'ku' ? 'هاوبەشکردن' : 'Share'}
           </h3>
           <div className="flex flex-wrap items-center gap-3">
-            {(() => {
-              const baseUrl = typeof window !== 'undefined' ? window.location.origin : (process.env.NEXT_PUBLIC_SITE_URL || 'https://kodang.news')
-              const shortUrl = getShortUrl(resolvedParams.slug, locale, baseUrl)
-              
-              return (
-                <>
-                  {/* Facebook Share */}
-                  <a
-                    href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shortUrl)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded border border-blue-200 bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors"
-                  >
-                    <Facebook className="h-4 w-4" />
-                    <span className="text-sm font-medium">Facebook</span>
-                  </a>
+            {shortUrl ? (
+              <>
+                {/* Facebook Share */}
+                <a
+                  href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shortUrl)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded border border-blue-200 bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors"
+                >
+                  <Facebook className="h-4 w-4" />
+                  <span className="text-sm font-medium">Facebook</span>
+                </a>
 
-                  {/* Twitter Share */}
-                  <a
-                    href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shortUrl)}&text=${encodeURIComponent(article.title)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded border border-gray-200 bg-gray-50 text-gray-600 hover:bg-gray-100 transition-colors"
-                  >
-                    <Twitter className="h-4 w-4" />
-                    <span className="text-sm font-medium">Twitter</span>
-                  </a>
+                {/* Twitter Share */}
+                <a
+                  href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(shortUrl)}&text=${encodeURIComponent(article.title)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded border border-gray-200 bg-gray-50 text-gray-600 hover:bg-gray-100 transition-colors"
+                >
+                  <Twitter className="h-4 w-4" />
+                  <span className="text-sm font-medium">Twitter</span>
+                </a>
 
-                  {/* Telegram Share */}
-                  <a
-                    href={`https://t.me/share/url?url=${encodeURIComponent(shortUrl)}&text=${encodeURIComponent(article.title)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded border border-blue-200 bg-blue-50 text-blue-500 hover:bg-blue-100 transition-colors"
-                  >
-                    <Send className="h-4 w-4" />
-                    <span className="text-sm font-medium">Telegram</span>
-                  </a>
+                {/* Telegram Share */}
+                <a
+                  href={`https://t.me/share/url?url=${encodeURIComponent(shortUrl)}&text=${encodeURIComponent(article.title)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded border border-blue-200 bg-blue-50 text-blue-500 hover:bg-blue-100 transition-colors"
+                >
+                  <Send className="h-4 w-4" />
+                  <span className="text-sm font-medium">Telegram</span>
+                </a>
 
-                  {/* WhatsApp Share */}
-                  <a
-                    href={`https://wa.me/?text=${encodeURIComponent(`${article.title} ${shortUrl}`)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded border border-green-200 bg-green-50 text-green-600 hover:bg-green-100 transition-colors"
-                  >
-                    <Share2 className="h-4 w-4" />
-                    <span className="text-sm font-medium">WhatsApp</span>
-                  </a>
+                {/* WhatsApp Share */}
+                <a
+                  href={`https://wa.me/?text=${encodeURIComponent(`${article.title} ${shortUrl}`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded border border-green-200 bg-green-50 text-green-600 hover:bg-green-100 transition-colors"
+                >
+                  <Share2 className="h-4 w-4" />
+                  <span className="text-sm font-medium">WhatsApp</span>
+                </a>
 
-                  {/* Copy Link */}
-                  <button
-                    onClick={() => {
-                      navigator.clipboard.writeText(shortUrl).then(() => {
-                        setLinkCopied(true)
-                        setTimeout(() => setLinkCopied(false), 2000)
-                      })
-                    }}
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded border border-gray-200 bg-gray-50 text-gray-600 hover:bg-gray-100 transition-colors"
-                  >
-                    {linkCopied ? (
-                      <>
-                        <Check className="h-4 w-4 text-green-600" />
-                        <span className="text-sm font-medium text-green-600">
-                          {locale === 'fa' ? 'کپی شد!' : locale === 'ku' ? 'کۆپی کرا!' : 'Copied!'}
-                        </span>
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="h-4 w-4" />
-                        <span className="text-sm font-medium">
-                          {locale === 'fa' ? 'کپی لینک' : locale === 'ku' ? 'کۆپی لینک' : 'Copy Link'}
-                        </span>
-                      </>
-                    )}
-                  </button>
-                </>
-              )
-            })()}
+                {/* Copy Link */}
+                <button
+                  onClick={() => {
+                    navigator.clipboard.writeText(shortUrl).then(() => {
+                      setLinkCopied(true)
+                      setTimeout(() => setLinkCopied(false), 2000)
+                    })
+                  }}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded border border-gray-200 bg-gray-50 text-gray-600 hover:bg-gray-100 transition-colors"
+                >
+                  {linkCopied ? (
+                    <>
+                      <Check className="h-4 w-4 text-green-600" />
+                      <span className="text-sm font-medium text-green-600">
+                        {locale === 'fa' ? 'کپی شد!' : locale === 'ku' ? 'کۆپی کرا!' : 'Copied!'}
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="h-4 w-4" />
+                      <span className="text-sm font-medium">
+                        {locale === 'fa' ? 'کپی لینک' : locale === 'ku' ? 'کۆپی لینک' : 'Copy Link'}
+                      </span>
+                    </>
+                  )}
+                </button>
+              </>
+            ) : (
+              <p className="text-sm text-gray-500">
+                {locale === 'fa' ? 'در حال بارگذاری...' : locale === 'ku' ? 'بارکردن...' : 'Loading...'}
+              </p>
+            )}
           </div>
         </div>
 
