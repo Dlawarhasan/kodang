@@ -84,14 +84,24 @@ export async function GET(
     }
 
     if (error || !data) {
-      // Try to get a list of similar slugs for debugging
+      // Last resort: try to find ANY article with similar text
+      console.error('API: All lookup methods failed, trying last resort search:', { slug })
+      
+      // Get first few articles just to show something exists
+      const anyArticles = await supabase
+        .from('news')
+        .select('slug, translations')
+        .limit(10)
+        .order('created_at', { ascending: false })
+      
+      // Try to get similar slugs
       const similarSlugs = await supabase
         .from('news')
         .select('slug')
         .ilike('slug', `%${slug.substring(0, Math.min(10, slug.length))}%`)
         .limit(5)
       
-      console.error('API: Article not found:', { 
+      console.error('API: Article not found after all attempts:', { 
         slug, 
         locale, 
         error: error?.message,
@@ -99,7 +109,8 @@ export async function GET(
         triedExact: true,
         triedCaseInsensitive: true,
         triedPartial: true,
-        similarSlugs: similarSlugs.data?.map(s => s.slug) || []
+        similarSlugs: similarSlugs.data?.map(s => s.slug) || [],
+        sampleSlugs: anyArticles.data?.slice(0, 5).map(a => a.slug) || []
       })
       
       return NextResponse.json({ 
@@ -111,7 +122,14 @@ export async function GET(
         triedCaseInsensitive: true,
         triedPartial: true,
         similarSlugs: similarSlugs.data?.map(s => s.slug) || [],
-        suggestion: 'Check /api/news/list-slugs to see all available slugs'
+        sampleSlugs: anyArticles.data?.slice(0, 5).map(a => a.slug) || [],
+        suggestion: 'Check /api/news/list-slugs to see all available slugs',
+        debug: {
+          requestedSlug: slug,
+          slugLength: slug.length,
+          slugEncoded: encodeURIComponent(slug),
+          slugDecoded: decodeURIComponent(encodeURIComponent(slug))
+        }
       }, { status: 404 })
     }
 
