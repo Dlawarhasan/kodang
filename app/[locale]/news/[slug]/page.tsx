@@ -132,11 +132,16 @@ export default function NewsDetail({
     if (article && !loading) {
       const baseUrl = typeof window !== 'undefined' ? window.location.origin : (process.env.NEXT_PUBLIC_SITE_URL || 'https://kodang.news')
       getShortUrl(resolvedParams.slug, locale, baseUrl)
-        .then(url => setShortUrl(url))
+        .then(url => {
+          console.log('Short URL generated:', url)
+          setShortUrl(url)
+        })
         .catch(error => {
           console.error('Error getting short URL:', error)
           // Fallback to full URL
-          setShortUrl(`${baseUrl}/${locale}/news/${resolvedParams.slug}`)
+          const fallbackUrl = `${baseUrl}/${locale}/news/${resolvedParams.slug}`
+          console.warn('Using fallback URL:', fallbackUrl)
+          setShortUrl(fallbackUrl)
         })
     }
   }, [article, loading, resolvedParams.slug, locale])

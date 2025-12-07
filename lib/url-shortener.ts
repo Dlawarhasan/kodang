@@ -14,12 +14,29 @@ export async function getShortUrl(
   
   try {
     // Call API to get or create short URL
-    const response = await fetch(`${origin}/api/shorten?slug=${encodeURIComponent(slug)}&locale=${locale}`)
+    const apiUrl = `${origin}/api/shorten?slug=${encodeURIComponent(slug)}&locale=${locale}`
+    console.log('Fetching short URL from:', apiUrl)
     
-    if (response.ok) {
-      const data = await response.json()
-      return data.shortUrl || `${origin}/s/${data.code}`
+    const response = await fetch(apiUrl)
+    const data = await response.json()
+    
+    if (response.ok && data.shortUrl) {
+      console.log('Short URL created successfully:', data.shortUrl)
+      return data.shortUrl
     }
+    
+    if (response.ok && data.code) {
+      const shortUrl = `${origin}/s/${data.code}`
+      console.log('Short URL created with code:', shortUrl)
+      return shortUrl
+    }
+    
+    // API returned error
+    console.error('API error response:', {
+      status: response.status,
+      statusText: response.statusText,
+      data
+    })
     
     // Fallback to old format if API fails
     console.warn('Failed to get short URL from API, using fallback')

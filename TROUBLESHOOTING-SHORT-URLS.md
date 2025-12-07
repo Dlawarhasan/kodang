@@ -2,6 +2,24 @@
 
 ## کێشە: کاتێک کلیک لە short URL دەکەم، 404 دەردەکەوێت
 
+### 🔍 Test Endpoint
+
+یەکەم شت - تاقی بکەوە system کار دەکات:
+
+بچۆ بۆ:
+```
+https://kodang.news/api/shorten/test
+```
+
+ئەمە دەڵێت:
+- خشتەی `short_urls` هەیە یان نا
+- چەند short URL هەیە
+- Sample short URLs
+
+---
+
+## کێشە: کاتێک کلیک لە short URL دەکەم، 404 دەردەکەوێت
+
 ### هەنگاو 1: چێک بکە خشتەی short_urls هەیە
 
 لە Supabase SQL Editor:
