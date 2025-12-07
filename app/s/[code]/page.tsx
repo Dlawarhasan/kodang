@@ -90,15 +90,17 @@ export default async function ShortUrlRedirect({ params }: PageProps) {
       // Continue with redirect anyway
     }
 
-    // Next.js will automatically encode the slug in the URL
-    // The route handler will receive it decoded
-    // So we just use the slug directly (unencoded)
-    const redirectUrl = `/${locale}/news/${slug}`
+    // Encode the slug properly for the URL
+    // Next.js routes will decode it automatically when the page loads
+    // But redirect() needs a properly encoded URL
+    const encodedSlug = encodeURIComponent(slug)
+    const redirectUrl = `/${locale}/news/${encodedSlug}`
     
     console.log('Redirecting short URL:', { 
       code, 
       originalSlug: data.slug, 
       processedSlug: slug,
+      encodedSlug,
       locale, 
       redirectUrl,
       timestamp: new Date().toISOString()
