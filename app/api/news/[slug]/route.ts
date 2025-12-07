@@ -7,19 +7,73 @@ export async function GET(
 ) {
   try {
     const resolvedParams = 'then' in params ? await params : params
-    const slug = decodeURIComponent(resolvedParams.slug)
+    let slug = resolvedParams.slug
+    
+    // Decode slug if it's URL-encoded
+    // Next.js route params are already decoded, but handle both cases
+    try {
+      const decoded = decodeURIComponent(slug)
+      if (decoded !== slug) {
+        slug = decoded
+      }
+    } catch (e) {
+      // If decode fails, slug is probably not encoded, use as-is
+    }
+    
     const supabase = createServerClient()
     const { searchParams } = new URL(request.url)
     const locale = searchParams.get('locale') || 'fa' // Default to Farsi
 
-    const { data, error } = await supabase
+    console.log('API: Looking up article:', { slug, locale, originalSlug: resolvedParams.slug })
+
+    let data = null
+    let error = null
+
+    // Try exact match first
+    const exactMatch = await supabase
       .from('news')
       .select('*')
       .eq('slug', slug)
       .single()
 
+    if (exactMatch.data && !exactMatch.error) {
+      data = exactMatch.data
+    } else {
+      error = exactMatch.error
+      console.warn('API: Exact match failed, trying case-insensitive search:', { slug, error: error?.message })
+      
+      // Try case-insensitive search as fallback
+      const caseInsensitiveMatch = await supabase
+        .from('news')
+        .select('*')
+        .ilike('slug', slug)
+        .limit(1)
+        .maybeSingle()
+      
+      if (caseInsensitiveMatch.data && !caseInsensitiveMatch.error) {
+        console.log('API: Found article with case-insensitive search')
+        data = caseInsensitiveMatch.data
+        error = null
+      } else {
+        error = caseInsensitiveMatch.error || error
+      }
+    }
+
     if (error || !data) {
-      return NextResponse.json({ error: 'پۆست نەدۆزرایەوە' }, { status: 404 })
+      console.error('API: Article not found:', { 
+        slug, 
+        locale, 
+        error: error?.message,
+        errorCode: error?.code,
+        triedExact: true,
+        triedCaseInsensitive: true
+      })
+      return NextResponse.json({ 
+        error: 'پۆست نەدۆزرایەوە',
+        details: error?.message,
+        slug: slug,
+        locale: locale
+      }, { status: 404 })
     }
 
     // Get translations - prioritize requested locale, fallback to Farsi
