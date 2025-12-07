@@ -52,9 +52,19 @@ export default async function ShortUrlRedirect({ params }: PageProps) {
       notFound()
     }
 
-    if (!data || !data.slug || !data.locale) {
-      console.error('Short URL data missing:', { code, data })
+    if (!data) {
+      console.error('Short URL data is null/undefined:', { code })
       notFound()
+    }
+
+    if (!data.slug) {
+      console.error('Short URL slug is missing:', { code, data })
+      notFound()
+    }
+
+    if (!data.locale) {
+      console.warn('Short URL locale is missing, defaulting to fa:', { code, data })
+      // Don't fail - just use default locale
     }
 
     // Validate locale
