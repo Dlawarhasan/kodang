@@ -38,7 +38,13 @@ export async function GET(
 
     if (exactMatch.data && !exactMatch.error) {
       data = exactMatch.data
-      console.log('API: Found article with exact match:', { slug, hasTranslations: !!data.translations })
+      console.log('API: Found article with exact match:', { 
+        slug, 
+        hasTranslations: !!data.translations,
+        hasFa: !!(data.translations?.fa?.title),
+        hasKu: !!(data.translations?.ku?.title),
+        hasEn: !!(data.translations?.en?.title)
+      })
     } else {
       error = exactMatch.error
       console.warn('API: Exact match failed, trying case-insensitive search:', { slug, error: error?.message, errorCode: error?.code })
