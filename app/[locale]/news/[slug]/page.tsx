@@ -65,23 +65,50 @@ export default function NewsDetail({
         console.error('Article not found:', { slug, locale })
         
         // Fetch error details and similar slugs
-        Promise.all([
-          fetch(`/api/news/${encodeURIComponent(slug)}?locale=${locale}`)
-            .then(res => res.json())
-            .catch(() => ({})),
-          fetch('/api/news/list-slugs?limit=50')
-            .then(res => res.json())
-            .catch(() => ({ slugs: [] }))
-        ]).then(([errorResponse, slugsResponse]) => {
-          setErrorDetails({
-            slug: slug,
-            similarSlugs: errorResponse.similarSlugs || [],
-            allSlugs: slugsResponse.slugs || []
+        fetch(`/api/news/${encodeURIComponent(slug)}?locale=${locale}`)
+          .then(res => res.json())
+          .then(errorResponse => {
+            fetch('/api/news/list-slugs?limit=50')
+              .then(res => res.json())
+              .then(slugsResponse => {
+                setErrorDetails({
+                  slug: slug,
+                  similarSlugs: errorResponse.similarSlugs || [],
+                  allSlugs: slugsResponse.slugs || []
+                })
+                setLoading(false)
+              })
+              .catch(() => {
+                setErrorDetails({
+                  slug: slug,
+                  similarSlugs: errorResponse.similarSlugs || [],
+                  allSlugs: []
+                })
+                setLoading(false)
+              })
           })
-        })
+          .catch(() => {
+            fetch('/api/news/list-slugs?limit=50')
+              .then(res => res.json())
+              .then(slugsResponse => {
+                setErrorDetails({
+                  slug: slug,
+                  similarSlugs: [],
+                  allSlugs: slugsResponse.slugs || []
+                })
+                setLoading(false)
+              })
+              .catch(() => {
+                setErrorDetails({
+                  slug: slug,
+                  similarSlugs: [],
+                  allSlugs: []
+                })
+                setLoading(false)
+              })
+          })
         
-        setLoading(false)
-        // notFound() will be called in render when !article
+        // Don't return here - let the error page render
         return
       }
       
