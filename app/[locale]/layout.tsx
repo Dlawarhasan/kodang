@@ -13,6 +13,9 @@ const inter = Inter({ subsets: ['latin', 'latin-ext'] })
 export const metadata: Metadata = {
   title: 'کۆدەنگ | KODANG',
   description: 'وێبسایتی هەواڵی مۆدێرن کۆدەنگ | KODANG Modern News Website',
+  verification: {
+    google: 'google6df8cc884e12b968',
+  },
   other: {
     'font-vazir': 'https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;200;300;400;500;600;700;800;900&display=swap',
   },
