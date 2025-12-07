@@ -156,9 +156,13 @@ export default async function ShortUrlRedirect({ params }: PageProps) {
       encodedSlug,
       locale, 
       redirectUrl,
+      articleFound,
       timestamp: new Date().toISOString()
     })
     
+    // Always redirect, even if article verification failed
+    // The article page will handle 404 with better debugging
+    // redirect() throws a NEXT_REDIRECT error which is expected behavior
     redirect(redirectUrl)
   } catch (error: any) {
     console.error('Error resolving short URL:', {
