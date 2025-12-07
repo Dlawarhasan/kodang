@@ -291,7 +291,8 @@ export default function NewsDetail({
     )
   }
 
-  if (!article && !loading) {
+  // Show error page if article not found (even if errorDetails is still loading)
+  if (!article) {
     // Show error page with debugging info instead of just notFound()
     return (
       <div className="container mx-auto px-4 py-8 max-w-4xl">
@@ -303,15 +304,17 @@ export default function NewsDetail({
             {locale === 'fa' ? 'پەڕەیەک کە داوات کردووە بوونی نییە.' : locale === 'ku' ? 'پەڕەیەک کە داوات کردووە بوونی نییە.' : 'The page you requested does not exist.'}
           </p>
           
-          {errorDetails && (
-            <div className="mt-6 space-y-4">
-              <div className="bg-white rounded p-4 border border-red-200">
-                <h2 className="font-semibold text-red-900 mb-2">
-                  {locale === 'fa' ? 'زانیاری Debug:' : locale === 'ku' ? 'زانیاری Debug:' : 'Debug Information:'}
-                </h2>
-                <p className="text-sm text-gray-700 mb-2">
-                  <strong>Slug:</strong> <code className="bg-gray-100 px-2 py-1 rounded">{errorDetails.slug}</code>
-                </p>
+          <div className="mt-6 space-y-4">
+            <div className="bg-white rounded p-4 border border-red-200">
+              <h2 className="font-semibold text-red-900 mb-2">
+                {locale === 'fa' ? 'زانیاری Debug:' : locale === 'ku' ? 'زانیاری Debug:' : 'Debug Information:'}
+              </h2>
+              <p className="text-sm text-gray-700 mb-2">
+                <strong>Slug:</strong> <code className="bg-gray-100 px-2 py-1 rounded">{resolvedParams.slug}</code>
+              </p>
+              
+              {errorDetails ? (
+                <>
                 
                 {errorDetails.similarSlugs && errorDetails.similarSlugs.length > 0 && (
                   <div className="mt-3">
