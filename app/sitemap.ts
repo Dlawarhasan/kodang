@@ -26,7 +26,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       ...locales.map(locale => ({
         url: `${baseUrl}/${locale}`,
         lastModified: new Date(),
-        changeFrequency: 'daily',
+        changeFrequency: 'daily' as const,
         priority: 0.9,
       })),
     ]
@@ -49,7 +49,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...locales.map(locale => ({
       url: `${baseUrl}/${locale}/news`,
       lastModified: new Date(),
-      changeFrequency: 'hourly',
+      changeFrequency: 'hourly' as const,
       priority: 0.8,
     })),
   ]
@@ -73,7 +73,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         sitemapEntries.push({
           url: `${baseUrl}/${locale}/news/${encodeURIComponent(article.slug)}`,
           lastModified,
-          changeFrequency: 'weekly',
+          changeFrequency: 'weekly' as const,
           priority: 0.7,
         })
       }
