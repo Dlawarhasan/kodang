@@ -164,6 +164,7 @@ export async function GET(
     // Don't require specific locale - just return what's available
     const title = getTranslation('title')
     const content = getTranslation('content')
+    const excerpt = getTranslation('excerpt')
     
     // Log what we found
     console.log('API: Translation results:', { 
@@ -172,7 +173,8 @@ export async function GET(
       hasTitle: !!title, 
       hasContent: !!content,
       titlePreview: title?.substring(0, 50),
-      availableLocales: Object.keys(data.translations || {})
+      availableLocales: Object.keys(data.translations || {}),
+      rawTranslations: data.translations
     })
     
     // Always return the article if it exists, even if translations are missing
@@ -180,19 +182,39 @@ export async function GET(
     // Only fail if article doesn't exist at all (which we already checked above)
 
     // Map translations based on locale with fallbacks
+    // Ensure we always have at least a title (use slug as fallback if needed)
     const newsItem = {
       ...data,
-      title: getTranslation('title'),
-      excerpt: getTranslation('excerpt') || null, // Excerpt is optional
-      content: getTranslation('content') || '',
-      // Map database column names to camelCase for frontend
+      id: data.id,
+      slug: data.slug,
+      title: title || data.slug || 'Untitled',
+      excerpt: excerpt || null, // Excerpt is optional
+      content: content || '',
+      category: data.category || null,
+      image: data.image || null,
+      video: data.video || null,
+      audio: data.audio || null,
+      thumbnail: data.thumbnail || null,
+      author: data.author || null,
       authorInstagram: data.author_instagram || null,
       authorFacebook: data.author_facebook || null,
       authorTwitter: data.author_twitter || null,
       authorTelegram: data.author_telegram || null,
       authorYoutube: data.author_youtube || null,
       views: data.views || 0,
+      created_at: data.created_at,
+      updated_at: data.updated_at,
+      section: data.section || null,
+      translations: data.translations || {}
     }
+
+    console.log('API: Returning article response:', { 
+      slug, 
+      hasNewsItem: !!newsItem,
+      hasTitle: !!newsItem.title,
+      titlePreview: newsItem.title?.substring(0, 50),
+      hasContent: !!newsItem.content
+    })
 
     return NextResponse.json({ news: newsItem })
   } catch (error: any) {
