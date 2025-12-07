@@ -244,6 +244,10 @@ export default function NewsDetail({
     notFound()
   }
 
+  if (!article) {
+    return null // This shouldn't happen due to notFound() above, but TypeScript needs it
+  }
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <Link 
