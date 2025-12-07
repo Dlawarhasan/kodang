@@ -84,19 +84,34 @@ export async function GET(
     }
 
     if (error || !data) {
+      // Try to get a list of similar slugs for debugging
+      const similarSlugs = await supabase
+        .from('news')
+        .select('slug')
+        .ilike('slug', `%${slug.substring(0, Math.min(10, slug.length))}%`)
+        .limit(5)
+      
       console.error('API: Article not found:', { 
         slug, 
         locale, 
         error: error?.message,
         errorCode: error?.code,
         triedExact: true,
-        triedCaseInsensitive: true
+        triedCaseInsensitive: true,
+        triedPartial: true,
+        similarSlugs: similarSlugs.data?.map(s => s.slug) || []
       })
+      
       return NextResponse.json({ 
         error: 'پۆست نەدۆزرایەوە',
         details: error?.message,
         slug: slug,
-        locale: locale
+        locale: locale,
+        triedExact: true,
+        triedCaseInsensitive: true,
+        triedPartial: true,
+        similarSlugs: similarSlugs.data?.map(s => s.slug) || [],
+        suggestion: 'Check /api/news/list-slugs to see all available slugs'
       }, { status: 404 })
     }
 
