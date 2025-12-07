@@ -51,9 +51,24 @@ export default async function ShortUrlRedirect({ params }: PageProps) {
     const validLocales = ['fa', 'ku', 'en']
     const locale = validLocales.includes(data.locale) ? data.locale : 'fa'
 
-    // Redirect to the full URL
-    const redirectUrl = `/${locale}/news/${encodeURIComponent(data.slug)}`
-    console.log('Redirecting short URL:', { code, slug: data.slug, locale, redirectUrl })
+    // Decode slug if it's URL-encoded (handle both encoded and unencoded slugs)
+    let slug = data.slug
+    try {
+      // Try to decode - if it's already decoded, this will just return the original
+      const decoded = decodeURIComponent(slug)
+      // If decoding changed it, use decoded version
+      if (decoded !== slug) {
+        slug = decoded
+      }
+    } catch (e) {
+      // If decode fails, slug is probably not encoded, use as-is
+      slug = data.slug
+    }
+
+    // Encode the slug properly for the URL
+    const encodedSlug = encodeURIComponent(slug)
+    const redirectUrl = `/${locale}/news/${encodedSlug}`
+    console.log('Redirecting short URL:', { code, originalSlug: data.slug, decodedSlug: slug, locale, redirectUrl })
     redirect(redirectUrl)
   } catch (error: any) {
     console.error('Error resolving short URL:', {
