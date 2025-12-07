@@ -97,16 +97,17 @@ export async function GET(
       return ''
     }
 
-    // Check if post has content in the requested language
-    // Post must have at least title in the requested language
-    // Content can fallback to other languages if not available
-    const translation = data.translations?.[locale]
+    // Use getTranslation function which already handles fallbacks
+    // Don't require specific locale - just return what's available
+    const title = getTranslation('title')
+    const content = getTranslation('content')
     
-    if (!translation) {
-      console.error('API: No translation found for locale:', { slug, locale, availableLocales: Object.keys(data.translations || {}) })
+    // Only fail if we have absolutely no content at all
+    if (!title && !content) {
+      console.error('API: Post has no title or content in any language:', { slug, locale, availableLocales: Object.keys(data.translations || {}) })
       return NextResponse.json(
         { 
-          error: 'Post not found in this language',
+          error: 'Post not found - no content available',
           slug: slug,
           locale: locale,
           availableLocales: Object.keys(data.translations || {})
@@ -114,36 +115,13 @@ export async function GET(
         { status: 404 }
       )
     }
-    
-    const hasTitle = translation.title && translation.title.trim() !== ''
-    const hasContent = translation.content && translation.content.trim() !== ''
-    
-    // Post must have at least title in the requested language
-    // Content can be empty (will use fallback or show empty)
-    if (!hasTitle) {
-      console.error('API: Post missing title in requested locale:', { slug, locale, hasTitle, hasContent })
-      return NextResponse.json(
-        { 
-          error: 'Post not found in this language - missing title',
-          slug: slug,
-          locale: locale
-        },
-        { status: 404 }
-      )
-    }
-    
-    // Log if content is missing (but don't fail - allow empty content)
-    if (!hasContent) {
-      console.warn('API: Post missing content in requested locale, will use fallback:', { slug, locale })
-    }
 
-    // Map translations based on locale
-    // Use requested locale, but fallback to other languages if content is missing
+    // Map translations based on locale with fallbacks
     const newsItem = {
       ...data,
-      title: translation?.title || getTranslation('title'),
-      excerpt: translation?.excerpt || null, // Excerpt is optional
-      content: translation?.content || getTranslation('content') || '',
+      title: getTranslation('title'),
+      excerpt: getTranslation('excerpt') || null, // Excerpt is optional
+      content: getTranslation('content') || '',
       // Map database column names to camelCase for frontend
       authorInstagram: data.author_instagram || null,
       authorFacebook: data.author_facebook || null,
