@@ -97,13 +97,20 @@ export async function GET(
       return ''
     }
 
-    // Check if post is fully in the requested language
-    // Post must have title AND content in the requested language
-    // This ensures only posts that are actually "posted in" that language are accessible
+    // Check if post has content in the requested language
+    // Post must have at least title in the requested language
+    // Content can fallback to other languages if not available
     const translation = data.translations?.[locale]
+    
     if (!translation) {
+      console.error('API: No translation found for locale:', { slug, locale, availableLocales: Object.keys(data.translations || {}) })
       return NextResponse.json(
-        { error: 'Post not found in this language' },
+        { 
+          error: 'Post not found in this language',
+          slug: slug,
+          locale: locale,
+          availableLocales: Object.keys(data.translations || {})
+        },
         { status: 404 }
       )
     }
@@ -111,13 +118,23 @@ export async function GET(
     const hasTitle = translation.title && translation.title.trim() !== ''
     const hasContent = translation.content && translation.content.trim() !== ''
     
-    // Post must have BOTH: title AND content in the requested language
-    // This ensures the post is fully written in that language
-    if (!hasTitle || !hasContent) {
+    // Post must have at least title in the requested language
+    // Content can be empty (will use fallback or show empty)
+    if (!hasTitle) {
+      console.error('API: Post missing title in requested locale:', { slug, locale, hasTitle, hasContent })
       return NextResponse.json(
-        { error: 'Post not found in this language' },
+        { 
+          error: 'Post not found in this language - missing title',
+          slug: slug,
+          locale: locale
+        },
         { status: 404 }
       )
+    }
+    
+    // Log if content is missing (but don't fail - allow empty content)
+    if (!hasContent) {
+      console.warn('API: Post missing content in requested locale, will use fallback:', { slug, locale })
     }
 
     // Map translations based on locale (only use requested locale, no fallback)
