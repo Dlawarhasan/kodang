@@ -102,6 +102,16 @@ export async function GET(
     const title = getTranslation('title')
     const content = getTranslation('content')
     
+    // Log what we found
+    console.log('API: Translation results:', { 
+      slug, 
+      locale, 
+      hasTitle: !!title, 
+      hasContent: !!content,
+      titlePreview: title?.substring(0, 50),
+      availableLocales: Object.keys(data.translations || {})
+    })
+    
     // Only fail if we have absolutely no content at all
     if (!title && !content) {
       console.error('API: Post has no title or content in any language:', { slug, locale, availableLocales: Object.keys(data.translations || {}) })
