@@ -1,5 +1,18 @@
+-- ============================================
 -- Create short_urls table for URL shortening
--- Run this in Supabase SQL Editor
+-- ============================================
+-- IMPORTANT: You MUST run this SQL script in Supabase SQL Editor
+-- before short URLs will work!
+--
+-- Steps:
+-- 1. Go to Supabase Dashboard
+-- 2. Click on "SQL Editor" in the left sidebar
+-- 3. Copy and paste this entire file
+-- 4. Click "Run" button
+-- 5. Wait for success message
+--
+-- After running this, short URLs will work properly.
+-- ============================================
 
 CREATE TABLE IF NOT EXISTS short_urls (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
