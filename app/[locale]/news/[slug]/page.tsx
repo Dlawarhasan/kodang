@@ -35,6 +35,7 @@ export default function NewsDetail({
   const [linkCopied, setLinkCopied] = useState(false)
   const [lightboxImage, setLightboxImage] = useState<string | null>(null)
   const [shortUrl, setShortUrl] = useState<string>('')
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     // Clear article state when locale changes to force re-render
@@ -59,9 +60,13 @@ export default function NewsDetail({
       if (!data) {
         console.error('Article not found:', { slug, locale })
         setLoading(false)
-        notFound()
+        setError(`Article not found: ${slug}`)
+        // Don't call notFound() here - it doesn't work in useEffect
+        // Instead, show error state
         return
       }
+      
+      setError(null) // Clear any previous errors
       
       setArticle(data)
       setViews(data?.views || 0)
@@ -240,8 +245,31 @@ export default function NewsDetail({
     )
   }
 
-  if (!article) {
-    notFound()
+  if (error || !article) {
+    return (
+      <div className="container mx-auto px-4 py-8 max-w-4xl">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+          <h1 className="text-2xl font-bold text-red-900 mb-4">
+            {locale === 'fa' ? 'پەڕەکە نەدۆزرایەوە' : locale === 'ku' ? 'پەڕەکە نەدۆزرایەوە' : 'Page Not Found'}
+          </h1>
+          <p className="text-red-700 mb-4">
+            {error || (locale === 'fa' ? 'پەڕەیەک کە داوات کردووە بوونی نییە.' : locale === 'ku' ? 'پەڕەیەک کە داوات کردووە بوونی نییە.' : 'The page you requested does not exist.')}
+          </p>
+          {error && (
+            <p className="text-sm text-red-600 mb-4 font-mono">
+              {error}
+            </p>
+          )}
+          <Link 
+            href={`/${locale}/news`}
+            className="inline-flex items-center px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+          >
+            <ArrowRight className={locale === 'en' ? 'mr-2 h-4 w-4' : 'ml-2 h-4 w-4'} />
+            {t('backToList')}
+          </Link>
+        </div>
+      </div>
+    )
   }
 
   return (
