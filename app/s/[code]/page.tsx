@@ -51,24 +51,33 @@ export default async function ShortUrlRedirect({ params }: PageProps) {
     const validLocales = ['fa', 'ku', 'en']
     const locale = validLocales.includes(data.locale) ? data.locale : 'fa'
 
-    // Decode slug if it's URL-encoded (handle both encoded and unencoded slugs)
+    // Handle slug - slugs in database might be URL-encoded or unencoded
+    // The news API route expects the slug to be URL-encoded in the path
+    // So we need to ensure proper encoding for the redirect
     let slug = data.slug
-    try {
-      // Try to decode - if it's already decoded, this will just return the original
-      const decoded = decodeURIComponent(slug)
-      // If decoding changed it, use decoded version
-      if (decoded !== slug) {
-        slug = decoded
+    
+    // If slug contains % signs, it's likely URL-encoded
+    // Decode it first, then we'll encode it properly for the URL
+    if (slug.includes('%')) {
+      try {
+        slug = decodeURIComponent(slug)
+      } catch (e) {
+        // If decode fails, slug might not be properly encoded, try to use as-is
+        console.warn('Failed to decode slug, trying direct redirect:', slug)
       }
-    } catch (e) {
-      // If decode fails, slug is probably not encoded, use as-is
-      slug = data.slug
     }
 
-    // Encode the slug properly for the URL
-    const encodedSlug = encodeURIComponent(slug)
-    const redirectUrl = `/${locale}/news/${encodedSlug}`
-    console.log('Redirecting short URL:', { code, originalSlug: data.slug, decodedSlug: slug, locale, redirectUrl })
+    // The slug should match what's in the news table
+    // Next.js will handle URL encoding in the route, but we encode it here for safety
+    // Use the slug directly - Next.js route will decode it
+    const redirectUrl = `/${locale}/news/${slug}`
+    console.log('Redirecting short URL:', { 
+      code, 
+      originalSlug: data.slug, 
+      processedSlug: slug,
+      locale, 
+      redirectUrl 
+    })
     redirect(redirectUrl)
   } catch (error: any) {
     console.error('Error resolving short URL:', {

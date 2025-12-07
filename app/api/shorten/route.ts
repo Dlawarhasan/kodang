@@ -24,11 +24,23 @@ function generateShortCode(): string {
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
-    const slug = searchParams.get('slug')
+    let slug = searchParams.get('slug')
     const locale = searchParams.get('locale') || 'fa'
 
     if (!slug) {
       return NextResponse.json({ error: 'Slug is required' }, { status: 400 })
+    }
+
+    // Decode slug if it's URL-encoded (searchParams.get() should auto-decode, but handle both cases)
+    // Store slugs unencoded in database for consistency
+    try {
+      const decoded = decodeURIComponent(slug)
+      // If decoding changed it, use decoded version
+      if (decoded !== slug) {
+        slug = decoded
+      }
+    } catch (e) {
+      // If decode fails, slug is probably not encoded, use as-is
     }
 
     const supabase = createServerClient()
