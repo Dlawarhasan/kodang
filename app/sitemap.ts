@@ -40,12 +40,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'daily',
       priority: 1,
     },
-    ...locales.map(locale => ({
-      url: `${baseUrl}/${locale}`,
-      lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 0.9,
-    })),
+      ...locales.map((locale): MetadataRoute.Sitemap[0] => ({
+        url: `${baseUrl}/${locale}`,
+        lastModified: new Date(),
+        changeFrequency: 'daily' as const,
+        priority: 0.9,
+      })),
     ...locales.map(locale => ({
       url: `${baseUrl}/${locale}/news`,
       lastModified: new Date(),
