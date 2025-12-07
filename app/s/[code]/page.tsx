@@ -67,23 +67,56 @@ export default async function ShortUrlRedirect({ params }: PageProps) {
     }
 
     // Verify the article exists before redirecting
-    // This helps catch issues early
+    // Try multiple matching strategies like the article API does
+    let articleFound = false
     try {
-      const { data: article, error: articleError } = await supabase
+      // Try exact match first
+      let { data: article, error: articleError } = await supabase
         .from('news')
         .select('slug')
         .eq('slug', slug)
         .single()
 
-      if (articleError || !article) {
-        console.error('Article not found for slug:', {
+      if (article && !articleError) {
+        articleFound = true
+      } else {
+        // Try case-insensitive match
+        const { data: caseInsensitive } = await supabase
+          .from('news')
+          .select('slug')
+          .ilike('slug', slug)
+          .limit(1)
+          .maybeSingle()
+        
+        if (caseInsensitive) {
+          articleFound = true
+          slug = caseInsensitive.slug // Use the actual slug from database
+        } else {
+          // Try partial match as last resort
+          const { data: partial } = await supabase
+            .from('news')
+            .select('slug')
+            .ilike('slug', `%${slug.substring(0, Math.min(10, slug.length))}%`)
+            .limit(1)
+          
+          if (partial && partial.length > 0) {
+            articleFound = true
+            slug = partial[0].slug // Use the actual slug from database
+          }
+        }
+      }
+
+      if (!articleFound) {
+        console.error('Article not found for slug after all attempts:', {
           code,
-          slug,
+          originalSlug: data.slug,
+          processedSlug: slug,
           locale,
           error: articleError?.message
         })
-        // Still redirect - let the article page handle the 404
-        // This allows for edge cases where slug format differs slightly
+        // Still redirect - let the article page handle the 404 with better debugging
+      } else {
+        console.log('Article found for short URL:', { code, slug, locale })
       }
     } catch (verifyError) {
       console.warn('Could not verify article existence:', verifyError)
