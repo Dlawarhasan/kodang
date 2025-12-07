@@ -315,49 +315,53 @@ export default function NewsDetail({
               
               {errorDetails ? (
                 <>
-                
-                {errorDetails.similarSlugs && errorDetails.similarSlugs.length > 0 && (
-                  <div className="mt-3">
-                    <p className="text-sm font-semibold text-gray-700 mb-2">
-                      {locale === 'fa' ? 'Slug-ە هاوشێوەکان:' : locale === 'ku' ? 'Slug-ە هاوشێوەکان:' : 'Similar Slugs:'}
-                    </p>
-                    <ul className="list-disc list-inside space-y-1">
-                      {errorDetails.similarSlugs.map((similarSlug, idx) => (
-                        <li key={idx} className="text-sm">
-                          <Link 
-                            href={`/${locale}/news/${similarSlug}`}
-                            className="text-blue-600 hover:underline"
-                          >
-                            {similarSlug}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                
-                {errorDetails.allSlugs && errorDetails.allSlugs.length > 0 && (
-                  <div className="mt-3">
-                    <p className="text-sm font-semibold text-gray-700 mb-2">
-                      {locale === 'fa' ? 'هەموو Article-ەکان (20 یەکەم):' : locale === 'ku' ? 'هەموو Article-ەکان (20 یەکەم):' : 'All Articles (First 20):'}
-                    </p>
-                    <ul className="list-disc list-inside space-y-1 max-h-60 overflow-y-auto">
-                      {errorDetails.allSlugs.slice(0, 20).map((item, idx) => (
-                        <li key={idx} className="text-sm">
-                          <Link 
-                            href={`/${locale}/news/${item.slug}`}
-                            className="text-blue-600 hover:underline"
-                          >
-                            {item.slug} {item.titleFa && `- ${item.titleFa.substring(0, 30)}`}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
+                  {errorDetails.similarSlugs && errorDetails.similarSlugs.length > 0 && (
+                    <div className="mt-3">
+                      <p className="text-sm font-semibold text-gray-700 mb-2">
+                        {locale === 'fa' ? 'Slug-ە هاوشێوەکان:' : locale === 'ku' ? 'Slug-ە هاوشێوەکان:' : 'Similar Slugs:'}
+                      </p>
+                      <ul className="list-disc list-inside space-y-1">
+                        {errorDetails.similarSlugs.map((similarSlug, idx) => (
+                          <li key={idx} className="text-sm">
+                            <Link 
+                              href={`/${locale}/news/${similarSlug}`}
+                              className="text-blue-600 hover:underline"
+                            >
+                              {similarSlug}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  
+                  {errorDetails.allSlugs && errorDetails.allSlugs.length > 0 && (
+                    <div className="mt-3">
+                      <p className="text-sm font-semibold text-gray-700 mb-2">
+                        {locale === 'fa' ? 'هەموو Article-ەکان (20 یەکەم):' : locale === 'ku' ? 'هەموو Article-ەکان (20 یەکەم):' : 'All Articles (First 20):'}
+                      </p>
+                      <ul className="list-disc list-inside space-y-1 max-h-60 overflow-y-auto">
+                        {errorDetails.allSlugs.slice(0, 20).map((item, idx) => (
+                          <li key={idx} className="text-sm">
+                            <Link 
+                              href={`/${locale}/news/${item.slug}`}
+                              className="text-blue-600 hover:underline"
+                            >
+                              {item.slug} {item.titleFa && `- ${item.titleFa.substring(0, 30)}`}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <p className="text-sm text-gray-500 italic">
+                  {locale === 'fa' ? 'بارکردنی زانیاری...' : locale === 'ku' ? 'بارکردنی زانیاری...' : 'Loading debug information...'}
+                </p>
+              )}
             </div>
-          )}
+          </div>
           
           <div className="mt-6">
             <Link 
