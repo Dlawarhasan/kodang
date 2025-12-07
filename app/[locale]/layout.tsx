@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   title: 'کۆدەنگ | KODANG',
   description: 'وێبسایتی هەواڵی مۆدێرن کۆدەنگ | KODANG Modern News Website',
   verification: {
-    google: 'google6df8cc884e12b968',
+    google: 'Pcg4d5GxxOVKeX0wsDDicp0xbebGwrLXHok2MjJeAtE',
   },
   other: {
     'font-vazir': 'https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;200;300;400;500;600;700;800;900&display=swap',
