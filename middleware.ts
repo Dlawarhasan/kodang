@@ -10,6 +10,7 @@ export default createMiddleware({
 
 export const config = {
   // Exclude API routes, Next.js internals, static files, short URL routes, and Google verification
-  matcher: ['/((?!api|_next|.*\\..*|s|google).*)']
+  // Also exclude files that start with 'google' for verification
+  matcher: ['/((?!api|_next|.*\\..*|s|google6df8cc884e12b968).*)']
 }
 
