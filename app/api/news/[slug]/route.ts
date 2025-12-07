@@ -137,12 +137,13 @@ export async function GET(
       console.warn('API: Post missing content in requested locale, will use fallback:', { slug, locale })
     }
 
-    // Map translations based on locale (only use requested locale, no fallback)
+    // Map translations based on locale
+    // Use requested locale, but fallback to other languages if content is missing
     const newsItem = {
       ...data,
-      title: translation?.title || '',
+      title: translation?.title || getTranslation('title'),
       excerpt: translation?.excerpt || null, // Excerpt is optional
-      content: translation?.content || '',
+      content: translation?.content || getTranslation('content') || '',
       // Map database column names to camelCase for frontend
       authorInstagram: data.author_instagram || null,
       authorFacebook: data.author_facebook || null,
