@@ -44,22 +44,38 @@ export default function NewsDetail({
     
     console.log('Loading article with locale:', locale, 'slug:', resolvedParams.slug)
     
-    getNewsBySlug(resolvedParams.slug, locale).then(data => {
-      console.log('Article loaded:', { locale, hasData: !!data, title: data?.title?.substring(0, 50), needsTranslation: data?.needsTranslation })
+    const slug = resolvedParams.slug
+    console.log('Loading article with locale:', locale, 'slug:', slug)
+    
+    getNewsBySlug(slug, locale).then(data => {
+      console.log('Article loaded:', { 
+        locale, 
+        slug,
+        hasData: !!data, 
+        title: data?.title?.substring(0, 50), 
+        needsTranslation: data?.needsTranslation 
+      })
+      
+      if (!data) {
+        console.error('Article not found:', { slug, locale })
+        setLoading(false)
+        notFound()
+        return
+      }
+      
       setArticle(data)
       setViews(data?.views || 0)
       setLoading(false)
-      if (!data) {
-        notFound()
-      }
       
       // Auto-translate if translation is needed
       if (data?.needsTranslation && data.originalLocale && data.originalLocale !== locale) {
         autoTranslate(data, data.originalLocale, locale)
       }
     }).catch(error => {
-      console.error('Error loading article:', error)
+      console.error('Error loading article:', { slug, locale, error: error.message, stack: error.stack })
       setLoading(false)
+      // Don't call notFound() here - let the user see the error or retry
+      // The component will show loading state
     })
   }, [resolvedParams.slug, locale])
 

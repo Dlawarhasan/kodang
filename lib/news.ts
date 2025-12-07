@@ -247,7 +247,17 @@ export async function getNewsBySlug(slug: string, locale: string = 'fa'): Promis
       console.log('Fetched post data:', { slug, locale, hasTitle: !!data.news?.title, title: data.news?.title?.substring(0, 50) })
       return data.news
     } else {
-      console.log('API response not OK for slug:', response.status, response.statusText)
+      const errorData = await response.json().catch(() => ({}))
+      console.error('API response not OK for slug:', { 
+        slug, 
+        locale, 
+        status: response.status, 
+        statusText: response.statusText,
+        error: errorData.error,
+        details: errorData.details
+      })
+      // Return undefined so the component can handle it
+      return undefined
     }
   } catch (error) {
     console.log('API not available, using static data:', error)
