@@ -156,3 +156,35 @@ All verification methods are configured and ready. You can use any of the three 
 
 Choose the method that's easiest for you!
 
+---
+
+## 🔎 چۆن پۆستەکان لە گووگڵ دەردەکەون (How to get posts in Google)
+
+ئەگەر سێرچ لە گووگڵ دەکەیت و پۆستەکانی وێبسایت نایەن، ئەم هەنگاوانە بکە:
+
+### ١) دڵنیابوون لە خاوەندارێتی (Verification)
+- بڕۆ بۆ [Google Search Console](https://search.google.com/search-console)
+- پرۆپەرتی **kodang.news** (یان **www.kodang.news**) هەڵبژێرە
+- ئەگەر هێشتا verify نەکردووت، بە **HTML tag** verify بکە (مێتا تەگەکە لە layoutەکەت دایە)
+
+### ٢) ناردنی سایت مەپ (Submit Sitemap)
+- لە Search Console: **Sitemaps** (لە لای چەپ)
+- لە بۆشایی «Add a new sitemap» بنووسە: `sitemap.xml`
+- کلیک لە **Submit** بکە
+- چاوەڕوان بە تا status بێتە «Success»
+
+### ٣) داواکردنی index بۆ URLە گرنگەکان (Request Indexing)
+- بڕۆ بۆ **URL Inspection** (لە سەرەوە بۆشایی URL)
+- لینکی سەرەوەی ماڵپەڕ بنووسە، وەک: `https://kodang.news/fa` یان `https://kodang.news/ku`
+- دوای چەککردنەوە کلیک لە **Request Indexing** بکە
+- دەتوانیت بۆ ٢–٣ پۆستی گرنگیش هەمان شت بکەیت (لینکی وتارەکە بنووسە → Request Indexing)
+
+### ٤) چاوەڕوانبوون
+- گووگڵ پێویستی بە کات هەیە (ڕۆژێک تا چەند هەفتە) بۆ crawl و index کردنی پەڕە نوێکان
+- دوای submit کردنی sitemap، گووگڵ خۆی پەڕەکان دەگەڕێت؛ Request Indexing خێرایی دەکاتەوە بۆ URLەکانی تایبەت
+
+### ئەوەی لە کۆدەکەت جێبەجێ کراوە (SEO)
+- **Server-side metadata** بۆ هەر پەڕەی وتار: title، description، canonical، Open Graph و Twitter Card لە HTML ی سەرەتادا دەر دەکەون (باشە بۆ گووگڵ)
+- **Sitemap** هەموو وتارەکان لە سێ زماندا (fa, ku, en) لەخۆ دەگرێت
+- **robots.txt** ڕێگە بە crawl دەدات؛ تەنها `/api/` و `/admin/` و `/_next/` و `/s/` قەدەغە کراوە
+
