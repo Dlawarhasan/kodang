@@ -756,6 +756,7 @@ export default function AdminPage() {
           image: '',
           video: '',
           audio: '',
+          pdf: '',
           date: new Date().toISOString().split('T')[0],
         })
         setImageFile(null)
