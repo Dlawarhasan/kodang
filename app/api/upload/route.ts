@@ -26,10 +26,10 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Check file size (100MB videos, 20MB PDFs, 50MB others)
+    // Check file size (100MB videos, 50MB PDFs, 50MB others)
     const maxSize =
       fileType === 'video' ? 100 * 1024 * 1024
-      : fileType === 'pdf' ? 20 * 1024 * 1024
+      : fileType === 'pdf' ? 50 * 1024 * 1024
       : 50 * 1024 * 1024
     if (file.size > maxSize) {
       const sizeMB = (file.size / 1024 / 1024).toFixed(2)
