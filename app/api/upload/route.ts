@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData()
     const file = formData.get('file') as File
-    const fileType = formData.get('type') as string || 'image'
+    const fileType = (formData.get('type') as string) || 'image'
 
     if (!file) {
       return NextResponse.json(
@@ -26,8 +26,11 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Check file size (100MB limit for videos, 50MB for others)
-    const maxSize = fileType === 'video' ? 100 * 1024 * 1024 : 50 * 1024 * 1024
+    // Check file size (100MB videos, 20MB PDFs, 50MB others)
+    const maxSize =
+      fileType === 'video' ? 100 * 1024 * 1024
+      : fileType === 'pdf' ? 20 * 1024 * 1024
+      : 50 * 1024 * 1024
     if (file.size > maxSize) {
       const sizeMB = (file.size / 1024 / 1024).toFixed(2)
       const maxSizeMB = (maxSize / 1024 / 1024).toFixed(0)
@@ -36,6 +39,8 @@ export async function POST(request: NextRequest) {
           success: false,
           error: fileType === 'video' 
             ? `قەبارەی ڤیدیۆ (${sizeMB}MB) زۆر گەورەیە. تکایە فایلی بچووکتر هەڵبژێرە (کەمتر لە ${maxSizeMB}MB)`
+            : fileType === 'pdf'
+            ? `قەبارەی PDF (${sizeMB}MB) زۆر گەورەیە. تکایە فایلی بچووکتر هەڵبژێرە (کەمتر لە ${maxSizeMB}MB)`
             : `قەبارەی فایل (${sizeMB}MB) زۆر گەورەیە. تکایە فایلی بچووکتر هەڵبژێرە (کەمتر لە ${maxSizeMB}MB)`
         }, 
         { 
@@ -68,6 +73,9 @@ export async function POST(request: NextRequest) {
       folder = 'news'
     } else if (fileType === 'audio') {
       bucket = 'audio'
+      folder = 'news'
+    } else if (fileType === 'pdf') {
+      bucket = 'documents'
       folder = 'news'
     }
     

@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation'
 import { useTranslations, useLocale } from 'next-intl'
 import { getNews, getNewsBySlug, type NewsItem } from '@/lib/news'
 import { translateText } from '@/lib/translate'
-import { Calendar, User, ArrowRight, Instagram, Facebook, Twitter, Send, Youtube, Eye, Languages, Share2, Copy, Check, X, Maximize2 } from 'lucide-react'
+import { Calendar, User, ArrowRight, Instagram, Facebook, Twitter, Send, Youtube, Eye, Languages, Share2, Copy, Check, X, Maximize2, FileText } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { use } from 'react'
@@ -555,6 +555,42 @@ export default function NewsDetail({
                 {locale === 'fa' ? 'صوت' : locale === 'ku' ? 'دەنگ' : 'Audio'}
               </h3>
               <audio src={article.audio} controls className="w-full" />
+            </div>
+          </div>
+        )}
+        {article.pdf && (
+          <div className="mb-8">
+            <div className="w-full bg-gray-100 rounded-lg p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <FileText className="h-5 w-5 text-red-600" />
+                {locale === 'fa' ? 'فایل PDF' : locale === 'ku' ? 'فایلی PDF' : 'PDF'}
+              </h3>
+              <a
+                href={article.pdf}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition font-medium"
+              >
+                <FileText className="h-4 w-4" />
+                {locale === 'fa' ? 'دانلود PDF' : locale === 'ku' ? 'داگرتنی PDF' : 'Download PDF'}
+              </a>
+              <div className="mt-4 w-full rounded-lg overflow-hidden border border-gray-200 bg-white" style={{ minHeight: '480px' }}>
+                <object
+                  data={article.pdf}
+                  type="application/pdf"
+                  width="100%"
+                  height="600"
+                  className="w-full"
+                  aria-label="PDF viewer"
+                >
+                  <p className="p-4 text-gray-600">
+                    {locale === 'fa' ? 'پیش‌بین PDF لە وێبگەڕەکەت پشتگیری ناکرێت. ' : locale === 'ku' ? 'پیشاندانی PDF لە وێبگەڕەکەت پشتگیری ناکرێت. ' : 'Your browser does not support PDF preview. '}
+                    <a href={article.pdf} target="_blank" rel="noopener noreferrer" className="text-red-600 hover:underline">
+                      {locale === 'fa' ? 'دانلود' : locale === 'ku' ? 'داگرتن' : 'Download'}
+                    </a>
+                  </p>
+                </object>
+              </div>
             </div>
           </div>
         )}

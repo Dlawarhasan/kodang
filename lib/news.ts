@@ -18,6 +18,7 @@ export interface NewsItem {
   image?: string
   video?: string
   audio?: string
+  pdf?: string
   images?: string[]
   tags?: string[]
   views?: number

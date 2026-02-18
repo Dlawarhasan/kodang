@@ -5,7 +5,7 @@ import { createClient } from '@supabase/supabase-js'
 
 export async function uploadFileDirect(
   file: File,
-  fileType: 'image' | 'video' | 'audio',
+  fileType: 'image' | 'video' | 'audio' | 'pdf',
   supabaseUrl: string,
   supabaseAnonKey: string
 ): Promise<{ url: string; path: string }> {
@@ -13,7 +13,11 @@ export async function uploadFileDirect(
   const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
   // Determine bucket
-  const bucket = fileType === 'video' ? 'videos' : fileType === 'audio' ? 'audio' : 'images'
+  const bucket =
+    fileType === 'video' ? 'videos'
+    : fileType === 'audio' ? 'audio'
+    : fileType === 'pdf' ? 'documents'
+    : 'images'
   const folder = 'news'
   const fileExt = file.name.split('.').pop()
   const fileName = `${Date.now()}.${fileExt}`

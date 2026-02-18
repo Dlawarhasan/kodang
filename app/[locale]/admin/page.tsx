@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
-import { Save, Upload, Image as ImageIcon, Video, Music, X, Edit, Trash2, Plus, List, Lock, Users, UserPlus, Eye } from 'lucide-react'
+import { Save, Upload, Image as ImageIcon, Video, Music, FileText, X, Edit, Trash2, Plus, List, Lock, Users, UserPlus, Eye } from 'lucide-react'
 import { getNews, type NewsItem } from '@/lib/news'
 import { newsDataWithTranslations } from '@/lib/news-translations'
 import Link from 'next/link'
@@ -54,6 +54,7 @@ export default function AdminPage() {
     image: '',
     video: '',
     audio: '',
+    pdf: '',
     date: new Date().toISOString().split('T')[0],
   })
 
@@ -63,6 +64,7 @@ export default function AdminPage() {
   const [videoPreview, setVideoPreview] = useState<string>('')
   const [audioFile, setAudioFile] = useState<File | null>(null)
   const [audioPreview, setAudioPreview] = useState<string>('')
+  const [pdfFile, setPdfFile] = useState<File | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
 
@@ -260,6 +262,7 @@ export default function AdminPage() {
         image: post.image || '',
         video: post.video || '',
         audio: post.audio || '',
+        pdf: (post as { pdf?: string }).pdf || '',
         date: post.date || new Date().toISOString().split('T')[0],
       })
       setEditingSlug(slug)
@@ -355,12 +358,12 @@ export default function AdminPage() {
     }
   }
 
-  const handleUploadFile = async (file: File, type: 'image' | 'video' | 'audio') => {
+  const handleUploadFile = async (file: File, type: 'image' | 'video' | 'audio' | 'pdf') => {
     if (!file) return null
 
     try {
-      // Check file size (100MB limit for videos, 50MB for others)
-      const maxSize = type === 'video' ? 100 * 1024 * 1024 : 50 * 1024 * 1024
+      // Check file size (100MB videos, 20MB PDFs, 50MB others)
+      const maxSize = type === 'video' ? 100 * 1024 * 1024 : type === 'pdf' ? 20 * 1024 * 1024 : 50 * 1024 * 1024
       if (file.size > maxSize) {
         const sizeMB = (file.size / 1024 / 1024).toFixed(2)
         const maxSizeMB = (maxSize / 1024 / 1024).toFixed(0)
@@ -392,9 +395,9 @@ export default function AdminPage() {
         }
       }
 
-      // For large files (especially videos), upload directly to Supabase
+      // For large files (videos, PDFs), upload directly to Supabase
       // This bypasses Vercel's 4.5MB serverless function limit
-      if (fileToUpload.size > 4 * 1024 * 1024) { // If file is larger than 4MB, use direct upload
+      if (fileToUpload.size > 4 * 1024 * 1024 || type === 'pdf') {
         const { uploadFileDirect } = await import('@/lib/upload-direct')
         const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
         const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
@@ -476,6 +479,13 @@ export default function AdminPage() {
       if (file.type.startsWith('audio/')) {
         setAudioPreview(URL.createObjectURL(file))
       }
+    }
+  }
+
+  const handlePdfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file && file.type === 'application/pdf') {
+      setPdfFile(file)
     }
   }
 
@@ -633,6 +643,7 @@ export default function AdminPage() {
       let imageUrl = formData.image
       let videoUrl = formData.video
       let audioUrl = formData.audio
+      let pdfUrl = formData.pdf
 
       if (imageFile) {
         imageUrl = await handleUploadFile(imageFile, 'image')
@@ -653,6 +664,14 @@ export default function AdminPage() {
       if (audioFile) {
         audioUrl = await handleUploadFile(audioFile, 'audio')
         if (!audioUrl) {
+          setIsSubmitting(false)
+          return
+        }
+      }
+
+      if (pdfFile) {
+        pdfUrl = await handleUploadFile(pdfFile, 'pdf')
+        if (!pdfUrl) {
           setIsSubmitting(false)
           return
         }
@@ -694,6 +713,7 @@ export default function AdminPage() {
           image: imageUrl || formData.image,
           video: videoUrl || formData.video,
           audio: audioUrl || formData.audio,
+          pdf: pdfUrl || formData.pdf || null,
         }),
       })
 
@@ -947,8 +967,10 @@ export default function AdminPage() {
                     image: '',
                     video: '',
                     audio: '',
+                    pdf: '',
                     date: new Date().toISOString().split('T')[0],
                   })
+                  setPdfFile(null)
                   }}
                   className="flex items-center gap-2 bg-red-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-600 transition"
                 >
@@ -1501,6 +1523,48 @@ export default function AdminPage() {
                     setFormData({ ...formData, audio: '' })
                   }}
                   className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* PDF - بەشی فایلی PDF (دیار بە border سوور) */}
+        <div className="border-2 border-red-400 bg-red-50 rounded-xl p-4">
+          <label className="block text-sm font-semibold text-red-800 mb-2">
+            📄 PDF — فایلی PDF ({t('upload')} {t('orLink')})
+          </label>
+          <div className="space-y-3">
+            <input
+              type="text"
+              value={formData.pdf}
+              onChange={(e) => setFormData({ ...formData, pdf: e.target.value })}
+              className="w-full rounded-lg border border-slate-300 px-4 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500"
+              placeholder="لینکی PDF یان بەڕێکەوت فایل upload بکە"
+            />
+            <label className="flex items-center gap-2 px-4 py-2 bg-slate-100 rounded-lg cursor-pointer hover:bg-slate-200 transition w-fit">
+              <FileText className="h-5 w-5" />
+              <span>PDF هەڵبژێرە</span>
+              <input
+                type="file"
+                accept="application/pdf"
+                onChange={handlePdfChange}
+                className="hidden"
+              />
+            </label>
+            {pdfFile && (
+              <div className="flex items-center gap-2 text-sm text-slate-600">
+                <FileText className="h-4 w-4" />
+                <span>{pdfFile.name}</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPdfFile(null)
+                    setFormData({ ...formData, pdf: '' })
+                  }}
+                  className="text-red-500 hover:text-red-700"
                 >
                   <X className="h-4 w-4" />
                 </button>

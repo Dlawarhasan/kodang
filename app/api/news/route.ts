@@ -186,6 +186,7 @@ export async function POST(request: NextRequest) {
       image: body.image || '',
       video: body.video || null,
       audio: body.audio || null,
+      pdf: body.pdf || null,
       images: body.images || null,
       tags,
       translations,

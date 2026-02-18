@@ -19,6 +19,7 @@ export interface NewsItemBase {
   image?: string
   video?: string
   audio?: string
+  pdf?: string
   images?: string[]
   tags?: string[]
   translations: NewsTranslations
