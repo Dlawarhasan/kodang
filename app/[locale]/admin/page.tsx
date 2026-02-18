@@ -362,8 +362,8 @@ export default function AdminPage() {
     if (!file) return null
 
     try {
-      // Check file size (50MB max – Supabase Free tier limit)
-      const maxSize = 50 * 1024 * 1024
+      // 48MB so we stay under Supabase 50MB limit
+      const maxSize = 48 * 1024 * 1024
       if (file.size > maxSize) {
         const sizeMB = (file.size / 1024 / 1024).toFixed(2)
         const maxSizeMB = (maxSize / 1024 / 1024).toFixed(0)
@@ -1532,8 +1532,8 @@ export default function AdminPage() {
           </div>
         </div>
 
-        {/* PDF - بەشی فایلی PDF (دیار بە border سوور) */}
-        <div className="border-2 border-red-400 bg-red-50 rounded-xl p-4">
+        {/* PDF */}
+        <div className="rounded-xl border border-slate-200 bg-slate-50/50 p-4">
           <label className="block text-sm font-semibold text-red-800 mb-2">
             📄 PDF — فایلی PDF ({t('upload')} {t('orLink')})
           </label>

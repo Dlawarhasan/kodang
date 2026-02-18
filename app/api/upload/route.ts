@@ -26,11 +26,9 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Check file size (50MB max for Supabase Free tier; matches Storage limit)
-    const maxSize =
-      fileType === 'video' ? 50 * 1024 * 1024
-      : fileType === 'pdf' ? 50 * 1024 * 1024
-      : 50 * 1024 * 1024
+    // 48MB so we stay under Supabase Free tier 50MB limit
+    const MAX_FILE_BYTES = 48 * 1024 * 1024
+    const maxSize = MAX_FILE_BYTES
     if (file.size > maxSize) {
       const sizeMB = (file.size / 1024 / 1024).toFixed(2)
       const maxSizeMB = (maxSize / 1024 / 1024).toFixed(0)

@@ -3,13 +3,19 @@
 
 import { createClient } from '@supabase/supabase-js'
 
+const MAX_FILE_BYTES = 48 * 1024 * 1024 // 48MB, under Supabase Free 50MB limit
+
 export async function uploadFileDirect(
   file: File,
   fileType: 'image' | 'video' | 'audio' | 'pdf',
   supabaseUrl: string,
   supabaseAnonKey: string
 ): Promise<{ url: string; path: string }> {
-  // Create Supabase client
+  if (file.size > MAX_FILE_BYTES) {
+    const sizeMB = (file.size / 1024 / 1024).toFixed(2)
+    throw new Error(`قەبارەی فایل (${sizeMB}MB) زۆر گەورەیە. کەمتر لە ٤٨MB`)
+  }
+
   const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
   // Determine bucket
