@@ -362,8 +362,8 @@ export default function AdminPage() {
     if (!file) return null
 
     try {
-      // Check file size (100MB videos, 50MB PDFs, 50MB others)
-      const maxSize = type === 'video' ? 100 * 1024 * 1024 : type === 'pdf' ? 50 * 1024 * 1024 : 50 * 1024 * 1024
+      // Check file size (100MB videos, 100MB PDFs, 50MB others)
+      const maxSize = type === 'video' ? 100 * 1024 * 1024 : type === 'pdf' ? 100 * 1024 * 1024 : 50 * 1024 * 1024
       if (file.size > maxSize) {
         const sizeMB = (file.size / 1024 / 1024).toFixed(2)
         const maxSizeMB = (maxSize / 1024 / 1024).toFixed(0)
