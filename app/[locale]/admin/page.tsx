@@ -367,9 +367,12 @@ export default function AdminPage() {
       if (file.size > maxSize) {
         const sizeMB = (file.size / 1024 / 1024).toFixed(2)
         const maxSizeMB = (maxSize / 1024 / 1024).toFixed(0)
-        const errorMsg = type === 'video' 
-          ? t('videoTooLarge').replace('{size}', sizeMB).replace('{maxSize}', maxSizeMB)
-          : t('fileTooLarge').replace('{size}', sizeMB).replace('{maxSize}', maxSizeMB)
+        const errorMsg =
+          type === 'video'
+            ? t('videoTooLarge').replace('{size}', sizeMB).replace('{maxSize}', maxSizeMB)
+            : type === 'pdf'
+              ? t('pdfTooLarge').replace('{size}', sizeMB).replace('{maxSize}', maxSizeMB)
+              : t('fileTooLarge').replace('{size}', sizeMB).replace('{maxSize}', maxSizeMB)
         setMessage({ type: 'error', text: errorMsg })
         return null
       }

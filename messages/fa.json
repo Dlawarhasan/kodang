@@ -148,7 +148,10 @@
     "confirmDeleteUser": "آیا از حذف این کاربر مطمئن هستید؟",
     "usernamePasswordRequired": "نام کاربری و رمز عبور الزامی است",
     "farsiFieldsRequired": "لطفاً عنوان، خلاصه و محتوای فارسی را پر کنید",
-    "views": "بازدید"
+    "views": "بازدید",
+    "fileTooLarge": "حجم فایل ({size}MB) زیاد است. لطفاً فایل کوچک‌تری انتخاب کنید (کمتر از {maxSize}MB)",
+    "videoTooLarge": "حجم ویدیو ({size}MB) زیاد است. لطفاً فایل کوچک‌تری انتخاب کنید (کمتر از {maxSize}MB)",
+    "pdfTooLarge": "حجم PDF ({size}MB) زیاد است. لطفاً فایل کوچک‌تری انتخاب کنید (کمتر از {maxSize}MB)"
   }
 }
 

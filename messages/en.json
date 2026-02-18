@@ -157,7 +157,8 @@
     "instruction3": "Click \"Add Post\"",
     "instruction4": "The post will be automatically added to the database",
     "fileTooLarge": "File size ({size}MB) is too large. Please select a smaller file (less than {maxSize}MB)",
-    "videoTooLarge": "Video size ({size}MB) is too large. Please select a smaller file (less than {maxSize}MB)"
+    "videoTooLarge": "Video size ({size}MB) is too large. Please select a smaller file (less than {maxSize}MB)",
+    "pdfTooLarge": "PDF size ({size}MB) is too large. Please select a smaller file (less than {maxSize}MB)"
   }
 }
 
